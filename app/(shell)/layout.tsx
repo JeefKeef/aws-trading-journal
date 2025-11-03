@@ -20,7 +20,7 @@ export default function ShellLayout({ children }: { children: ReactNode }) {
         <div className="hidden h-full w-full md:flex">
           <ResizablePanelGroup direction="horizontal" className="h-full w-full">
             <ResizablePanel defaultSize={30} minSize={25}>
-              <section className="flex h-full flex-col bg-white">
+              <section className="flex h-full min-h-0 flex-col bg-white">
                 {children}
               </section>
             </ResizablePanel>
@@ -32,7 +32,7 @@ export default function ShellLayout({ children }: { children: ReactNode }) {
         </div>
 
         <div className="flex h-full w-full flex-col md:hidden">
-          <section className="flex h-full flex-col border-b border-neutral-200 bg-white">
+          <section className="flex h-full min-h-0 flex-col border-b border-neutral-200 bg-white">
             {children}
           </section>
           <RightPane />

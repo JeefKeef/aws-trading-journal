@@ -168,8 +168,8 @@ export default function ChatPage() {
   };
 
   return (
-    <>
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-200 px-5 py-4">
+    <div className="flex flex-col h-[calc(100vh-3.5rem)] max-h-[calc(100vh-3.5rem)]">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-200 px-5 py-4 shrink-0">
         <div>
           <p className="text-sm font-semibold text-neutral-900">Chat session</p>
           <p className="text-xs text-neutral-500">
@@ -188,15 +188,17 @@ export default function ChatPage() {
         </select>
       </div>
 
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 min-h-0 flex-col">
         <div
           ref={viewportRef}
-          className="flex-1 space-y-4 overflow-y-auto px-5 py-6"
+          className="flex-1 overflow-y-scroll px-5 py-6"
         >
-          {messages.map((message) => (
-            <ChatBubble key={message.id} message={message} />
-          ))}
-          {isStreaming ? <TypingIndicator /> : null}
+          <div className="space-y-4">
+            {messages.map((message) => (
+              <ChatBubble key={message.id} message={message} />
+            ))}
+            {isStreaming ? <TypingIndicator /> : null}
+          </div>
         </div>
 
         <form
@@ -248,7 +250,7 @@ export default function ChatPage() {
           ) : null}
         </form>
       </div>
-    </>
+    </div>
   );
 }
 
