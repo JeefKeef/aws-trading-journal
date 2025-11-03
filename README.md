@@ -1,24 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Signal Copilot
+
+Signal Copilot is an AI-native workspace focused on trading, market research, and AWS-driven analytics. The interface delivers a conversational experience with quick-start prompts, model selection, and a ready-to-wire API layer for large language models.
+
+## Prerequisites
+
+- Node.js 18+
+- npm (or pnpm/yarn/bun)
+- An OpenAI-compatible API key exposed as `OPENAI_API_KEY`
+
+Optionally set `OPENAI_BASE_URL` if you are proxying requests through a compatible gateway (e.g. OpenRouter, Azure OpenAI, Together).
+
+Create a local `.env.local` file at the project root:
+
+```bash
+OPENAI_API_KEY=sk-...
+# OPENAI_BASE_URL=https://api.openai.com/v1
+```
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies and launch the dev server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Navigate to [http://localhost:3000](http://localhost:3000) for the landing page. Launch the chat workspace from the hero actions or directly visit [http://localhost:3000/chat](http://localhost:3000/chat). The UI auto-updates while developing, and model calls flow through `app/api/chat/route.ts`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Key Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Modern chat surface with typing indicator, scrollback, and quick-start prompts
+- Model selector with sane defaults (`gpt-4o-mini`, `gpt-4.1`, etc.)
+- Abortable requests and optimistic UI updates
+- Server route scaffolded for OpenAI-compatible chat completions with optional system prompt injection
 
 ## Learn More
 
