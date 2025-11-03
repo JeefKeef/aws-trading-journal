@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bot, MessageSquare, Settings } from "lucide-react";
+import { Bot, MessageSquare, Settings, Clock } from "lucide-react";
+import { useState } from "react";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
@@ -20,16 +21,50 @@ const navItems = [
   },
 ];
 
+// Mock chat history data
+const chatHistory = [
+  {
+    id: "1",
+    title: "Market analysis for tech stocks",
+    timestamp: "2 hours ago",
+  },
+  {
+    id: "2",
+    title: "Options strategy discussion",
+    timestamp: "5 hours ago",
+  },
+  {
+    id: "3",
+    title: "Risk assessment framework",
+    timestamp: "Yesterday",
+  },
+  {
+    id: "4",
+    title: "AWS automation setup",
+    timestamp: "Yesterday",
+  },
+  {
+    id: "5",
+    title: "Portfolio rebalancing ideas",
+    timestamp: "2 days ago",
+  },
+];
+
 export function AppSidebar() {
   const pathname = usePathname();
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   return (
-    <aside className="hidden border-r border-neutral-200 bg-white/80 backdrop-blur lg:flex lg:w-14 lg:flex-col lg:items-center lg:py-5">
-      <div className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-neutral-900 text-white shadow-sm">
-        <Bot className="h-4 w-4" />
-      </div>
+    <>
+      <aside className="hidden border-r border-neutral-200 bg-white/80 backdrop-blur lg:flex lg:w-14 lg:flex-col lg:items-center lg:py-5 relative z-40">
+        <div
+          onMouseEnter={() => setIsHistoryOpen(true)}
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-neutral-900 text-white shadow-sm cursor-pointer transition-transform hover:scale-110"
+        >
+          <Bot className="h-4 w-4" />
+        </div>
 
-      <nav className="mt-6 flex flex-1 flex-col items-center gap-3">
+        <nav className="mt-6 flex flex-1 flex-col items-center gap-3">
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = pathname.startsWith(item.href);
@@ -60,5 +95,52 @@ export function AppSidebar() {
         v1.0
       </div>
     </aside>
+
+    {/* Chat History Sidebar - Appears on hover */}
+    {isHistoryOpen && (
+      <div
+        onMouseEnter={() => setIsHistoryOpen(true)}
+        onMouseLeave={() => setIsHistoryOpen(false)}
+        className="fixed left-14 top-0 z-50 h-screen w-64 border-r border-neutral-200 bg-white shadow-xl animate-in slide-in-from-left duration-200"
+      >
+        <div className="flex h-full flex-col">
+          <div className="border-b border-neutral-200 px-4 py-5">
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-neutral-500" />
+              <h2 className="text-sm font-semibold text-neutral-900">Chat History</h2>
+            </div>
+            <p className="mt-1 text-xs text-neutral-500">Recent conversations</p>
+          </div>
+
+          <div className="flex-1 overflow-y-auto px-3 py-3">
+            <div className="space-y-1">
+              {chatHistory.map((chat) => (
+                <Link
+                  key={chat.id}
+                  href={`/chat/${chat.id}`}
+                  className="block rounded-lg px-3 py-2.5 text-sm transition hover:bg-neutral-50"
+                >
+                  <p className="font-medium text-neutral-900 line-clamp-2">
+                    {chat.title}
+                  </p>
+                  <p className="mt-1 text-xs text-neutral-500">{chat.timestamp}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="border-t border-neutral-200 px-4 py-3">
+            <Link
+              href="/chat"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-neutral-900 px-3 py-2 text-xs font-semibold text-white transition hover:bg-neutral-800"
+            >
+              <MessageSquare className="h-3.5 w-3.5" />
+              New Chat
+            </Link>
+          </div>
+        </div>
+      </div>
+    )}
+  </>
   );
 }

@@ -12,30 +12,40 @@ import {
   useRightPane,
 } from "@/components/layout/right-pane-context";
 import type { ToolState } from "@/components/layout/right-pane-context";
+import { AppSidebar } from "@/components/layout/sidebar";
+import { TopNav } from "@/components/layout/top-nav";
 
 export default function ShellLayout({ children }: { children: ReactNode }) {
   return (
     <RightPaneProvider>
-      <div className="flex h-full w-full flex-col">
-        <div className="hidden h-full w-full md:flex">
-          <ResizablePanelGroup direction="horizontal" className="h-full w-full">
-            <ResizablePanel defaultSize={30} minSize={25}>
-              <section className="flex h-full min-h-0 flex-col bg-white">
-                {children}
-              </section>
-            </ResizablePanel>
-            <ResizableHandle withHandle className="bg-neutral-200" />
-            <ResizablePanel defaultSize={70} minSize={40}>
-              <RightPane />
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </div>
+      <div className="flex min-h-screen bg-neutral-100">
+        <AppSidebar />
+        <div className="flex flex-1 flex-col">
+          <TopNav />
+          <main className="flex-1 overflow-hidden min-h-0">
+            <div className="flex h-full w-full flex-col">
+              <div className="hidden h-full w-full md:flex">
+                <ResizablePanelGroup direction="horizontal" className="h-full w-full">
+                  <ResizablePanel defaultSize={30} minSize={25}>
+                    <section className="flex h-full min-h-0 flex-col bg-white">
+                      {children}
+                    </section>
+                  </ResizablePanel>
+                  <ResizableHandle withHandle className="bg-neutral-200" />
+                  <ResizablePanel defaultSize={70} minSize={40}>
+                    <RightPane />
+                  </ResizablePanel>
+                </ResizablePanelGroup>
+              </div>
 
-        <div className="flex h-full w-full flex-col md:hidden">
-          <section className="flex h-full min-h-0 flex-col border-b border-neutral-200 bg-white">
-            {children}
-          </section>
-          <RightPane />
+              <div className="flex h-full w-full flex-col md:hidden">
+                <section className="flex h-full min-h-0 flex-col border-b border-neutral-200 bg-white">
+                  {children}
+                </section>
+                <RightPane />
+              </div>
+            </div>
+          </main>
         </div>
       </div>
     </RightPaneProvider>
