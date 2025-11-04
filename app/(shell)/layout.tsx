@@ -26,7 +26,7 @@ import CryptoPage from "./crypto/page";
 export default function ShellLayout({ children }: { children: ReactNode }) {
   return (
     <RightPaneProvider>
-      <div className="flex min-h-screen bg-neutral-100">
+      <div className="flex min-h-screen bg-neutral-100 dark:bg-neutral-950">
         <AppSidebar />
         <div className="flex flex-1 flex-col">
           <TopNav />
@@ -35,11 +35,11 @@ export default function ShellLayout({ children }: { children: ReactNode }) {
               <div className="hidden h-full w-full md:flex">
                 <ResizablePanelGroup direction="horizontal" className="h-full w-full">
                   <ResizablePanel defaultSize={20} minSize={20}>
-                    <section className="flex h-full min-h-0 flex-col bg-white">
+                    <section className="flex h-full min-h-0 flex-col bg-white dark:bg-neutral-900">
                       {children}
                     </section>
                   </ResizablePanel>
-                  <ResizableHandle withHandle className="bg-neutral-200" />
+                  <ResizableHandle withHandle className="bg-neutral-200 dark:bg-neutral-800" />
                   <ResizablePanel defaultSize={80} minSize={40}>
                     <RightPane />
                   </ResizablePanel>
@@ -47,7 +47,7 @@ export default function ShellLayout({ children }: { children: ReactNode }) {
               </div>
 
               <div className="flex h-full w-full flex-col md:hidden">
-                <section className="flex h-full min-h-0 flex-col border-b border-neutral-200 bg-white">
+                <section className="flex h-full min-h-0 flex-col border-b border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
                   {children}
                 </section>
                 <RightPane />
@@ -95,9 +95,9 @@ function RightPane() {
   };
 
   return (
-    <aside className="flex h-full min-h-[50vh] flex-col bg-white">
+    <aside className="flex h-full min-h-[50vh] flex-col bg-white dark:bg-neutral-900">
       {/* Navigation Bar */}
-      <div className="border-b border-neutral-200 bg-white px-4 py-2">
+      <div className="border-b border-neutral-200 bg-white px-4 py-2 dark:border-neutral-800 dark:bg-neutral-900">
         <nav className="flex items-center gap-1">
           {navItems.map((item) => {
             const isActive = activeView === item.id;
@@ -107,8 +107,8 @@ function RightPane() {
                 onClick={() => setActiveView(item.id)}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${
                   isActive
-                    ? "bg-neutral-900 text-white"
-                    : "text-neutral-700 hover:bg-neutral-100"
+                    ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
+                    : "text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
                 }`}
               >
                 {item.label}
@@ -119,7 +119,7 @@ function RightPane() {
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 overflow-hidden bg-neutral-50">
+      <div className="flex-1 overflow-hidden bg-neutral-50 dark:bg-neutral-950">
         {renderContent()}
       </div>
     </aside>

@@ -727,9 +727,9 @@ export default function ScreenerPage() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-neutral-50 overflow-hidden">
+    <div className="flex flex-col h-full bg-neutral-50 overflow-hidden dark:bg-neutral-950">
       {/* Filters Section */}
-      <div className="bg-white border-b border-neutral-200 shrink-0">
+      <div className="bg-white border-b border-neutral-200 shrink-0 dark:bg-neutral-900 dark:border-neutral-800">
         {/* Search and Actions Bar */}
         <div className="px-4 py-3 border-b border-neutral-100 flex items-center gap-3">
           <div className="flex-1 relative">
@@ -891,7 +891,7 @@ export default function ScreenerPage() {
               })}
               <button
                 onClick={openSaveDialog}
-                className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-neutral-900 bg-white border border-neutral-300 rounded-full hover:bg-neutral-100 transition ml-auto"
+                className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-neutral-900 bg-white border dark:text-neutral-100 dark:bg-neutral-800 dark:border-neutral-700 border-neutral-300 rounded-full hover:bg-neutral-100 transition ml-auto"
               >
                 💾 Save as Preset
               </button>
@@ -925,7 +925,7 @@ export default function ScreenerPage() {
                 autoFocus
               />
             </div>
-            <div className="rounded-lg bg-neutral-50 p-3 space-y-2">
+            <div className="rounded-lg bg-neutral-50 p-3 space-y-2 dark:bg-neutral-900 dark:border dark:border-neutral-800">
               <p className="text-xs font-medium text-neutral-700">Current Configuration:</p>
               <div className="text-xs text-neutral-600">
                 <div className="mb-1">
@@ -986,7 +986,7 @@ export default function ScreenerPage() {
                 ))}
               </TableRow>
             </TableHeader>
-            <TableBody className="bg-white ">
+            <TableBody className="bg-white dark:bg-neutral-900 ">
               {filteredStocks.map((stock, index) => (
                 <TableRow 
                   key={stock.ticker}
@@ -1030,7 +1030,7 @@ export default function ScreenerPage() {
       </div>
 
       {/* Results Footer */}
-      <div className="border-t border-neutral-200 bg-white px-4 py-3 shrink-0">
+      <div className="border-t border-neutral-200 bg-white px-4 py-3 shrink-0 dark:bg-neutral-900 dark:border-neutral-800">
         <div className="flex items-center justify-between text-xs text-neutral-600">
           <span>Showing {filteredStocks.length} results</span>
           <div className="flex items-center gap-2">

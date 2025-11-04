@@ -25,7 +25,7 @@ export default function FuturesPage() {
     <div className="p-4 h-full overflow-hidden">
       <div className="h-full rounded-lg border border-neutral-200 bg-white overflow-auto relative">
         <Table>
-          <TableHeader className="bg-neutral-50 sticky top-0 z-10">
+          <TableHeader className="bg-neutral-50 sticky top-0 z-10 dark:bg-neutral-900">
             <TableRow>
               <TableHead className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Symbol</TableHead>
               <TableHead className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Name</TableHead>

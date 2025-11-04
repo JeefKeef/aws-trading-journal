@@ -25,7 +25,7 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center px-6 py-12">
+    <div className="min-h-screen bg-white dark:bg-neutral-950 flex items-center justify-center px-6 py-12">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -34,7 +34,7 @@ export default function SignUpPage() {
       >
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 justify-center mb-8">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg border-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg border-2 dark:border-neutral-700">
             <Sparkles className="h-5 w-5" />
           </div>
           <span className="text-2xl font-bold">TraderCloud</span>

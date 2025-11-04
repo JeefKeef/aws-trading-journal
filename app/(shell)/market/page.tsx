@@ -53,8 +53,8 @@ export default function MarketOverviewPage() {
       {/* Top Row - Charts as Tiles */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* S&P 500 Chart Tile */}
-        <div className="rounded-lg border border-neutral-200 bg-white p-3">
-          <h3 className="text-xs font-semibold text-neutral-900 mb-2">S&P 500 Intraday</h3>
+        <div className="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
+          <h3 className="text-xs font-semibold text-neutral-900 mb-2 dark:text-neutral-100">S&P 500 Intraday</h3>
           <ChartContainer config={chartConfig} className="h-32 w-full">
             <AreaChart data={marketChartData}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-neutral-200" />
@@ -79,8 +79,8 @@ export default function MarketOverviewPage() {
         </div>
 
         {/* Sector Performance Chart Tile */}
-        <div className="rounded-lg border border-neutral-200 bg-white p-3">
-          <h3 className="text-xs font-semibold text-neutral-900 mb-2">Sector Performance</h3>
+        <div className="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
+          <h3 className="text-xs font-semibold text-neutral-900 mb-2 dark:text-neutral-100">Sector Performance</h3>
           <ChartContainer config={chartConfig} className="h-32 w-full">
             <BarChart data={sectorPerformanceData}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-neutral-200" />
@@ -108,14 +108,14 @@ export default function MarketOverviewPage() {
           { label: "NASDAQ", value: "16,523.45", change: "+1.15%", positive: true },
           { label: "VIX", value: "14.82", change: "-0.45", positive: false },
         ].map((stat) => (
-          <div key={stat.label} className="rounded-lg border border-neutral-200 bg-neutral-50 p-3">
-            <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">
+          <div key={stat.label} className="rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-neutral-800 dark:bg-neutral-900/50">
+            <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
               {stat.label}
             </p>
-            <p className="mt-1.5 text-base font-bold text-neutral-900">
+            <p className="mt-1.5 text-base font-bold text-neutral-900 dark:text-neutral-100">
               {stat.value}
             </p>
-            <p className={`text-xs font-semibold ${stat.positive ? 'text-emerald-600' : 'text-rose-600'}`}>
+            <p className={`text-xs font-semibold ${stat.positive ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
               {stat.change}
             </p>
           </div>
@@ -125,8 +125,8 @@ export default function MarketOverviewPage() {
       {/* Top Movers Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Top Gainers */}
-        <div className="rounded-lg border border-neutral-200 bg-white p-4">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-3">
+        <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-3 dark:text-neutral-400">
             Top Gainers
           </h3>
           <div className="space-y-2">
@@ -150,8 +150,8 @@ export default function MarketOverviewPage() {
         </div>
 
         {/* Top Losers */}
-        <div className="rounded-lg border border-neutral-200 bg-white p-4">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-3">
+        <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-3 dark:text-neutral-400">
             Top Losers
           </h3>
           <div className="space-y-2">

@@ -37,8 +37,8 @@ export default function ChartsPage() {
       {/* Chart Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Volume Chart Tile */}
-        <div className="rounded-lg border border-neutral-200 bg-white p-3">
-          <h3 className="text-xs font-semibold text-neutral-900 mb-2">Market Volume</h3>
+        <div className="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
+          <h3 className="text-xs font-semibold text-neutral-900 mb-2 dark:text-neutral-100">Market Volume</h3>
           <ChartContainer config={chartConfig} className="h-32 w-full">
             <BarChart data={marketChartData}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-neutral-200" />
@@ -50,8 +50,8 @@ export default function ChartsPage() {
         </div>
 
         {/* Price Trend Tile */}
-        <div className="rounded-lg border border-neutral-200 bg-white p-3">
-          <h3 className="text-xs font-semibold text-neutral-900 mb-2">Price Trend</h3>
+        <div className="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
+          <h3 className="text-xs font-semibold text-neutral-900 mb-2 dark:text-neutral-100">Price Trend</h3>
           <ChartContainer config={chartConfig} className="h-32 w-full">
             <LineChart data={marketChartData}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-neutral-200" />
@@ -71,8 +71,8 @@ export default function ChartsPage() {
 
       {/* Additional Chart Tiles */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="rounded-lg border border-neutral-200 bg-white p-3">
-          <h3 className="text-xs font-semibold text-neutral-900 mb-2">NASDAQ Composite</h3>
+        <div className="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
+          <h3 className="text-xs font-semibold text-neutral-900 mb-2 dark:text-neutral-100">NASDAQ Composite</h3>
           <ChartContainer config={chartConfig} className="h-28 w-full">
             <LineChart data={marketChartData}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-neutral-200" />
@@ -83,8 +83,8 @@ export default function ChartsPage() {
           </ChartContainer>
         </div>
 
-        <div className="rounded-lg border border-neutral-200 bg-white p-3">
-          <h3 className="text-xs font-semibold text-neutral-900 mb-2">DOW Jones</h3>
+        <div className="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
+          <h3 className="text-xs font-semibold text-neutral-900 mb-2 dark:text-neutral-100">DOW Jones</h3>
           <ChartContainer config={chartConfig} className="h-28 w-full">
             <LineChart data={marketChartData}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-neutral-200" />
@@ -95,8 +95,8 @@ export default function ChartsPage() {
           </ChartContainer>
         </div>
 
-        <div className="rounded-lg border border-neutral-200 bg-white p-3">
-          <h3 className="text-xs font-semibold text-neutral-900 mb-2">Russell 2000</h3>
+        <div className="rounded-lg border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
+          <h3 className="text-xs font-semibold text-neutral-900 mb-2 dark:text-neutral-100">Russell 2000</h3>
           <ChartContainer config={chartConfig} className="h-28 w-full">
             <LineChart data={marketChartData}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-neutral-200" />

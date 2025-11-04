@@ -192,15 +192,15 @@ export default function ChatPage() {
 
         <form
           onSubmit={handleSubmit}
-          className="border-t border-neutral-200 bg-neutral-50 px-3 py-3"
+          className="border-t border-neutral-200 bg-neutral-50 px-3 py-3 dark:border-neutral-800 dark:bg-neutral-900"
         >
-          <div className="rounded-2xl border border-neutral-200 bg-white overflow-hidden">
+          <div className="rounded-2xl border border-neutral-200 bg-white overflow-hidden dark:border-neutral-700 dark:bg-neutral-800">
             <Textarea
               value={inputValue}
               onChange={(event) => setInputValue(event.target.value)}
               placeholder="Ask for synthesis, automation, or specific trade support…"
               rows={3}
-              className="w-full resize-none px-4 py-3 text-sm text-neutral-700 placeholder:text-neutral-400 focus:outline-none border-0"
+              className="w-full resize-none px-4 py-3 text-sm text-neutral-700 placeholder:text-neutral-400 focus:outline-none border-0 dark:text-neutral-200 dark:placeholder:text-neutral-500 dark:bg-neutral-800"
               onKeyDown={(event) => {
                 if (event.key === "Enter" && !event.shiftKey) {
                   event.preventDefault();
@@ -210,13 +210,13 @@ export default function ChatPage() {
               disabled={isStreaming}
             />
 
-            <div className="flex items-center justify-between gap-2 border-t border-neutral-200 bg-neutral-50 px-3 py-2">
+            <div className="flex items-center justify-between gap-2 border-t border-neutral-200 bg-neutral-50 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900">
               <Select
                 value={activeModel}
                 onValueChange={setActiveModel}
                 disabled={isStreaming}
               >
-                <SelectTrigger size="sm" className="h-8 text-xs w-[130px] border-neutral-200 bg-white">
+                <SelectTrigger size="sm" className="h-8 text-xs w-[130px] border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -228,7 +228,7 @@ export default function ChatPage() {
 
               <button
                 type="submit"
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-neutral-900 text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:bg-neutral-400"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-neutral-900 text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:bg-neutral-400 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200 dark:disabled:bg-neutral-700"
                 disabled={isStreaming || inputValue.trim().length === 0}
               >
                 {isStreaming ? (
@@ -244,7 +244,7 @@ export default function ChatPage() {
             <div className="mt-3 flex justify-end">
               <button
                 type="button"
-                className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-600 transition hover:border-neutral-300 hover:text-neutral-900"
+                className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-600 transition hover:border-neutral-300 hover:text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:text-neutral-100"
                 onClick={() => {
                   abortControllerRef.current?.abort();
                   setIsStreaming(false);
@@ -273,21 +273,21 @@ function ChatBubble({ message }: { message: ChatMessage }) {
       }`}
     >
       {!isUser ? (
-        <div className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-neutral-900 text-white">
+        <div className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-neutral-900 text-white dark:border-neutral-700 dark:bg-neutral-100 dark:text-neutral-900">
           <Sparkles className="h-3.5 w-3.5" />
         </div>
       ) : (
-        <div className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-500">
+        <div className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-400">
           <User className="h-3.5 w-3.5" />
         </div>
       )}
       <div
         className={`max-w-[85%] rounded-xl px-3 py-2 leading-relaxed shadow-sm sm:max-w-[70%] ${
           isSystem
-            ? "border border-rose-200 bg-rose-50 text-rose-700"
+            ? "border border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-800 dark:bg-rose-950 dark:text-rose-300"
             : isUser
-              ? "border border-neutral-200 bg-neutral-900 text-white"
-              : "border border-neutral-200 bg-neutral-50 text-neutral-800"
+              ? "border border-neutral-200 bg-neutral-900 text-white dark:border-neutral-700 dark:bg-neutral-100 dark:text-neutral-900"
+              : "border border-neutral-200 bg-neutral-50 text-neutral-800 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200"
         }`}
       >
         <p className="whitespace-pre-wrap text-sm">{message.content}</p>
@@ -301,7 +301,7 @@ function ChatBubble({ message }: { message: ChatMessage }) {
 
 function TypingIndicator() {
   return (
-    <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-neutral-50 px-4 py-2 text-[11px] uppercase tracking-[0.3em] text-neutral-500">
+    <div className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-neutral-50 px-4 py-2 text-[11px] uppercase tracking-[0.3em] text-neutral-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-400">
       <Loader2 className="h-3.5 w-3.5 animate-spin" />
       Thinking
     </div>
