@@ -180,9 +180,9 @@ export default function ChatPage() {
       <div className="flex flex-1 min-h-0 flex-col">
         <div
           ref={viewportRef}
-          className="flex-1 overflow-y-scroll px-5 py-6"
+          className="flex-1 overflow-y-scroll px-3 py-3"
         >
-          <div className="space-y-4">
+          <div className="space-y-3">
             {messages.map((message) => (
               <ChatBubble key={message.id} message={message} />
             ))}
@@ -318,21 +318,21 @@ function ChatBubble({ message }: { message: ChatMessage }) {
 
   return (
     <article
-      className={`flex w-full gap-3 text-sm ${
+      className={`flex w-full gap-2.5 text-sm ${
         isUser ? "justify-end" : "justify-start"
       }`}
     >
       {!isUser ? (
-        <div className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-neutral-900 text-white dark:border-neutral-700 dark:bg-neutral-100 dark:text-neutral-900">
-          <Sparkles className="h-3.5 w-3.5" />
+        <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-neutral-900 text-white dark:border-neutral-700 dark:bg-neutral-100 dark:text-neutral-900">
+          <Sparkles className="h-3 w-3" />
         </div>
       ) : (
-        <div className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-400">
-          <User className="h-3.5 w-3.5" />
+        <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-400">
+          <User className="h-3 w-3" />
         </div>
       )}
       <div
-        className={`max-w-[85%] rounded-xl px-3 py-2 leading-relaxed shadow-sm sm:max-w-[70%] ${
+        className={`max-w-[85%] rounded-xl px-2.5 py-1.5 leading-relaxed shadow-sm sm:max-w-[70%] ${
           isSystem
             ? "border border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-800 dark:bg-rose-950 dark:text-rose-300"
             : isUser
@@ -341,7 +341,7 @@ function ChatBubble({ message }: { message: ChatMessage }) {
         }`}
       >
         <p className="whitespace-pre-wrap text-sm">{message.content}</p>
-        <span className="mt-1.5 block text-[10px] uppercase tracking-[0.3em] text-neutral-500" suppressHydrationWarning>
+        <span className="mt-1 block text-[10px] uppercase tracking-[0.3em] text-neutral-500" suppressHydrationWarning>
           {formatTimestamp(message.createdAt)}
         </span>
       </div>

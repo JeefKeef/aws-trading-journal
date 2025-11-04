@@ -73,14 +73,14 @@ function ShellContent({ children }: { children: React.ReactNode }) {
             <div className="hidden h-full w-full md:flex">
               <ResizablePanelGroup direction="horizontal" className="h-full w-full">
                 {/* Left Panel - Toggle between Chat and Settings */}
-                <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+                <ResizablePanel defaultSize={15} minSize={15} maxSize={30}>
                   <div className="h-full overflow-auto">
                     <LeftPanelContent mode={leftPanelMode} />
                   </div>
                 </ResizablePanel>
                 <ResizableHandle className="bg-neutral-200 dark:bg-neutral-800" />
                 {/* Right Panel - Shows page content for full-page routes, or dynamic content for others */}
-                <ResizablePanel defaultSize={80} minSize={50}>
+                <ResizablePanel defaultSize={85} minSize={50}>
                   <div className="h-full overflow-auto">
                     {isFullPageRoute ? children : <RightPane appView={appView} />}
                   </div>
