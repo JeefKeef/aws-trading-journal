@@ -78,7 +78,7 @@ function ShellContent({ children }: { children: React.ReactNode }) {
                     <LeftPanelContent mode={leftPanelMode} />
                   </div>
                 </ResizablePanel>
-                <ResizableHandle withHandle className="bg-neutral-200 dark:bg-neutral-800" />
+                <ResizableHandle className="bg-neutral-200 dark:bg-neutral-800" />
                 {/* Right Panel - Shows page content for full-page routes, or dynamic content for others */}
                 <ResizablePanel defaultSize={80} minSize={50}>
                   <div className="h-full overflow-auto">

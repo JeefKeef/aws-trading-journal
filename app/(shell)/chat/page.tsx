@@ -41,7 +41,7 @@ export default function ChatPage() {
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
-  const [activeModel, setActiveModel] = useState("signal-mini");
+  const [activeModel, setActiveModel] = useState("signal-mini-v1");
   const viewportRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<ChatMessage[]>(messages);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -218,71 +218,59 @@ export default function ChatPage() {
               >
                 <SelectTrigger size="sm" className="h-9 text-xs w-44 border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-800">
                   <SelectValue>
-                    {activeModel === "signal-mini" && (
-                      <span className="inline-flex items-center gap-1.5 rounded-md border-2 px-2.5 py-1 text-[11px] font-semibold backdrop-blur-sm" style={{ borderColor: "#888888", backgroundColor: "rgba(136, 136, 136, 0.15)", color: "#888888", boxShadow: "0 0 10px rgba(136, 136, 136, 0.5), inset 0 0 10px rgba(136, 136, 136, 0.1)" }}>
-                        Signal Mini
+                    {activeModel === "signal-mini-v1" && (
+                      <span className="inline-flex items-center justify-center gap-1.5 rounded-md border px-2.5 py-1 text-[11px] font-bold backdrop-blur-sm w-[110px]" style={{ borderColor: "#A0A0A0", backgroundColor: "rgba(160, 160, 160, 0.12)", color: "#B8B8B8", boxShadow: "0 0 4px rgba(160, 160, 160, 0.2), inset 0 0 6px rgba(160, 160, 160, 0.05)" }}>
+                        signal-mini-v1
                       </span>
                     )}
-                    {activeModel === "signal-core" && (
-                      <span className="inline-flex items-center gap-1.5 rounded-md border-2 px-2.5 py-1 text-[11px] font-semibold backdrop-blur-sm" style={{ borderColor: "#00FFB3", backgroundColor: "rgba(0, 255, 179, 0.15)", color: "#00FFB3", boxShadow: "0 0 15px rgba(0, 255, 179, 0.6), inset 0 0 15px rgba(0, 255, 179, 0.1)" }}>
-                        Signal Core
+                    {activeModel === "signal-core-v1" && (
+                      <span className="inline-flex items-center justify-center gap-1.5 rounded-md border px-2.5 py-1 text-[11px] font-semibold backdrop-blur-sm w-[110px]" style={{ borderColor: "#00FFB3", backgroundColor: "rgba(0, 255, 179, 0.12)", color: "#00FFB3", boxShadow: "0 0 6px rgba(0, 255, 179, 0.25), inset 0 0 8px rgba(0, 255, 179, 0.06)" }}>
+                        signal-core-v1
                       </span>
                     )}
-                    {activeModel === "signal-pro" && (
-                      <span className="inline-flex items-center gap-1.5 rounded-md border-2 px-2.5 py-1 text-[11px] font-semibold backdrop-blur-sm" style={{ borderColor: "#3D7EFF", backgroundColor: "rgba(61, 126, 255, 0.15)", color: "#3D7EFF", boxShadow: "0 0 15px rgba(61, 126, 255, 0.6), inset 0 0 15px rgba(61, 126, 255, 0.1)" }}>
-                        Signal Pro
+                    {activeModel === "signal-pro-v1" && (
+                      <span className="inline-flex items-center justify-center gap-1.5 rounded-md border px-2.5 py-1 text-[11px] font-semibold backdrop-blur-sm w-[110px]" style={{ borderColor: "#3D7EFF", backgroundColor: "rgba(61, 126, 255, 0.12)", color: "#3D7EFF", boxShadow: "0 0 6px rgba(61, 126, 255, 0.25), inset 0 0 8px rgba(61, 126, 255, 0.06)" }}>
+                        signal-pro-v1
                       </span>
                     )}
-                    {activeModel === "signal-ultra" && (
-                      <span className="inline-flex items-center gap-1.5 rounded-md border-2 px-2.5 py-1 text-[11px] font-semibold backdrop-blur-sm" style={{ borderColor: "#A55EFF", backgroundColor: "rgba(165, 94, 255, 0.15)", color: "#A55EFF", boxShadow: "0 0 15px rgba(165, 94, 255, 0.6), inset 0 0 15px rgba(165, 94, 255, 0.1)" }}>
-                        Signal Ultra
+                    {activeModel === "signal-ultra-v1" && (
+                      <span className="inline-flex items-center justify-center gap-1.5 rounded-md border px-2.5 py-1 text-[11px] font-semibold backdrop-blur-sm w-[110px]" style={{ borderColor: "#A55EFF", backgroundColor: "rgba(165, 94, 255, 0.12)", color: "#A55EFF", boxShadow: "0 0 6px rgba(165, 94, 255, 0.25), inset 0 0 8px rgba(165, 94, 255, 0.06)" }}>
+                        signal-ultra-v1
                       </span>
                     )}
                   </SelectValue>
                 </SelectTrigger>
-                <SelectContent className="w-96">
-                  <SelectItem value="signal-mini" className="py-3">
-                    <div className="flex items-start gap-3">
-                      <span className="inline-flex items-center gap-1.5 rounded-md border-2 px-2.5 py-1 text-[11px] font-semibold backdrop-blur-sm transition-all hover:shadow-xl" style={{ borderColor: "#888888", backgroundColor: "rgba(136, 136, 136, 0.15)", color: "#888888", boxShadow: "0 0 10px rgba(136, 136, 136, 0.5), inset 0 0 10px rgba(136, 136, 136, 0.1)" }}>
-                        Signal Mini
+                <SelectContent className="w-80">
+                  <SelectItem value="signal-mini-v1" className="py-2.5">
+                    <div className="flex items-center justify-between w-full gap-3">
+                      <span className="inline-flex items-center justify-center rounded-md border px-2.5 py-1 text-[11px] font-bold w-[110px] shrink-0" style={{ borderColor: "#A0A0A0", backgroundColor: "rgba(160, 160, 160, 0.12)", color: "#B8B8B8", boxShadow: "0 0 4px rgba(160, 160, 160, 0.2), inset 0 0 6px rgba(160, 160, 160, 0.05)" }}>
+                        signal-mini-v1
                       </span>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-xs font-medium text-neutral-700 dark:text-neutral-300">Fast AI for every trader</span>
-                        <span className="text-[10px] text-neutral-500 dark:text-neutral-400">Fast, free, and responsive.</span>
-                      </div>
+                      <span className="text-xs text-neutral-600 dark:text-neutral-400 flex-1 text-right">Fast & free</span>
                     </div>
                   </SelectItem>
-                  <SelectItem value="signal-core" className="py-3">
-                    <div className="flex items-start gap-3">
-                      <span className="inline-flex items-center gap-1.5 rounded-md border-2 px-2.5 py-1 text-[11px] font-semibold backdrop-blur-sm transition-all hover:shadow-xl" style={{ borderColor: "#00FFB3", backgroundColor: "rgba(0, 255, 179, 0.15)", color: "#00FFB3", boxShadow: "0 0 15px rgba(0, 255, 179, 0.6), inset 0 0 15px rgba(0, 255, 179, 0.1)" }}>
-                        Signal Core
+                  <SelectItem value="signal-core-v1" className="py-2.5">
+                    <div className="flex items-center justify-between w-full gap-3">
+                      <span className="inline-flex items-center justify-center rounded-md border px-2.5 py-1 text-[11px] font-semibold w-[110px] shrink-0" style={{ borderColor: "#00FFB3", backgroundColor: "rgba(0, 255, 179, 0.12)", color: "#00FFB3", boxShadow: "0 0 6px rgba(0, 255, 179, 0.25), inset 0 0 8px rgba(0, 255, 179, 0.06)" }}>
+                        signal-core-v1
                       </span>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-xs font-medium text-neutral-700 dark:text-neutral-300">Advanced filtering & analytics</span>
-                        <span className="text-[10px] text-neutral-500 dark:text-neutral-400">Smarter reasoning at the edge.</span>
-                      </div>
+                      <span className="text-xs text-neutral-600 dark:text-neutral-400 flex-1 text-right">Advanced analytics</span>
                     </div>
                   </SelectItem>
-                  <SelectItem value="signal-pro" className="py-3">
-                    <div className="flex items-start gap-3">
-                      <span className="inline-flex items-center gap-1.5 rounded-md border-2 px-2.5 py-1 text-[11px] font-semibold backdrop-blur-sm transition-all hover:shadow-xl" style={{ borderColor: "#3D7EFF", backgroundColor: "rgba(61, 126, 255, 0.15)", color: "#3D7EFF", boxShadow: "0 0 15px rgba(61, 126, 255, 0.6), inset 0 0 15px rgba(61, 126, 255, 0.1)" }}>
-                        Signal Pro
+                  <SelectItem value="signal-pro-v1" className="py-2.5">
+                    <div className="flex items-center justify-between w-full gap-3">
+                      <span className="inline-flex items-center justify-center rounded-md border px-2.5 py-1 text-[11px] font-semibold w-[110px] shrink-0" style={{ borderColor: "#3D7EFF", backgroundColor: "rgba(61, 126, 255, 0.12)", color: "#3D7EFF", boxShadow: "0 0 6px rgba(61, 126, 255, 0.25), inset 0 0 8px rgba(61, 126, 255, 0.06)" }}>
+                        signal-pro-v1
                       </span>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-xs font-medium text-neutral-700 dark:text-neutral-300">Strong analytical reasoning</span>
-                        <span className="text-[10px] text-neutral-500 dark:text-neutral-400">Deeper insights. Sharper edge.</span>
-                      </div>
+                      <span className="text-xs text-neutral-600 dark:text-neutral-400 flex-1 text-right">Deep reasoning</span>
                     </div>
                   </SelectItem>
-                  <SelectItem value="signal-ultra" className="py-3">
-                    <div className="flex items-start gap-3">
-                      <span className="inline-flex items-center gap-1.5 rounded-md border-2 px-2.5 py-1 text-[11px] font-semibold backdrop-blur-sm transition-all hover:shadow-xl" style={{ borderColor: "#A55EFF", backgroundColor: "rgba(165, 94, 255, 0.15)", color: "#A55EFF", boxShadow: "0 0 15px rgba(165, 94, 255, 0.6), inset 0 0 15px rgba(165, 94, 255, 0.1)" }}>
-                        Signal Ultra
+                  <SelectItem value="signal-ultra-v1" className="py-2.5">
+                    <div className="flex items-center justify-between w-full gap-3">
+                      <span className="inline-flex items-center justify-center rounded-md border px-2.5 py-1 text-[11px] font-semibold w-[110px] shrink-0" style={{ borderColor: "#A55EFF", backgroundColor: "rgba(165, 94, 255, 0.12)", color: "#A55EFF", boxShadow: "0 0 6px rgba(165, 94, 255, 0.25), inset 0 0 8px rgba(165, 94, 255, 0.06)" }}>
+                        signal-ultra-v1
                       </span>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-xs font-medium text-neutral-700 dark:text-neutral-300">Enterprise-grade analytics</span>
-                        <span className="text-[10px] text-neutral-500 dark:text-neutral-400">Limitless clarity. Maximum intelligence.</span>
-                      </div>
+                      <span className="text-xs text-neutral-600 dark:text-neutral-400 flex-1 text-right">Maximum intelligence</span>
                     </div>
                   </SelectItem>
                 </SelectContent>
