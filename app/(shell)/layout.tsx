@@ -1,7 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 import {
   ResizableHandle,
@@ -61,7 +62,8 @@ export default function ShellLayout({ children }: { children: ReactNode }) {
 }
 
 function RightPane() {
-  const [activeView, setActiveView] = useState("market");
+  const searchParams = useSearchParams();
+  const view = searchParams.get('view') || 'market';
   
   const navItems = [
     { id: "market", label: "Overview" },
@@ -74,9 +76,7 @@ function RightPane() {
   ];
 
   const renderContent = () => {
-    switch (activeView) {
-      case "market":
-        return <MarketPage />;
+    switch (view) {
       case "screener":
         return <ScreenerPage />;
       case "charts":
@@ -89,6 +89,7 @@ function RightPane() {
         return <ForexPage />;
       case "crypto":
         return <CryptoPage />;
+      case "market":
       default:
         return <MarketPage />;
     }
@@ -100,11 +101,21 @@ function RightPane() {
       <div className="border-b border-neutral-200 bg-white px-4 py-2 dark:border-neutral-800 dark:bg-neutral-900">
         <nav className="flex items-center gap-1">
           {navItems.map((item) => {
-            const isActive = activeView === item.id;
+            const isActive = view === item.id;
+            // Preserve existing search params and add/update view
+            const params = new URLSearchParams(searchParams.toString());
+            if (item.id !== 'market') {
+              params.set('view', item.id);
+            } else {
+              params.delete('view');
+            }
+            const href = params.toString() ? `?${params.toString()}` : '?';
+            
             return (
-              <button
+              <Link
                 key={item.id}
-                onClick={() => setActiveView(item.id)}
+                href={href}
+                scroll={false}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${
                   isActive
                     ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
@@ -112,7 +123,7 @@ function RightPane() {
                 }`}
               >
                 {item.label}
-              </button>
+              </Link>
             );
           })}
         </nav>

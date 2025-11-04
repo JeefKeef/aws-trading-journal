@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { ChevronDown, Search, X } from "lucide-react";
+import { useState, useMemo, useEffect, useRef } from "react";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import Link from "next/link";
+import { ChevronDown, Search, X, Plus, TrendingUp, LineChart } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -21,6 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 type FilterCategory = {
   name: string;
@@ -383,13 +386,63 @@ const defaultPresets: Preset[] = [
 ];
 
 export default function ScreenerPage() {
-  const [activeTab, setActiveTab] = useState<FilterTab>("Overview");
-  const [selectedFilters, setSelectedFilters] = useState<Record<string, string>>({});
-  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  
+  // Get tab from URL or default to Overview
+  const tabFromUrl = searchParams.get('tab') as FilterTab | null;
+  const [activeTab, setActiveTab] = useState<FilterTab>(tabFromUrl || "Overview");
+  
+  // Store initial view parameter to preserve it
+  const initialViewRef = useRef(searchParams.get('view'));
+  
+  // Initialize filters from URL parameters
+  const [selectedFilters, setSelectedFilters] = useState<Record<string, string>>(() => {
+    const filters: Record<string, string> = {};
+    searchParams.forEach((value, key) => {
+      if (key !== 'tab' && key !== 'search') {
+        filters[key] = value;
+      }
+    });
+    return filters;
+  });
+  
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || "");
   const [myPresets, setMyPresets] = useState<Preset[]>(defaultPresets);
   const [showPresets, setShowPresets] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [presetName, setPresetName] = useState("");
+  const [backtestModalOpen, setBacktestModalOpen] = useState(false);
+  const [selectedStockForBacktest, setSelectedStockForBacktest] = useState<Stock | null>(null);
+  const [hoveredStock, setHoveredStock] = useState<string | null>(null);
+
+  // Update URL when filters or tab change
+  useEffect(() => {
+    const params = new URLSearchParams();
+    
+    // Preserve the view parameter from initial load
+    if (initialViewRef.current) {
+      params.set('view', initialViewRef.current);
+    }
+    
+    if (activeTab !== "Overview") {
+      params.set('tab', activeTab);
+    }
+    
+    if (searchQuery) {
+      params.set('search', searchQuery);
+    }
+    
+    Object.entries(selectedFilters).forEach(([key, value]) => {
+      if (value && value !== "Any" && key !== 'view') {
+        params.set(key, value);
+      }
+    });
+    
+    const newUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
+    router.replace(newUrl, { scroll: false });
+  }, [activeTab, selectedFilters, searchQuery, pathname, router]);
 
   const filteredStocks = useMemo(() => {
     return allStocks.filter((stock) => {
@@ -625,53 +678,109 @@ export default function ScreenerPage() {
     setMyPresets(prev => prev.filter(p => p.id !== id));
   };
 
-  const activeFilterCount = Object.values(selectedFilters).filter(v => v && v !== "Any").length;
+  const activeFilterCount = Object.entries(selectedFilters).filter(([key, value]) => {
+    return key !== 'view' && value && value !== "Any";
+  }).length;
 
   const allTabs: FilterTab[] = ["Overview", "Valuation", "Financial", "Ownership", "Performance", "Technical", "ETF", "ETF Perf", "Custom", "Charts", "Tickers", "Basic", "TA", "News", "Snapshot", "Maps", "Stats"];
+
+  const addToJournal = (stock: Stock) => {
+    toast.success(`${stock.ticker} added to journal`, {
+      description: `${stock.company} has been successfully added to your trading journal.`,
+      duration: 3000,
+    });
+  };
+
+  const openBacktestModal = (stock: Stock) => {
+    setSelectedStockForBacktest(stock);
+    setBacktestModalOpen(true);
+  };
+
+  // Generate stable mock chart data for backtest modal
+  const generateMockBacktestData = useMemo(() => {
+    if (!selectedStockForBacktest) return [];
+    return Array.from({ length: 20 }, (_, i) => {
+      const seed = i * selectedStockForBacktest.price;
+      const pseudoRandom = Math.sin(seed) * 10000;
+      const height = 30 + (pseudoRandom - Math.floor(pseudoRandom)) * 70;
+      const isPositive = ((i + selectedStockForBacktest.ticker.charCodeAt(0)) % 10) > 3;
+      return { height, isPositive };
+    });
+  }, [selectedStockForBacktest]);
 
   // Define columns based on active tab
   const getColumnsForTab = () => {
     switch (activeTab) {
       case "Overview":
-        return ["No.", "Ticker", "Company", "Sector", "Industry", "Country", "Market Cap", "Price", "Change %", "Volume"];
+        return ["No.", "Ticker", "Company", "Sector", "Industry", "Country", "Market Cap", "Price", "Change %", "Volume", "Actions"];
       case "Valuation":
-        return ["No.", "Ticker", "Company", "Price", "P/E", "Fwd P/E", "PEG", "P/S", "P/B", "Mkt Cap"];
+        return ["No.", "Ticker", "Company", "Price", "P/E", "Fwd P/E", "PEG", "P/S", "P/B", "Mkt Cap", "Actions"];
       case "Financial":
-        return ["No.", "Ticker", "Company", "Dividend %", "ROE %", "ROA %", "Debt/Eq", "Curr Ratio", "Gross M%", "Oper M%", "Net M%"];
+        return ["No.", "Ticker", "Company", "Dividend %", "ROE %", "ROA %", "Debt/Eq", "Curr Ratio", "Gross M%", "Oper M%", "Net M%", "Actions"];
       case "Ownership":
-        return ["No.", "Ticker", "Company", "Price", "Insider Own%", "Inst Own%", "Float", "Volume"];
+        return ["No.", "Ticker", "Company", "Price", "Insider Own%", "Inst Own%", "Float", "Volume", "Actions"];
       case "Performance":
-        return ["No.", "Ticker", "Company", "Price", "Change %", "Week %", "Month %", "Year %", "EPS Growth %"];
+        return ["No.", "Ticker", "Company", "Price", "Change %", "Week %", "Month %", "Year %", "EPS Growth %", "Actions"];
       case "Technical":
-        return ["No.", "Ticker", "Company", "Price", "Change %", "Volume", "Rel Vol", "Beta", "RSI", "SMA20", "SMA50", "SMA200"];
+        return ["No.", "Ticker", "Company", "Price", "Change %", "Volume", "Rel Vol", "Beta", "RSI", "SMA20", "SMA50", "SMA200", "Actions"];
       case "ETF":
-        return ["No.", "Ticker", "Company", "Price", "Change %", "Volume", "Mkt Cap"];
+        return ["No.", "Ticker", "Company", "Price", "Change %", "Volume", "Mkt Cap", "Actions"];
       case "ETF Perf":
-        return ["No.", "Ticker", "Company", "Price", "Change %", "Week %", "Month %", "Year %"];
+        return ["No.", "Ticker", "Company", "Price", "Change %", "Week %", "Month %", "Year %", "Actions"];
       case "Custom":
-        return ["No.", "Ticker", "Company", "Price", "Change %", "Volume", "Mkt Cap", "P/E"];
+        return ["No.", "Ticker", "Company", "Price", "Change %", "Volume", "Mkt Cap", "P/E", "Actions"];
       case "Charts":
-        return ["No.", "Ticker", "Company", "Price", "Change %", "Volume", "High", "Low"];
+        return ["No.", "Ticker", "Company", "Price", "Change %", "Volume", "High", "Low", "Actions"];
       case "Tickers":
-        return ["No.", "Ticker", "Company", "Sector", "Price", "Change %", "Volume"];
+        return ["No.", "Ticker", "Company", "Sector", "Price", "Change %", "Volume", "Actions"];
       case "Basic":
-        return ["No.", "Ticker", "Company", "Sector", "Price", "Change %", "Volume", "Mkt Cap"];
+        return ["No.", "Ticker", "Company", "Sector", "Price", "Change %", "Volume", "Mkt Cap", "Actions"];
       case "TA":
-        return ["No.", "Ticker", "Company", "Price", "Change %", "RSI", "Beta", "Volume"];
+        return ["No.", "Ticker", "Company", "Price", "Change %", "RSI", "Beta", "Volume", "Actions"];
       case "News":
-        return ["No.", "Ticker", "Company", "Price", "Change %", "Volume"];
+        return ["No.", "Ticker", "Company", "Price", "Change %", "Volume", "Actions"];
       case "Snapshot":
-        return ["No.", "Ticker", "Company", "Sector", "Price", "Change %", "Volume", "Mkt Cap", "P/E"];
+        return ["No.", "Ticker", "Company", "Sector", "Price", "Change %", "Volume", "Mkt Cap", "P/E", "Actions"];
       case "Maps":
-        return ["No.", "Ticker", "Company", "Sector", "Market Cap", "Change %"];
+        return ["No.", "Ticker", "Company", "Sector", "Market Cap", "Change %", "Actions"];
       case "Stats":
-        return ["No.", "Ticker", "Company", "Price", "Volume", "Mkt Cap", "P/E", "Beta"];
+        return ["No.", "Ticker", "Company", "Price", "Volume", "Mkt Cap", "P/E", "Beta", "Actions"];
       default:
-        return ["No.", "Ticker", "Company", "Price", "Change %", "Volume", "Mkt Cap"];
+        return ["No.", "Ticker", "Company", "Price", "Change %", "Volume", "Mkt Cap", "Actions"];
     }
   };
 
   const columns = getColumnsForTab();
+
+  // Generate mock chart data for hover preview
+  const generateMockChartData = (stock: Stock) => {
+    const basePrice = stock.price;
+    const volatility = stock.beta * 3; // Increased for more variation
+    const trend = stock.change / 100;
+    
+    return Array.from({ length: 30 }, (_, i) => {
+      // Create a more realistic price movement with larger variations
+      const trendEffect = trend * basePrice * (i / 30);
+      const waveEffect = Math.sin(i * 0.3) * basePrice * 0.05;
+      const noise = Math.sin(i * stock.ticker.charCodeAt(0) * 0.1) * volatility;
+      
+      const close = basePrice + trendEffect + waveEffect + noise;
+      
+      // Generate OHLC with realistic intraday movement (2-5% range)
+      const dayRange = basePrice * (0.02 + (Math.abs(Math.sin(i * 1.7)) * 0.03));
+      const openOffset = Math.sin(i * 2.1) * dayRange * 0.3;
+      const open = close + openOffset;
+      
+      // High and low should extend beyond open/close
+      const highExtension = Math.abs(Math.cos(i * 1.3)) * dayRange * 0.5;
+      const lowExtension = Math.abs(Math.sin(i * 1.9)) * dayRange * 0.5;
+      
+      const high = Math.max(open, close) + highExtension;
+      const low = Math.min(open, close) - lowExtension;
+      
+      return { open, high, low, close };
+    });
+  };
 
   const formatMarketCap = (value: number) => {
     if (value >= 1000000000000) return `$${(value / 1000000000000).toFixed(2)}T`;
@@ -841,19 +950,31 @@ export default function ScreenerPage() {
         {/* Filter Tabs */}
         <div className="border-b border-neutral-200 dark:border-neutral-800 overflow-x-auto">
           <div className="px-4 flex gap-1 min-w-max">
-            {allTabs.map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-3 py-2 text-[11px] font-medium border-b-2 transition whitespace-nowrap ${
-                  activeTab === tab
-                    ? "border-neutral-900 dark:border-neutral-100 text-neutral-900 dark:text-neutral-100"
-                    : "border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 hover:border-neutral-300 dark:hover:border-neutral-700"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
+            {allTabs.map((tab) => {
+              const tabParams = new URLSearchParams(searchParams.toString());
+              if (tab !== "Overview") {
+                tabParams.set('tab', tab);
+              } else {
+                tabParams.delete('tab');
+              }
+              const tabUrl = tabParams.toString() ? `${pathname}?${tabParams.toString()}` : pathname;
+              
+              return (
+                <Link
+                  key={tab}
+                  href={tabUrl}
+                  scroll={false}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-3 py-2 text-[11px] font-medium border-b-2 transition whitespace-nowrap ${
+                    activeTab === tab
+                      ? "border-neutral-900 dark:border-neutral-100 text-neutral-900 dark:text-neutral-100"
+                      : "border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 hover:border-neutral-300 dark:hover:border-neutral-700"
+                  }`}
+                >
+                  {tab}
+                </Link>
+              );
+            })}
           </div>
         </div>
 
@@ -877,7 +998,7 @@ export default function ScreenerPage() {
             <div className="flex items-center flex-wrap gap-2">
               <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Active filters:</span>
               {Object.entries(selectedFilters).map(([category, value]) => {
-                if (!value || value === "Any") return null;
+                if (!value || value === "Any" || category === "view") return null;
                 return (
                   <button
                     key={category}
@@ -990,17 +1111,59 @@ export default function ScreenerPage() {
               {filteredStocks.map((stock, index) => (
                 <TableRow 
                   key={stock.ticker}
-                  className="cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition"
+                  className="hover:bg-neutral-50 dark:hover:bg-neutral-800 transition group"
                 >
                   {columns.map((column) => {
                     if (column === "No.") {
                       return <TableCell key={column} className="px-4 py-3 text-xs text-neutral-500 dark:text-neutral-400">{index + 1}</TableCell>;
                     }
                     if (column === "Ticker") {
-                      return <TableCell key={column} className="px-4 py-3 text-sm font-bold text-neutral-900 dark:text-neutral-100">{stock.ticker}</TableCell>;
+                      return (
+                        <TableCell key={column} className="px-4 py-3 text-sm font-bold text-neutral-900 dark:text-neutral-100 relative">
+                          <div
+                            onMouseEnter={() => setHoveredStock(stock.ticker)}
+                            onMouseLeave={() => setHoveredStock(null)}
+                            className="inline-flex items-center gap-1 cursor-pointer"
+                          >
+                            {stock.ticker}
+                            <LineChart className="h-3 w-3 text-neutral-400 opacity-0 group-hover:opacity-100 transition" />
+                          </div>
+                          {hoveredStock === stock.ticker && (
+                            <MiniChartPreview stock={stock} chartData={generateMockChartData(stock)} />
+                          )}
+                        </TableCell>
+                      );
                     }
                     if (column === "Company") {
                       return <TableCell key={column} className="px-4 py-3 text-xs text-neutral-700 dark:text-neutral-300">{stock.company}</TableCell>;
+                    }
+                    if (column === "Actions") {
+                      return (
+                        <TableCell key={column} className="px-4 py-3">
+                          <div className="flex items-center gap-2 justify-end">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                addToJournal(stock);
+                              }}
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-white bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 rounded hover:bg-neutral-800 dark:hover:bg-neutral-200 transition"
+                            >
+                              <Plus className="h-3 w-3" />
+                              Add to Journal
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openBacktestModal(stock);
+                              }}
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-100 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded hover:bg-neutral-50 dark:hover:bg-neutral-700 transition"
+                            >
+                              <TrendingUp className="h-3 w-3" />
+                              Backtest
+                            </button>
+                          </div>
+                        </TableCell>
+                      );
                     }
                     
                     const value = getCellValue(stock, column);
@@ -1042,6 +1205,224 @@ export default function ScreenerPage() {
               Next
             </button>
           </div>
+        </div>
+      </div>
+
+      {/* Backtest Modal */}
+      <Dialog open={backtestModalOpen} onOpenChange={setBacktestModalOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5" />
+              Backtest Results: {selectedStockForBacktest?.ticker}
+            </DialogTitle>
+            <DialogDescription>
+              {selectedStockForBacktest?.company} - Historical performance simulation
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4 space-y-4">
+            {/* Mock Backtest Summary */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-4 rounded-lg bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800">
+                <div className="text-xs text-emerald-600 dark:text-emerald-400 font-medium mb-1">Total Return</div>
+                <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">+47.3%</div>
+              </div>
+              <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800">
+                <div className="text-xs text-blue-600 dark:text-blue-400 font-medium mb-1">Win Rate</div>
+                <div className="text-2xl font-bold text-blue-700 dark:text-blue-300">68.5%</div>
+              </div>
+              <div className="p-4 rounded-lg bg-purple-50 dark:bg-purple-950 border border-purple-200 dark:border-purple-800">
+                <div className="text-xs text-purple-600 dark:text-purple-400 font-medium mb-1">Sharpe Ratio</div>
+                <div className="text-2xl font-bold text-purple-700 dark:text-purple-300">1.82</div>
+              </div>
+              <div className="p-4 rounded-lg bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-orange-800">
+                <div className="text-xs text-orange-600 dark:text-orange-400 font-medium mb-1">Max Drawdown</div>
+                <div className="text-2xl font-bold text-orange-700 dark:text-orange-300">-12.4%</div>
+              </div>
+            </div>
+
+            {/* Mock Performance Chart */}
+            <div className="p-4 rounded-lg bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+              <div className="text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-3">Performance Over Time</div>
+              <div className="h-32 flex items-end gap-1">
+                {generateMockBacktestData.map((bar, i) => (
+                  <div
+                    key={i}
+                    className={`flex-1 rounded-t ${
+                      bar.isPositive ? 'bg-emerald-500' : 'bg-rose-500'
+                    }`}
+                    style={{ height: `${bar.height}%` }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Mock Stats */}
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="flex justify-between">
+                <span className="text-neutral-600 dark:text-neutral-400">Total Trades:</span>
+                <span className="font-semibold text-neutral-900 dark:text-neutral-100">127</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-600 dark:text-neutral-400">Avg Win:</span>
+                <span className="font-semibold text-emerald-600">+4.8%</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-600 dark:text-neutral-400">Winning Trades:</span>
+                <span className="font-semibold text-emerald-600">87</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-600 dark:text-neutral-400">Avg Loss:</span>
+                <span className="font-semibold text-rose-600">-2.3%</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-600 dark:text-neutral-400">Losing Trades:</span>
+                <span className="font-semibold text-rose-600">40</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-600 dark:text-neutral-400">Profit Factor:</span>
+                <span className="font-semibold text-neutral-900 dark:text-neutral-100">2.14</span>
+              </div>
+            </div>
+
+            {/* Info Note */}
+            <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800">
+              <p className="text-xs text-blue-700 dark:text-blue-300">
+                <strong>Note:</strong> This is a simulated backtest based on historical data. Past performance does not guarantee future results.
+              </p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setBacktestModalOpen(false)}
+            >
+              Close
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                if (selectedStockForBacktest) {
+                  addToJournal(selectedStockForBacktest);
+                }
+                setBacktestModalOpen(false);
+              }}
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              Add to Journal
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+function MiniChartPreview({ 
+  stock, 
+  chartData 
+}: { 
+  stock: Stock; 
+  chartData: Array<{ open: number; high: number; low: number; close: number }> 
+}) {
+  // Calculate price range with padding for better visualization
+  const allPrices = chartData.flatMap(d => [d.open, d.high, d.low, d.close]);
+  const minPrice = Math.min(...allPrices);
+  const maxPrice = Math.max(...allPrices);
+  const range = maxPrice - minPrice;
+  const padding = range * 0.1; // Add 10% padding
+  const paddedMin = minPrice - padding;
+  const paddedMax = maxPrice + padding;
+  const paddedRange = paddedMax - paddedMin;
+
+  return (
+    <div className="absolute left-0 top-full mt-2 z-50 w-64 p-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-xl">
+      <div className="mb-2">
+        <div className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">{stock.ticker}</div>
+        <div className="text-[10px] text-neutral-500 dark:text-neutral-400">{stock.company}</div>
+      </div>
+      
+      {/* Candlestick Chart */}
+      <div className="h-24 relative mb-2 px-1">
+        <div className="absolute inset-0 flex items-end gap-0.5">
+          {chartData.map((candle, i) => {
+            const isUp = candle.close >= candle.open;
+            
+            // Calculate positions as percentage from bottom (0-100%)
+            const highPct = ((candle.high - paddedMin) / paddedRange) * 100;
+            const lowPct = ((candle.low - paddedMin) / paddedRange) * 100;
+            const openPct = ((candle.open - paddedMin) / paddedRange) * 100;
+            const closePct = ((candle.close - paddedMin) / paddedRange) * 100;
+            
+            const bodyTop = Math.max(openPct, closePct);
+            const bodyBottom = Math.min(openPct, closePct);
+            const bodyHeight = bodyTop - bodyBottom;
+            
+            return (
+              <div
+                key={i}
+                className="flex-1 relative"
+                style={{ height: '100%' }}
+              >
+                {/* Lower wick (from bottom to low point) */}
+                <div
+                  className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-px ${
+                    isUp ? 'bg-emerald-600 dark:bg-emerald-500' : 'bg-rose-600 dark:bg-rose-500'
+                  }`}
+                  style={{ 
+                    height: `${lowPct}%`
+                  }}
+                />
+                
+                {/* Candle body */}
+                <div
+                  className={`absolute left-0 right-0 ${
+                    isUp 
+                      ? 'bg-emerald-500 dark:bg-emerald-600 border border-emerald-600 dark:border-emerald-500' 
+                      : 'bg-rose-500 dark:bg-rose-600 border border-rose-600 dark:border-rose-500'
+                  }`}
+                  style={{ 
+                    bottom: `${bodyBottom}%`,
+                    height: bodyHeight > 0.5 ? `${bodyHeight}%` : '2px',
+                  }}
+                />
+                
+                {/* Upper wick (from body top to high point) */}
+                <div
+                  className={`absolute left-1/2 -translate-x-1/2 w-px ${
+                    isUp ? 'bg-emerald-600 dark:bg-emerald-500' : 'bg-rose-600 dark:bg-rose-500'
+                  }`}
+                  style={{ 
+                    bottom: `${bodyTop}%`,
+                    height: `${highPct - bodyTop}%`
+                  }}
+                />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Quick Stats */}
+      <div className="grid grid-cols-2 gap-2 text-[10px]">
+        <div>
+          <span className="text-neutral-500 dark:text-neutral-400">Price:</span>
+          <span className="ml-1 font-semibold text-neutral-900 dark:text-neutral-100">${stock.price.toFixed(2)}</span>
+        </div>
+        <div>
+          <span className="text-neutral-500 dark:text-neutral-400">Change:</span>
+          <span className={`ml-1 font-semibold ${stock.change >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+            {stock.change >= 0 ? '+' : ''}{stock.change.toFixed(2)}%
+          </span>
+        </div>
+        <div>
+          <span className="text-neutral-500 dark:text-neutral-400">Volume:</span>
+          <span className="ml-1 font-semibold text-neutral-900 dark:text-neutral-100">{stock.volume}</span>
+        </div>
+        <div>
+          <span className="text-neutral-500 dark:text-neutral-400">RSI:</span>
+          <span className="ml-1 font-semibold text-neutral-900 dark:text-neutral-100">{stock.rsi}</span>
         </div>
       </div>
     </div>

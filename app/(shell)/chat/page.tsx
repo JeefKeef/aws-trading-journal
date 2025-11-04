@@ -353,7 +353,7 @@ function ChatBubble({ message }: { message: ChatMessage }) {
         }`}
       >
         <p className="whitespace-pre-wrap text-sm">{message.content}</p>
-        <span className="mt-1.5 block text-[10px] uppercase tracking-[0.3em] text-neutral-500">
+        <span className="mt-1.5 block text-[10px] uppercase tracking-[0.3em] text-neutral-500" suppressHydrationWarning>
           {formatTimestamp(message.createdAt)}
         </span>
       </div>
