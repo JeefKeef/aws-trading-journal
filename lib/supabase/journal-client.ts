@@ -158,7 +158,8 @@ export async function getNotes(folderId?: string): Promise<NoteContent[]> {
           tags: row.trades.tags ?? [],
         }
       : undefined,
-    images: (row.journal_attachments ?? []).map((att) => ({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    images: (row.journal_attachments ?? []).map((att: any) => ({
       id: att.id,
       url: att.file_url,
       fileName: att.file_name,
@@ -227,7 +228,8 @@ export async function getNote(noteId: string): Promise<NoteContent | null> {
           tags: data.trades.tags ?? [],
         }
       : undefined,
-    images: (data.journal_attachments ?? []).map((att) => ({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    images: (data.journal_attachments ?? []).map((att: any) => ({
       id: att.id,
       url: att.file_url,
       fileName: att.file_name,
@@ -359,7 +361,7 @@ export async function uploadImage(
 
   // Upload to Supabase Storage
   const fileName = `${userData.user.id}/${noteId}/${Date.now()}-${file.name}`;
-  const { data: uploadData, error: uploadError } = await supabase.storage
+  const { error: uploadError } = await supabase.storage
     .from("journal-images")
     .upload(fileName, file);
 

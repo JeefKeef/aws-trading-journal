@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
 import { Toaster } from "@/components/ui/sonner";
@@ -41,7 +42,9 @@ export default function ShellLayout({
   return (
     <LeftPanelProvider>
       <RightPaneProvider>
-        <ShellContent>{children}</ShellContent>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ShellContent>{children}</ShellContent>
+        </Suspense>
         <Toaster />
       </RightPaneProvider>
     </LeftPanelProvider>

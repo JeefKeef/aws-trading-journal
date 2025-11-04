@@ -441,9 +441,8 @@ function extractAssistantText(payload: unknown): string | undefined {
         (choice.message as Record<string, unknown>).content as unknown[],
       )
     ) {
-      const textPart = (
-        choice.message as Record<string, unknown>
-      ).content?.find(
+      const content = (choice.message as Record<string, unknown>).content as unknown[];
+      const textPart = content.find(
         (item) =>
           item &&
           typeof item === "object" &&

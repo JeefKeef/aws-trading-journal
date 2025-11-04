@@ -30,9 +30,7 @@ type FilterCategory = {
   options: string[];
 };
 
-type MainTab = "Descriptive" | "Fundamental" | "Technical" | "News" | "ETF" | "All";
-
-type ViewTab = "Overview" | "Valuation" | "Financial" | "Ownership" | "Performance" | "Technical" | "ETF" | "ETF Perf" | "Custom" | "Charts" | "Tickers" | "Basic" | "TA" | "News" | "Snapshot" | "Maps" | "Stats";
+type FilterTab = "Overview" | "Valuation" | "Financial" | "Ownership" | "Performance" | "Technical" | "ETF" | "ETF Perf" | "Custom" | "Charts" | "Tickers" | "Basic" | "TA" | "News" | "Snapshot" | "Maps" | "Stats" | "Descriptive" | "Fundamental";
 
 type Stock = {
   ticker: string;
@@ -74,7 +72,7 @@ type Stock = {
   week52Low: number;
 };
 
-const filtersByTab: Record<MainTab, FilterCategory[]> = {
+const filtersByTab: Partial<Record<FilterTab, FilterCategory[]>> = {
   Descriptive: [
     {
       name: "Exchange",
@@ -1083,7 +1081,7 @@ export default function ScreenerPage() {
         {/* Filter Categories */}
         <div className="px-4 py-3 max-h-[30vh] overflow-y-auto relative z-50">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-            {filtersByTab[activeTab].map((category) => (
+            {filtersByTab[activeTab]?.map((category) => (
               <FilterDropdown
                 key={category.name}
                 category={category}
