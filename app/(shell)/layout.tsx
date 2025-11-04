@@ -59,25 +59,10 @@ function ShellContent({ children }: { children: React.ReactNode }) {
   // Check if app query param is set for right panel
   const appView = searchParams.get('app');
   
-  // Full-page routes that should render children directly without the dual-panel layout
+  // Check if we're on a full-page route (journal, screener, trades, analytics, calendar)
   const isFullPageRoute = pathname === '/journal' || pathname === '/screener' || pathname === '/trades' || pathname === '/analytics' || pathname === '/calendar';
 
-  // If it's a full-page route, render just the page content with sidebar and nav
-  if (isFullPageRoute) {
-    return (
-      <div className="flex h-screen bg-neutral-100 dark:bg-neutral-950">
-        <AppSidebar />
-        <div className="flex flex-1 flex-col min-w-0">
-          <TopNav />
-          <main className="flex-1 overflow-hidden min-h-0">
-            {children}
-          </main>
-        </div>
-      </div>
-    );
-  }
-
-  // Default dual-panel layout for chat, settings, and other routes
+  // Always show dual-panel layout with left panel (chat/settings) and right panel (page content)
   return (
     <div className="flex h-screen bg-neutral-100 dark:bg-neutral-950">
       <AppSidebar />
@@ -94,10 +79,10 @@ function ShellContent({ children }: { children: React.ReactNode }) {
                   </div>
                 </ResizablePanel>
                 <ResizableHandle withHandle className="bg-neutral-200 dark:bg-neutral-800" />
-                {/* Right Panel - Dynamic content based on ?app= query param */}
+                {/* Right Panel - Shows page content for full-page routes, or dynamic content for others */}
                 <ResizablePanel defaultSize={80} minSize={50}>
                   <div className="h-full overflow-auto">
-                    <RightPane appView={appView} />
+                    {isFullPageRoute ? children : <RightPane appView={appView} />}
                   </div>
                 </ResizablePanel>
               </ResizablePanelGroup>
@@ -108,7 +93,7 @@ function ShellContent({ children }: { children: React.ReactNode }) {
               <section className="flex h-full min-h-0 flex-col border-b border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
                 <LeftPanelContent mode={leftPanelMode} />
               </section>
-              <RightPane appView={appView} />
+              {isFullPageRoute ? children : <RightPane appView={appView} />}
             </div>
           </div>
         </main>
