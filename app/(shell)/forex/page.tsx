@@ -25,25 +25,25 @@ export default function ForexPage() {
 
   return (
     <div className="p-4 h-full overflow-hidden">
-      <div className="h-full rounded-lg border border-neutral-200 bg-white overflow-auto relative">
+      <div className="h-full rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-auto relative">
         <Table>
           <TableHeader className="bg-neutral-50 sticky top-0 z-10 dark:bg-neutral-900">
             <TableRow>
-              <TableHead className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Pair</TableHead>
-              <TableHead className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Name</TableHead>
-              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Rate</TableHead>
-              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Change %</TableHead>
-              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Bid</TableHead>
-              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Ask</TableHead>
-              <TableHead className="text-center text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Volume</TableHead>
+              <TableHead className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Pair</TableHead>
+              <TableHead className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Name</TableHead>
+              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Rate</TableHead>
+              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Change %</TableHead>
+              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Bid</TableHead>
+              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Ask</TableHead>
+              <TableHead className="text-center text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Volume</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {pairs.map((pair) => (
               <TableRow key={pair.pair} className="cursor-pointer">
-                <TableCell className="px-4 py-3 text-sm font-bold text-neutral-900">{pair.pair}</TableCell>
-                <TableCell className="px-4 py-3 text-xs text-neutral-700">{pair.name}</TableCell>
-                <TableCell className="px-4 py-3 text-right text-sm font-semibold text-neutral-900">
+                <TableCell className="px-4 py-3 text-sm font-bold text-neutral-900 dark:text-neutral-100">{pair.pair}</TableCell>
+                <TableCell className="px-4 py-3 text-xs text-neutral-700 dark:text-neutral-300">{pair.name}</TableCell>
+                <TableCell className="px-4 py-3 text-right text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                   {pair.rate.toFixed(4)}
                 </TableCell>
                 <TableCell className={`px-4 py-3 text-right text-sm font-bold ${
@@ -51,15 +51,15 @@ export default function ForexPage() {
                 }`}>
                   {pair.change >= 0 ? '+' : ''}{pair.change.toFixed(2)}%
                 </TableCell>
-                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600">{pair.bid.toFixed(4)}</TableCell>
-                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600">{pair.ask.toFixed(4)}</TableCell>
+                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600 dark:text-neutral-400">{pair.bid.toFixed(4)}</TableCell>
+                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600 dark:text-neutral-400">{pair.ask.toFixed(4)}</TableCell>
                 <TableCell className="px-4 py-3 text-center">
                   <span className={`inline-flex px-2 py-1 text-[10px] font-medium rounded ${
                     pair.volume === 'High' 
-                      ? 'bg-emerald-100 text-emerald-700' 
+                      ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400' 
                       : pair.volume === 'Medium' 
-                      ? 'bg-amber-100 text-amber-700'
-                      : 'bg-neutral-100 text-neutral-700'
+                      ? 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400'
+                      : 'bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300'
                   }`}>
                     {pair.volume}
                   </span>

@@ -62,9 +62,6 @@ export function TopNav() {
           <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
             Signal
           </span>
-          <span className="hidden text-xs text-neutral-500 dark:text-neutral-400 sm:inline">
-            Adaptive workspace
-          </span>
         </div>
 
         <div className="flex items-center gap-2">

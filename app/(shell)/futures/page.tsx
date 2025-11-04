@@ -23,26 +23,26 @@ export default function FuturesPage() {
 
   return (
     <div className="p-4 h-full overflow-hidden">
-      <div className="h-full rounded-lg border border-neutral-200 bg-white overflow-auto relative">
+      <div className="h-full rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-auto relative">
         <Table>
           <TableHeader className="bg-neutral-50 sticky top-0 z-10 dark:bg-neutral-900">
             <TableRow>
-              <TableHead className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Symbol</TableHead>
-              <TableHead className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Name</TableHead>
-              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Price</TableHead>
-              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Change %</TableHead>
-              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Open</TableHead>
-              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500">High</TableHead>
-              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Low</TableHead>
-              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Volume</TableHead>
+              <TableHead className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Symbol</TableHead>
+              <TableHead className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Name</TableHead>
+              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Price</TableHead>
+              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Change %</TableHead>
+              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Open</TableHead>
+              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">High</TableHead>
+              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Low</TableHead>
+              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Volume</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {futures.map((future) => (
               <TableRow key={future.symbol} className="cursor-pointer">
-                <TableCell className="px-4 py-3 text-sm font-bold text-neutral-900">{future.symbol}</TableCell>
-                <TableCell className="px-4 py-3 text-xs text-neutral-700">{future.name}</TableCell>
-                <TableCell className="px-4 py-3 text-right text-sm font-semibold text-neutral-900">
+                <TableCell className="px-4 py-3 text-sm font-bold text-neutral-900 dark:text-neutral-100">{future.symbol}</TableCell>
+                <TableCell className="px-4 py-3 text-xs text-neutral-700 dark:text-neutral-300">{future.name}</TableCell>
+                <TableCell className="px-4 py-3 text-right text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                   ${future.price.toFixed(2)}
                 </TableCell>
                 <TableCell className={`px-4 py-3 text-right text-sm font-bold ${
@@ -50,10 +50,10 @@ export default function FuturesPage() {
                 }`}>
                   {future.change >= 0 ? '+' : ''}{future.change.toFixed(2)}%
                 </TableCell>
-                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600">${future.open.toFixed(2)}</TableCell>
-                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600">${future.high.toFixed(2)}</TableCell>
-                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600">${future.low.toFixed(2)}</TableCell>
-                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600">{future.volume}</TableCell>
+                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600 dark:text-neutral-400">${future.open.toFixed(2)}</TableCell>
+                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600 dark:text-neutral-400">${future.high.toFixed(2)}</TableCell>
+                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600 dark:text-neutral-400">${future.low.toFixed(2)}</TableCell>
+                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600 dark:text-neutral-400">{future.volume}</TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -739,7 +739,7 @@ export default function ScreenerPage() {
               placeholder="Search by ticker or company name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 text-sm border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 text-sm border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-900 dark:focus:ring-neutral-100 focus:border-transparent"
             />
           </div>
 
@@ -747,7 +747,7 @@ export default function ScreenerPage() {
           <div className="relative">
             <button
               onClick={() => setShowPresets(!showPresets)}
-              className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-neutral-700 bg-white border border-neutral-200 rounded-lg hover:bg-neutral-50 transition"
+              className="flex items-center gap-2 px-4 py-2 text-xs font-medium text-neutral-700 dark:text-neutral-100 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-750 transition"
             >
               <span>My Presets</span>
               <ChevronDown className={`h-3.5 w-3.5 transition-transform ${showPresets ? 'rotate-180' : ''}`} />
@@ -756,16 +756,16 @@ export default function ScreenerPage() {
             {showPresets && (
               <>
                 <div 
-                  className="fixed inset-0 z-40" 
+                  className="fixed inset-0 z-[150]" 
                   onClick={() => setShowPresets(false)}
                 />
-                <div className="absolute top-full right-0 mt-2 w-72 bg-white border border-neutral-200 rounded-lg shadow-xl z-50 overflow-hidden">
-                  <div className="px-3 py-2 bg-neutral-50 border-b border-neutral-200 flex items-center justify-between">
-                    <span className="text-xs font-semibold text-neutral-700">My Presets</span>
+                <div className="absolute top-full right-0 mt-2 w-72 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-xl z-[200] overflow-hidden">
+                  <div className="px-3 py-2 bg-neutral-50 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+                    <span className="text-xs font-semibold text-neutral-700 dark:text-neutral-100">My Presets</span>
                     {activeFilterCount > 0 && (
                       <button
                         onClick={openSaveDialog}
-                        className="text-xs font-medium text-neutral-900 hover:text-neutral-700"
+                        className="text-xs font-medium text-neutral-900 dark:text-neutral-100 hover:text-neutral-700 dark:hover:text-neutral-300"
                       >
                         + Save Current
                       </button>
@@ -773,24 +773,24 @@ export default function ScreenerPage() {
                   </div>
                   <div className="max-h-80 overflow-y-auto">
                     {myPresets.length === 0 ? (
-                      <div className="px-4 py-8 text-center text-xs text-neutral-500">
+                      <div className="px-4 py-8 text-center text-xs text-neutral-500 dark:text-neutral-400">
                         No presets yet. Apply some filters and save them!
                       </div>
                     ) : (
                       myPresets.map((preset) => (
                         <div
                           key={preset.id}
-                          className="px-3 py-2.5 border-b border-neutral-100 hover:bg-neutral-50 transition group"
+                          className="px-3 py-2.5 border-b border-neutral-100 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition group"
                         >
                           <div className="flex items-start justify-between gap-2">
                             <button
                               onClick={() => loadPreset(preset)}
                               className="flex-1 text-left"
                             >
-                              <div className="text-sm font-medium text-neutral-900 mb-1">
+                              <div className="text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1">
                                 {preset.name}
                               </div>
-                              <div className="text-xs text-neutral-500 mb-1">
+                              <div className="text-xs text-neutral-500 dark:text-neutral-400 mb-1">
                                 Tab: {preset.tab}
                               </div>
                               <div className="flex flex-wrap gap-1">
@@ -798,7 +798,7 @@ export default function ScreenerPage() {
                                   value && value !== "Any" && (
                                     <span
                                       key={key}
-                                      className="inline-block px-2 py-0.5 text-[10px] bg-neutral-100 text-neutral-600 rounded"
+                                      className="inline-block px-2 py-0.5 text-[10px] bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 rounded"
                                     >
                                       {key}: {value}
                                     </span>
@@ -827,19 +827,19 @@ export default function ScreenerPage() {
           {activeFilterCount > 0 && (
             <button
               onClick={clearAllFilters}
-              className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-neutral-700 bg-neutral-100 rounded-lg hover:bg-neutral-200 transition"
+              className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-neutral-700 dark:text-neutral-100 bg-neutral-100 dark:bg-neutral-800 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700 transition"
             >
               <X className="h-3.5 w-3.5" />
               Clear All ({activeFilterCount})
             </button>
           )}
-          <button className="px-4 py-2 text-xs font-medium text-white bg-neutral-900 rounded-lg hover:bg-neutral-800 transition">
+          <button className="px-4 py-2 text-xs font-medium text-white bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 rounded-lg hover:bg-neutral-800 dark:hover:bg-neutral-200 transition">
             Export Results
           </button>
         </div>
 
         {/* Filter Tabs */}
-        <div className="border-b border-neutral-200 overflow-x-auto">
+        <div className="border-b border-neutral-200 dark:border-neutral-800 overflow-x-auto">
           <div className="px-4 flex gap-1 min-w-max">
             {allTabs.map((tab) => (
               <button
@@ -847,8 +847,8 @@ export default function ScreenerPage() {
                 onClick={() => setActiveTab(tab)}
                 className={`px-3 py-2 text-[11px] font-medium border-b-2 transition whitespace-nowrap ${
                   activeTab === tab
-                    ? "border-neutral-900 text-neutral-900"
-                    : "border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300"
+                    ? "border-neutral-900 dark:border-neutral-100 text-neutral-900 dark:text-neutral-100"
+                    : "border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 hover:border-neutral-300 dark:hover:border-neutral-700"
                 }`}
               >
                 {tab}
@@ -873,16 +873,16 @@ export default function ScreenerPage() {
 
         {/* Active Filters Display */}
         {activeFilterCount > 0 && (
-          <div className="px-4 py-2 bg-neutral-50 border-t border-neutral-100">
+          <div className="px-4 py-2 bg-neutral-50 dark:bg-neutral-900 border-t border-neutral-100 dark:border-neutral-800">
             <div className="flex items-center flex-wrap gap-2">
-              <span className="text-xs font-medium text-neutral-500">Active filters:</span>
+              <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Active filters:</span>
               {Object.entries(selectedFilters).map(([category, value]) => {
                 if (!value || value === "Any") return null;
                 return (
                   <button
                     key={category}
                     onClick={() => toggleFilter(category, value)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium bg-neutral-900 text-white rounded-full hover:bg-neutral-800 transition"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 rounded-full hover:bg-neutral-800 dark:hover:bg-neutral-200 transition"
                   >
                     {category}: {value}
                     <X className="h-3 w-3" />
@@ -891,7 +891,7 @@ export default function ScreenerPage() {
               })}
               <button
                 onClick={openSaveDialog}
-                className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-neutral-900 bg-white border dark:text-neutral-100 dark:bg-neutral-800 dark:border-neutral-700 border-neutral-300 rounded-full hover:bg-neutral-100 transition ml-auto"
+                className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-neutral-900 bg-white border dark:text-neutral-100 dark:bg-neutral-800 dark:border-neutral-700 border-neutral-300 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-700 transition ml-auto"
               >
                 💾 Save as Preset
               </button>
@@ -926,8 +926,8 @@ export default function ScreenerPage() {
               />
             </div>
             <div className="rounded-lg bg-neutral-50 p-3 space-y-2 dark:bg-neutral-900 dark:border dark:border-neutral-800">
-              <p className="text-xs font-medium text-neutral-700">Current Configuration:</p>
-              <div className="text-xs text-neutral-600">
+              <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300">Current Configuration:</p>
+              <div className="text-xs text-neutral-600 dark:text-neutral-400">
                 <div className="mb-1">
                   <span className="font-medium">Tab:</span> {activeTab}
                 </div>
@@ -940,7 +940,7 @@ export default function ScreenerPage() {
                   value && value !== "Any" && (
                     <span
                       key={key}
-                      className="inline-block px-2 py-0.5 text-[10px] bg-white text-neutral-600 rounded border border-neutral-200"
+                      className="inline-block px-2 py-0.5 text-[10px] bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 rounded border border-neutral-200 dark:border-neutral-700"
                     >
                       {key}: {value}
                     </span>
@@ -972,12 +972,12 @@ export default function ScreenerPage() {
       <div className="flex-1 min-h-0 relative">
         <div className="absolute inset-0 overflow-auto">
           <Table>
-            <TableHeader className="sticky top-0 bg-neutral-100 border-b border-neutral-200 z-10">
+            <TableHeader className="sticky top-0 bg-neutral-100 dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 z-10">
               <TableRow>
                 {columns.map((column) => (
                   <TableHead 
                     key={column}
-                    className={`text-[10px] font-semibold uppercase tracking-wider text-neutral-600 ${
+                    className={`text-[10px] font-semibold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 ${
                       column !== "No." && column !== "Ticker" && column !== "Company" && column !== "Sector" && column !== "Industry" && column !== "Country" ? "text-right" : ""
                     }`}
                   >
@@ -986,21 +986,21 @@ export default function ScreenerPage() {
                 ))}
               </TableRow>
             </TableHeader>
-            <TableBody className="bg-white dark:bg-neutral-900 ">
+            <TableBody className="bg-white dark:bg-black">
               {filteredStocks.map((stock, index) => (
                 <TableRow 
                   key={stock.ticker}
-                  className="cursor-pointer hover:bg-neutral-50 transition"
+                  className="cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 transition"
                 >
                   {columns.map((column) => {
                     if (column === "No.") {
-                      return <TableCell key={column} className="px-4 py-3 text-xs text-neutral-500">{index + 1}</TableCell>;
+                      return <TableCell key={column} className="px-4 py-3 text-xs text-neutral-500 dark:text-neutral-400">{index + 1}</TableCell>;
                     }
                     if (column === "Ticker") {
-                      return <TableCell key={column} className="px-4 py-3 text-sm font-bold text-neutral-900">{stock.ticker}</TableCell>;
+                      return <TableCell key={column} className="px-4 py-3 text-sm font-bold text-neutral-900 dark:text-neutral-100">{stock.ticker}</TableCell>;
                     }
                     if (column === "Company") {
-                      return <TableCell key={column} className="px-4 py-3 text-xs text-neutral-700">{stock.company}</TableCell>;
+                      return <TableCell key={column} className="px-4 py-3 text-xs text-neutral-700 dark:text-neutral-300">{stock.company}</TableCell>;
                     }
                     
                     const value = getCellValue(stock, column);
@@ -1015,7 +1015,7 @@ export default function ScreenerPage() {
                             ? numValue >= 0 
                               ? 'font-bold text-emerald-600' 
                               : 'font-bold text-rose-600'
-                            : 'text-neutral-600'
+                            : 'text-neutral-600 dark:text-neutral-400'
                         }`}
                       >
                         {value}
@@ -1031,14 +1031,14 @@ export default function ScreenerPage() {
 
       {/* Results Footer */}
       <div className="border-t border-neutral-200 bg-white px-4 py-3 shrink-0 dark:bg-neutral-900 dark:border-neutral-800">
-        <div className="flex items-center justify-between text-xs text-neutral-600">
+        <div className="flex items-center justify-between text-xs text-neutral-600 dark:text-neutral-400">
           <span>Showing {filteredStocks.length} results</span>
           <div className="flex items-center gap-2">
-            <button className="px-3 py-1.5 border border-neutral-200 rounded hover:bg-neutral-50 transition">
+            <button className="px-3 py-1.5 border border-neutral-200 dark:border-neutral-700 rounded hover:bg-neutral-50 dark:hover:bg-neutral-800 transition">
               Previous
             </button>
             <span className="px-2">Page 1 of 1</span>
-            <button className="px-3 py-1.5 border border-neutral-200 rounded hover:bg-neutral-50 transition">
+            <button className="px-3 py-1.5 border border-neutral-200 dark:border-neutral-700 rounded hover:bg-neutral-50 dark:hover:bg-neutral-800 transition">
               Next
             </button>
           </div>
@@ -1074,8 +1074,8 @@ function FilterDropdown({
           onClick={handleButtonClick}
           className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium rounded-lg border transition ${
             selectedValue && selectedValue !== "Any"
-              ? "bg-neutral-900 text-white border-neutral-900"
-              : "bg-white text-neutral-700 border-neutral-200 hover:border-neutral-300"
+              ? "bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 border-neutral-900 dark:border-neutral-100"
+              : "bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-100 border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600"
           }`}
         >
           <span className="truncate">{displayValue}</span>
@@ -1090,7 +1090,7 @@ function FilterDropdown({
             onClick={() => setIsOpen(false)}
           />
           <div 
-            className="fixed min-w-[200px] max-h-60 overflow-y-auto bg-white border border-neutral-200 rounded-lg shadow-lg z-100"
+            className="fixed min-w-[200px] max-h-60 overflow-y-auto bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg z-100"
             style={{
               top: `${buttonRect.bottom + 4}px`,
               left: `${buttonRect.left}px`,
@@ -1104,8 +1104,8 @@ function FilterDropdown({
                   onSelect(option);
                   setIsOpen(false);
                 }}
-                className={`w-full px-3 py-2 text-left text-xs hover:bg-neutral-50 transition ${
-                  selectedValue === option ? 'bg-neutral-100 font-semibold' : ''
+                className={`w-full px-3 py-2 text-left text-xs hover:bg-neutral-50 dark:hover:bg-neutral-800 transition ${
+                  selectedValue === option ? 'bg-neutral-100 dark:bg-neutral-800 font-semibold' : ''
                 }`}
               >
                 {option}

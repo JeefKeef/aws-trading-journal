@@ -70,7 +70,7 @@ export default function MarketOverviewPage() {
             </AreaChart>
           </ChartContainer>
           <div className="mt-2 flex items-center justify-between text-xs">
-            <span className="text-neutral-500">5,145.20</span>
+            <span className="text-neutral-500 dark:text-neutral-400">5,145.20</span>
             <span className="flex items-center gap-1 text-emerald-600 font-semibold">
               <TrendingUp className="h-3 w-3" />
               +0.88%
@@ -135,13 +135,13 @@ export default function MarketOverviewPage() {
               { symbol: "AMD", name: "Advanced Micro Devices", price: "$182.34", change: "+3.2%" },
               { symbol: "TSLA", name: "Tesla Inc", price: "$203.14", change: "+2.9%" },
             ].map((stock) => (
-              <div key={stock.symbol} className="flex items-center justify-between py-2 border-b border-neutral-100 last:border-0">
+              <div key={stock.symbol} className="flex items-center justify-between py-2 border-b border-neutral-100 dark:border-neutral-800 last:border-0">
                 <div className="flex-1">
-                  <p className="text-sm font-bold text-neutral-900">{stock.symbol}</p>
-                  <p className="text-[10px] text-neutral-500 mt-0.5">{stock.name}</p>
+                  <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">{stock.symbol}</p>
+                  <p className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-0.5">{stock.name}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-semibold text-neutral-900">{stock.price}</p>
+                  <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">{stock.price}</p>
                   <p className="text-xs font-medium text-emerald-600">{stock.change}</p>
                 </div>
               </div>
@@ -160,13 +160,13 @@ export default function MarketOverviewPage() {
               { symbol: "CVX", name: "Chevron Corp", price: "$154.87", change: "-1.9%" },
               { symbol: "BA", name: "Boeing Co", price: "$189.45", change: "-1.6%" },
             ].map((stock) => (
-              <div key={stock.symbol} className="flex items-center justify-between py-2 border-b border-neutral-100 last:border-0">
+              <div key={stock.symbol} className="flex items-center justify-between py-2 border-b border-neutral-100 dark:border-neutral-800 last:border-0">
                 <div className="flex-1">
-                  <p className="text-sm font-bold text-neutral-900">{stock.symbol}</p>
-                  <p className="text-[10px] text-neutral-500 mt-0.5">{stock.name}</p>
+                  <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">{stock.symbol}</p>
+                  <p className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-0.5">{stock.name}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-semibold text-neutral-900">{stock.price}</p>
+                  <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">{stock.price}</p>
                   <p className="text-xs font-medium text-rose-600">{stock.change}</p>
                 </div>
               </div>

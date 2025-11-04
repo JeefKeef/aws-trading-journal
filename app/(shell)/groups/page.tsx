@@ -16,9 +16,9 @@ export default function GroupsPage() {
     <div className="p-4">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {groups.map((group) => (
-          <div key={group.name} className="rounded-lg border border-neutral-200 bg-white p-4 hover:border-neutral-300 transition cursor-pointer">
+          <div key={group.name} className="rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4 hover:border-neutral-300 dark:hover:border-neutral-700 transition cursor-pointer">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-neutral-900">{group.name}</h3>
+              <h3 className="text-sm font-bold text-neutral-900 dark:text-neutral-100">{group.name}</h3>
               <span className={`text-sm font-bold ${
                 group.avgChange >= 0 ? 'text-emerald-600' : 'text-rose-600'
               }`}>
@@ -29,7 +29,7 @@ export default function GroupsPage() {
               {group.tickers.map((ticker) => (
                 <span 
                   key={ticker}
-                  className="rounded-md bg-neutral-100 px-2.5 py-1 text-xs font-semibold text-neutral-700 hover:bg-neutral-200 transition"
+                  className="rounded-md bg-neutral-100 dark:bg-neutral-800 px-2.5 py-1 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition"
                 >
                   {ticker}
                 </span>

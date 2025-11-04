@@ -23,26 +23,26 @@ export default function CryptoPage() {
 
   return (
     <div className="p-4 h-full overflow-hidden">
-      <div className="h-full rounded-lg border border-neutral-200 bg-white overflow-auto relative">
+      <div className="h-full rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-auto relative">
         <Table>
           <TableHeader className="bg-neutral-50 sticky top-0 z-10 dark:bg-neutral-900">
             <TableRow>
-              <TableHead className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Symbol</TableHead>
-              <TableHead className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Name</TableHead>
-              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Price</TableHead>
-              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Change %</TableHead>
-              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500">24h High</TableHead>
-              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500">24h Low</TableHead>
-              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Volume</TableHead>
-              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Mkt Cap</TableHead>
+              <TableHead className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Symbol</TableHead>
+              <TableHead className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Name</TableHead>
+              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Price</TableHead>
+              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Change %</TableHead>
+              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">24h High</TableHead>
+              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">24h Low</TableHead>
+              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Volume</TableHead>
+              <TableHead className="text-right text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Mkt Cap</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {cryptos.map((crypto) => (
               <TableRow key={crypto.symbol} className="cursor-pointer">
-                <TableCell className="px-4 py-3 text-sm font-bold text-neutral-900">{crypto.symbol}</TableCell>
-                <TableCell className="px-4 py-3 text-xs text-neutral-700">{crypto.name}</TableCell>
-                <TableCell className="px-4 py-3 text-right text-sm font-semibold text-neutral-900">
+                <TableCell className="px-4 py-3 text-sm font-bold text-neutral-900 dark:text-neutral-100">{crypto.symbol}</TableCell>
+                <TableCell className="px-4 py-3 text-xs text-neutral-700 dark:text-neutral-300">{crypto.name}</TableCell>
+                <TableCell className="px-4 py-3 text-right text-sm font-semibold text-neutral-900 dark:text-neutral-100">
                   ${crypto.price.toLocaleString()}
                 </TableCell>
                 <TableCell className={`px-4 py-3 text-right text-sm font-bold ${
@@ -50,14 +50,14 @@ export default function CryptoPage() {
                 }`}>
                   {crypto.change >= 0 ? '+' : ''}{crypto.change.toFixed(2)}%
                 </TableCell>
-                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600">
+                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600 dark:text-neutral-400">
                   ${crypto.high24h.toLocaleString()}
                 </TableCell>
-                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600">
+                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600 dark:text-neutral-400">
                   ${crypto.low24h.toLocaleString()}
                 </TableCell>
-                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600">{crypto.volume}</TableCell>
-                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600">{crypto.marketCap}</TableCell>
+                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600 dark:text-neutral-400">{crypto.volume}</TableCell>
+                <TableCell className="px-4 py-3 text-right text-xs text-neutral-600 dark:text-neutral-400">{crypto.marketCap}</TableCell>
               </TableRow>
             ))}
           </TableBody>
