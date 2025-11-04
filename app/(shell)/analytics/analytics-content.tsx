@@ -64,6 +64,7 @@ import {
 } from "@/components/ui/table";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -124,7 +125,14 @@ export default function AnalyticsContent() {
   const activeTab = (searchParams.get("tab") as AnalyticsTab) || "Overview";
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string>>({});
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [showDateRange, setShowDateRange] = useState(false);
   const [advancedButtonRect, setAdvancedButtonRect] = useState<DOMRect | null>(null);
+  const [dateRangeButtonRect, setDateRangeButtonRect] = useState<DOMRect | null>(null);
+  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({
+    from: undefined,
+    to: undefined,
+  });
+  const [dateRangePreset, setDateRangePreset] = useState<string>("Last 30 Days");
 
   const setActiveTab = (tab: AnalyticsTab) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -624,22 +632,6 @@ export default function AnalyticsContent() {
     <div className="flex flex-col h-full bg-neutral-50 dark:bg-neutral-950">
       {/* Header with Tabs */}
       <div className="bg-white border-b border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 shrink-0">
-        {/* Title and Export */}
-        <div className="px-6 py-4 flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800">
-          <div>
-            <h1 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
-              Analytics Dashboard
-            </h1>
-            <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
-              Comprehensive performance analysis and insights
-            </p>
-          </div>
-          <Button onClick={exportData} className="gap-2">
-            <Download className="h-4 w-4" />
-            Export Data
-          </Button>
-        </div>
-
         {/* Tabs Navigation */}
         <div className="px-6 py-0 border-b border-neutral-100 dark:border-neutral-800">
           <nav className="flex items-center gap-1 -mb-px">
@@ -690,6 +682,167 @@ export default function AnalyticsContent() {
                         onSelect={(option) => toggleFilter(filter.name, option)}
                       />
                     ))}
+                  </div>
+
+                  {/* Date Range Button */}
+                  <div className="relative">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        setDateRangeButtonRect(rect);
+                        setShowDateRange(!showDateRange);
+                      }}
+                      className="gap-2 whitespace-nowrap h-10"
+                    >
+                      {dateRangePreset}
+                      <ChevronDown
+                        className={`h-4 w-4 transition-transform ${
+                          showDateRange ? "rotate-180" : ""
+                        }`}
+                      />
+                    </Button>
+
+                    {/* Date Range Dropdown */}
+                    {showDateRange && dateRangeButtonRect && (
+                      <>
+                        {/* Backdrop */}
+                        <div
+                          className="fixed inset-0 z-150"
+                          onClick={() => setShowDateRange(false)}
+                        />
+                        {/* Dropdown Content */}
+                        <div 
+                          className="fixed w-[500px] max-h-[600px] overflow-y-auto bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg z-200 p-4"
+                          style={{
+                            top: `${dateRangeButtonRect.bottom + 8}px`,
+                            right: `${window.innerWidth - dateRangeButtonRect.right}px`,
+                          }}
+                        >
+                          {/* Quick Presets */}
+                          <div className="grid grid-cols-2 gap-2 mb-4">
+                            {[
+                              "Today",
+                              "Yesterday",
+                              "Last 7 Days",
+                              "Last 30 Days",
+                              "This Month",
+                              "Last Month",
+                              "Last 12 Months",
+                              "Last Year",
+                              "YTD",
+                              "Custom Range",
+                            ].map((preset) => (
+                              <Button
+                                key={preset}
+                                variant={dateRangePreset === preset ? "default" : "outline"}
+                                size="sm"
+                                className="text-xs h-8"
+                                onClick={() => {
+                                  setDateRangePreset(preset);
+                                  const today = new Date();
+                                  const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                                  
+                                  if (preset === "Today") {
+                                    setDateRange({ from: startOfDay, to: startOfDay });
+                                  } else if (preset === "Yesterday") {
+                                    const yesterday = new Date(startOfDay);
+                                    yesterday.setDate(yesterday.getDate() - 1);
+                                    setDateRange({ from: yesterday, to: yesterday });
+                                  } else if (preset === "Last 7 Days") {
+                                    const lastWeek = new Date(startOfDay);
+                                    lastWeek.setDate(lastWeek.getDate() - 7);
+                                    setDateRange({ from: lastWeek, to: startOfDay });
+                                  } else if (preset === "Last 30 Days") {
+                                    const lastMonth = new Date(startOfDay);
+                                    lastMonth.setDate(lastMonth.getDate() - 30);
+                                    setDateRange({ from: lastMonth, to: startOfDay });
+                                  } else if (preset === "This Month") {
+                                    const firstDayThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+                                    setDateRange({ from: firstDayThisMonth, to: startOfDay });
+                                  } else if (preset === "Last Month") {
+                                    const firstDayLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                                    const lastDayLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                                    setDateRange({ from: firstDayLastMonth, to: lastDayLastMonth });
+                                  } else if (preset === "Last 12 Months") {
+                                    const lastYear = new Date(startOfDay);
+                                    lastYear.setMonth(lastYear.getMonth() - 12);
+                                    setDateRange({ from: lastYear, to: startOfDay });
+                                  } else if (preset === "Last Year") {
+                                    const firstDayLastYear = new Date(today.getFullYear() - 1, 0, 1);
+                                    const lastDayLastYear = new Date(today.getFullYear() - 1, 11, 31);
+                                    setDateRange({ from: firstDayLastYear, to: lastDayLastYear });
+                                  } else if (preset === "YTD") {
+                                    const firstDayThisYear = new Date(today.getFullYear(), 0, 1);
+                                    setDateRange({ from: firstDayThisYear, to: startOfDay });
+                                  } else if (preset === "Custom Range") {
+                                    setDateRange({ from: undefined, to: undefined });
+                                  }
+                                }}
+                              >
+                                {preset}
+                              </Button>
+                            ))}
+                          </div>
+
+                          {/* Calendar for Custom Range */}
+                          {dateRangePreset === "Custom Range" && (
+                            <div className="space-y-3">
+                              <Calendar
+                                mode="range"
+                                selected={dateRange.from && dateRange.to ? { from: dateRange.from, to: dateRange.to } : undefined}
+                                onSelect={(range: { from?: Date; to?: Date } | undefined) => setDateRange(range || { from: undefined, to: undefined })}
+                                numberOfMonths={2}
+                                className="rounded-md border"
+                              />
+                              
+                              {/* Display Selected Range */}
+                              {dateRange.from && (
+                                <div className="text-xs text-neutral-600 dark:text-neutral-400 text-center">
+                                  {dateRange.from.toLocaleDateString("en-US", {
+                                    month: "short",
+                                    day: "2-digit",
+                                    year: "2-digit",
+                                  })}
+                                  {dateRange.to && dateRange.to !== dateRange.from && (
+                                    <>
+                                      {" - "}
+                                      {dateRange.to.toLocaleDateString("en-US", {
+                                        month: "short",
+                                        day: "2-digit",
+                                        year: "2-digit",
+                                      })}
+                                    </>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Display Selected Preset Range */}
+                          {dateRangePreset !== "Custom Range" && dateRange.from && (
+                            <div className="text-xs text-neutral-600 dark:text-neutral-400 text-center mt-2 pt-2 border-t">
+                              {dateRange.from.toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "2-digit",
+                                year: "2-digit",
+                              })}
+                              {dateRange.to && (
+                                <>
+                                  {" - "}
+                                  {dateRange.to.toLocaleDateString("en-US", {
+                                    month: "short",
+                                    day: "2-digit",
+                                    year: "2-digit",
+                                  })}
+                                </>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </>
+                    )}
                   </div>
 
                   {/* Advanced Filter Button */}
@@ -1123,17 +1276,24 @@ export default function AnalyticsContent() {
                       </>
                     )}
                   </div>
-                </div>
-              </div>
 
-              {activeFilterCount > 0 && (
-                <div className="px-6 py-2 bg-neutral-50 dark:bg-neutral-900 border-t border-neutral-100 dark:border-neutral-800">
-                  <div className="flex items-center flex-wrap gap-2">
-                    <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                      Active filters:
-                    </span>
+                  {/* Export Data Button */}
+                  <Button
+                    onClick={exportData}
+                    size="sm"
+                    className="gap-2 whitespace-nowrap h-10"
+                  >
+                    <Download className="h-4 w-4" />
+                    Export Data
+                  </Button>
+                </div>
+
+                {/* Active Filters Display */}
+                {activeFilterCount > 0 && (
+                  <div className="flex items-center flex-wrap gap-2 pt-3 border-t border-neutral-200 dark:border-neutral-800">
+                    <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Active filters:</span>
                     {Object.entries(selectedFilters).map(([category, value]) => {
-                      if (!value || value === "Any") return null;
+                      if (!value || value === "Any" || category === "Date Range") return null;
                       return (
                         <button
                           key={category}
@@ -1147,13 +1307,14 @@ export default function AnalyticsContent() {
                     })}
                     <button
                       onClick={clearAllFilters}
-                      className="text-xs font-medium text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300 underline"
+                      className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-neutral-700 dark:text-neutral-100 bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-700 transition"
                     >
-                      Clear all
+                      <X className="h-3 w-3" />
+                      Clear All ({activeFilterCount})
                     </button>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
