@@ -57,7 +57,7 @@ function ShellContent({ children }: { children: React.ReactNode }) {
   const appView = searchParams.get('app');
   
   // Full-page routes that should render children directly without the dual-panel layout
-  const isFullPageRoute = pathname === '/journal' || pathname === '/screener';
+  const isFullPageRoute = pathname === '/journal' || pathname === '/screener' || pathname === '/trades';
 
   // If it's a full-page route, render just the page content with sidebar and nav
   if (isFullPageRoute) {

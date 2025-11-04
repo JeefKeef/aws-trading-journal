@@ -39,6 +39,12 @@ const rightPanelApps = [
     icon: TrendingUp,
     href: "/screener", // Direct route to screener page
   },
+  {
+    id: "trades",
+    label: "Trades",
+    icon: TrendingUp,
+    href: "/trades", // Direct route to trades page
+  },
 ];
 
 // Mock chat history data
