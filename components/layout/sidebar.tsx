@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Bot, MessageSquare, Settings, BookOpen, Plus, MoreHorizontal, TrendingUp } from "lucide-react";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
@@ -30,11 +31,13 @@ const rightPanelApps = [
     id: "journal",
     label: "Journal",
     icon: BookOpen,
+    href: "/journal", // Direct route to journal page
   },
   {
     id: "screener",
     label: "Screener",
     icon: TrendingUp,
+    href: "/screener", // Direct route to screener page
   },
 ];
 
@@ -135,11 +138,13 @@ function HoverSidebar({
   onMouseEnter: () => void; 
   onMouseLeave: () => void;
 }) {
+  const pathname = usePathname();
+  
   return (
     <div
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className="fixed left-14 top-0 z-50 h-screen w-72 border-r border-neutral-200 bg-white shadow-xl animate-in slide-in-from-left duration-200 dark:border-neutral-800 dark:bg-neutral-950"
+      className="fixed left-14 top-0 z-100 h-screen w-72 border-r border-neutral-200 bg-white shadow-xl animate-in slide-in-from-left duration-200 dark:border-neutral-800 dark:bg-neutral-950"
     >
       <div className="flex h-full flex-col">
         {/* Header */}
@@ -167,14 +172,18 @@ function HoverSidebar({
             <div className="space-y-1">
               {rightPanelApps.map((app) => {
                 const Icon = app.icon;
-                // Build URL: use /screener as base path with ?app= query param
-                const href = `/screener?app=${app.id}`;
+                const isActive = pathname === app.href;
                 
                 return (
                   <Link
                     key={app.id}
-                    href={href}
-                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-900"
+                    href={app.href}
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition",
+                      isActive
+                        ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
+                        : "text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-900"
+                    )}
                   >
                     <Icon className="h-4 w-4" />
                     <span>{app.label}</span>

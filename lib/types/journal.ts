@@ -31,6 +31,7 @@ export type NoteContent = {
   content: string;
   tags: string[];
   linkedTrade?: LinkedTrade;
+  linkedTrades?: LinkedTrade[]; // Support multiple trades
   images: NoteImage[];
   createdAt: string;
   updatedAt: string;

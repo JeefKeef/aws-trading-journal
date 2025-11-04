@@ -1,7 +1,8 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
+import { Toaster } from "@/components/ui/sonner";
 
 import {
   ResizableHandle,
@@ -32,25 +33,50 @@ import JournalContent from "./journal/journal-content";
 import ChatPage from "./chat/page";
 import SettingsPage from "./settings/page";
 
-export default function ShellLayout() {
+export default function ShellLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <LeftPanelProvider>
       <RightPaneProvider>
-        <ShellContent />
+        <ShellContent>{children}</ShellContent>
+        <Toaster />
       </RightPaneProvider>
     </LeftPanelProvider>
   );
 }
 
-function ShellContent() {
+function ShellContent({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const { mode: leftPanelMode } = useLeftPanel();
 
   // Check if app query param is set for right panel
   const appView = searchParams.get('app');
+  
+  // Full-page routes that should render children directly without the dual-panel layout
+  const isFullPageRoute = pathname === '/journal' || pathname === '/screener';
 
+  // If it's a full-page route, render just the page content with sidebar and nav
+  if (isFullPageRoute) {
+    return (
+      <div className="flex h-screen bg-neutral-100 dark:bg-neutral-950">
+        <AppSidebar />
+        <div className="flex flex-1 flex-col min-w-0">
+          <TopNav />
+          <main className="flex-1 overflow-hidden min-h-0">
+            {children}
+          </main>
+        </div>
+      </div>
+    );
+  }
+
+  // Default dual-panel layout for chat, settings, and other routes
   return (
-    <div className="flex min-h-screen bg-neutral-100 dark:bg-neutral-950">
+    <div className="flex h-screen bg-neutral-100 dark:bg-neutral-950">
       <AppSidebar />
       <div className="flex flex-1 flex-col">
         <TopNav />

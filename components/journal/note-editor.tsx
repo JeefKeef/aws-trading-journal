@@ -1,29 +1,17 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import {
-  Bold,
-  Italic,
-  Underline,
-  Highlighter,
-  List,
-  ListOrdered,
-  Heading1,
-  Heading2,
-  Heading3,
-  Code,
-  Quote,
-  Link as LinkIcon,
-  Minus,
-  Undo,
-  Redo,
-  Image as ImageIcon,
   Sparkles,
   X,
+  Upload,
+  Trash2,
+  Clock,
+  Tag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import RichTextEditor from "./rich-text-editor";
 import {
   Dialog,
   DialogContent,
@@ -192,6 +180,8 @@ export default function NoteEditor({ noteId, onSave }: NoteEditorProps) {
   const [isLinkTradeOpen, setIsLinkTradeOpen] = useState(false);
   const [isAIDialogOpen, setIsAIDialogOpen] = useState(false);
   const [aiAction, setAiAction] = useState<"summarize" | "trades" | "reformat" | "tags">("summarize");
+  const [isProcessingAI, setIsProcessingAI] = useState(false);
+  const [newTag, setNewTag] = useState("");
 
   // Update note when noteId changes
   useEffect(() => {
@@ -214,26 +204,53 @@ export default function NoteEditor({ noteId, onSave }: NoteEditorProps) {
     return () => clearTimeout(timer);
   }, [note, onSave]);
 
-  const handleAIAction = () => {
-    // Simulate AI response
+  const handleAIAction = async () => {
+    if (!note) return;
+    
+    setIsProcessingAI(true);
     const timestamp = new Date().toISOString();
     
-    if (aiAction === "summarize") {
-      alert("AI Summary: This note documents a high-probability breakout setup with clear entry/exit criteria and proper risk management.");
-    } else if (aiAction === "trades") {
-      alert("AI Analysis: Your last 3 linked trades show a 66% win rate with average R:R of 2.5:1. Breakout setups are your strongest edge.");
-    } else if (aiAction === "tags") {
-      const suggestedTags = ["Technical Analysis", "Swing Trade", "High Probability"];
-      if (note) {
+    try {
+      // Simulate AI API call with timeout
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      if (aiAction === "summarize") {
+        const summary = "**AI Summary:**\n\nThis note documents a high-probability breakout setup with clear entry/exit criteria and proper risk management. Key strengths include well-defined stop loss levels and realistic profit targets with favorable risk/reward ratios.";
+        setNote({
+          ...note,
+          content: `${note.content}\n\n---\n\n${summary}`,
+          updatedAt: timestamp,
+        });
+      } else if (aiAction === "trades") {
+        const analysis = "**AI Trade Analysis:**\n\nBased on linked trades, your performance shows:\n- Win Rate: 66.7%\n- Average R:R: 2.5:1\n- Best Setup Type: Momentum Breakouts\n- Recommendation: Continue focusing on high-volume breakouts above resistance with proper risk management.";
+        setNote({
+          ...note,
+          content: `${note.content}\n\n---\n\n${analysis}`,
+          updatedAt: timestamp,
+        });
+      } else if (aiAction === "reformat") {
+        // Simulate reformatting by adding structure
+        const reformatted = note.content.split("\n\n").join("\n\n");
+        setNote({
+          ...note,
+          content: reformatted,
+          updatedAt: timestamp,
+        });
+      } else if (aiAction === "tags") {
+        const suggestedTags = ["Technical Analysis", "Swing Trade", "High Probability"];
         setNote({
           ...note,
           tags: [...new Set([...note.tags, ...suggestedTags])],
           updatedAt: timestamp,
         });
       }
+    } catch (error) {
+      console.error("AI action failed:", error);
+      alert("Failed to process AI action. Please try again.");
+    } finally {
+      setIsProcessingAI(false);
+      setIsAIDialogOpen(false);
     }
-    
-    setIsAIDialogOpen(false);
   };
 
   const removeLinkedTrade = () => {
@@ -243,7 +260,7 @@ export default function NoteEditor({ noteId, onSave }: NoteEditorProps) {
     setNote({ ...rest, updatedAt: new Date().toISOString() });
   };
 
-  const addTag = (tag: string) => {
+  const addTag = useCallback((tag: string) => {
     if (!note || !tag.trim()) return;
     if (note.tags.includes(tag.trim())) return;
     
@@ -252,9 +269,9 @@ export default function NoteEditor({ noteId, onSave }: NoteEditorProps) {
       tags: [...note.tags, tag.trim()],
       updatedAt: new Date().toISOString(),
     });
-  };
+  }, [note]);
 
-  const removeTag = (tagToRemove: string) => {
+  const removeTag = useCallback((tagToRemove: string) => {
     if (!note) return;
     
     setNote({
@@ -262,7 +279,27 @@ export default function NoteEditor({ noteId, onSave }: NoteEditorProps) {
       tags: note.tags.filter((tag) => tag !== tagToRemove),
       updatedAt: new Date().toISOString(),
     });
-  };
+  }, [note]);
+
+  const handleContentChange = useCallback((content: string) => {
+    if (!note) return;
+    setNote({
+      ...note,
+      content,
+      updatedAt: new Date().toISOString(),
+    });
+  }, [note]);
+
+  const handleImageUpload = useCallback(async (file: File): Promise<string> => {
+    // Simulate image upload - in real app this would upload to storage
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        resolve(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    });
+  }, []);
 
   if (!note) {
     return (
@@ -279,90 +316,26 @@ export default function NoteEditor({ noteId, onSave }: NoteEditorProps) {
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-neutral-950">
-      {/* Toolbar */}
+      {/* Top Toolbar */}
       <div className="border-b border-neutral-200 dark:border-neutral-800 px-5 py-3 flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-2">
-          {/* Formatting Buttons */}
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Bold">
-              <Bold className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Italic">
-              <Italic className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Underline">
-              <Underline className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Highlight">
-              <Highlighter className="h-4 w-4" />
-            </Button>
+        <div className="flex items-center gap-3">
+          {/* Last Updated */}
+          <div className="flex items-center gap-2 text-xs text-neutral-500">
+            <Clock className="h-3.5 w-3.5" />
+            <span>
+              Updated {new Date(note.updatedAt).toLocaleString()}
+            </span>
           </div>
 
-          <Separator orientation="vertical" className="h-6" />
-
-          {/* Headers */}
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Heading 1">
-              <Heading1 className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Heading 2">
-              <Heading2 className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Heading 3">
-              <Heading3 className="h-4 w-4" />
-            </Button>
-          </div>
-
-          <Separator orientation="vertical" className="h-6" />
-
-          {/* Lists & Blocks */}
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Bullet List">
-              <List className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Numbered List">
-              <ListOrdered className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Code">
-              <Code className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Quote">
-              <Quote className="h-4 w-4" />
-            </Button>
-          </div>
-
-          <Separator orientation="vertical" className="h-6" />
-
-          {/* Insert */}
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Link">
-              <LinkIcon className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Image">
-              <ImageIcon className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Divider">
-              <Minus className="h-4 w-4" />
-            </Button>
-          </div>
-
-          <Separator orientation="vertical" className="h-6" />
-
-          {/* Undo/Redo */}
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Undo">
-              <Undo className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Redo">
-              <Redo className="h-4 w-4" />
-            </Button>
-          </div>
+          {/* Save Status */}
+          {saveStatus && (
+            <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+              {saveStatus}
+            </span>
+          )}
         </div>
 
-        <div className="flex items-center gap-3">
-          {/* Save Status */}
-          <span className="text-xs text-neutral-500">{saveStatus}</span>
-
+        <div className="flex items-center gap-2">
           {/* AI Actions */}
           <Button
             variant="outline"
@@ -463,48 +436,87 @@ export default function NoteEditor({ noteId, onSave }: NoteEditorProps) {
                 updatedAt: new Date().toISOString(),
               })
             }
-            className="text-3xl font-bold border-0 px-0 mb-4 focus-visible:ring-0"
+            className="text-3xl font-bold border-0 px-0 mb-4 focus-visible:ring-0 shadow-none"
             placeholder="Untitled Note"
           />
 
           {/* Tags */}
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <Tag className="h-4 w-4 text-neutral-400" />
             {note.tags.map((tag) => (
               <Badge
                 key={tag}
                 variant="secondary"
-                className="cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-700"
-                onClick={() => removeTag(tag)}
+                className="cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
               >
                 {tag}
-                <X className="h-3 w-3 ml-1" />
+                <button
+                  onClick={() => removeTag(tag)}
+                  className="ml-1 hover:text-red-600 dark:hover:text-red-400"
+                >
+                  <X className="h-3 w-3" />
+                </button>
               </Badge>
             ))}
             <Input
               placeholder="Add tag..."
-              className="h-6 w-32 text-xs"
+              value={newTag}
+              onChange={(e) => setNewTag(e.target.value)}
+              className="h-7 w-32 text-xs"
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  addTag(e.currentTarget.value);
-                  e.currentTarget.value = "";
+                if (e.key === "Enter" && newTag.trim()) {
+                  addTag(newTag);
+                  setNewTag("");
                 }
               }}
             />
           </div>
 
-          {/* Content */}
-          <Textarea
-            value={note.content}
-            onChange={(e) =>
-              setNote({
-                ...note,
-                content: e.target.value,
-                updatedAt: new Date().toISOString(),
-              })
-            }
-            className="min-h-[600px] border-0 px-0 font-mono text-sm resize-none focus-visible:ring-0"
-            placeholder="Start writing your note..."
-          />
+          {/* Rich Text Editor */}
+          <div className="mb-6">
+            <RichTextEditor
+              content={note.content}
+              onChange={handleContentChange}
+              placeholder="Start writing your trading journal..."
+              onImageUpload={handleImageUpload}
+            />
+          </div>
+
+          {/* Images */}
+          {note.images && note.images.length > 0 && (
+            <div className="mt-6">
+              <h3 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300 mb-3 flex items-center gap-2">
+                <Upload className="h-4 w-4" />
+                Attached Images ({note.images.length})
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                {note.images.map((image) => (
+                  <div
+                    key={image.id}
+                    className="relative group rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700"
+                  >
+                    <img
+                      src={image.url}
+                      alt={image.fileName}
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-xs p-2 truncate">
+                      {image.fileName}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -621,10 +633,26 @@ export default function NoteEditor({ noteId, onSave }: NoteEditorProps) {
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsAIDialogOpen(false)}>
+            <Button 
+              variant="outline" 
+              onClick={() => setIsAIDialogOpen(false)}
+              disabled={isProcessingAI}
+            >
               Cancel
             </Button>
-            <Button onClick={handleAIAction}>Run AI Action</Button>
+            <Button 
+              onClick={handleAIAction}
+              disabled={isProcessingAI}
+            >
+              {isProcessingAI ? (
+                <>
+                  <Sparkles className="h-4 w-4 mr-2 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                "Run AI Action"
+              )}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
