@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Bot, MessageSquare, Settings, BookOpen, Plus, MoreHorizontal, TrendingUp } from "lucide-react";
+import { Bot, MessageSquare, Settings, BookOpen, Plus, MoreHorizontal, TrendingUp, BarChart3, LineChart } from "lucide-react";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 
@@ -42,8 +42,14 @@ const rightPanelApps = [
   {
     id: "trades",
     label: "Trades",
-    icon: TrendingUp,
+    icon: LineChart,
     href: "/trades", // Direct route to trades page
+  },
+  {
+    id: "analytics",
+    label: "Analytics",
+    icon: BarChart3,
+    href: "/analytics", // Direct route to analytics page
   },
 ];
 
