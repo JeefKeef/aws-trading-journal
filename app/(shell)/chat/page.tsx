@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 type MessageRole = "user" | "assistant" | "system";
 
@@ -191,10 +192,10 @@ export default function ChatPage() {
 
         <form
           onSubmit={handleSubmit}
-          className="border-t border-neutral-200 bg-neutral-50 px-5 py-5"
+          className="border-t border-neutral-200 bg-neutral-50 px-3 py-3"
         >
           <div className="rounded-2xl border border-neutral-200 bg-white overflow-hidden">
-            <textarea
+            <Textarea
               value={inputValue}
               onChange={(event) => setInputValue(event.target.value)}
               placeholder="Ask for synthesis, automation, or specific trade support…"
@@ -267,21 +268,21 @@ function ChatBubble({ message }: { message: ChatMessage }) {
 
   return (
     <article
-      className={`flex w-full gap-3 text-sm sm:text-base ${
+      className={`flex w-full gap-3 text-sm ${
         isUser ? "justify-end" : "justify-start"
       }`}
     >
       {!isUser ? (
-        <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-neutral-900 text-white">
-          <Sparkles className="h-4 w-4" />
+        <div className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-neutral-900 text-white">
+          <Sparkles className="h-3.5 w-3.5" />
         </div>
       ) : (
-        <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-500">
-          <User className="h-4 w-4" />
+        <div className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-500">
+          <User className="h-3.5 w-3.5" />
         </div>
       )}
       <div
-        className={`max-w-[85%] rounded-2xl px-4 py-3 leading-relaxed shadow-sm sm:max-w-[70%] ${
+        className={`max-w-[85%] rounded-xl px-3 py-2 leading-relaxed shadow-sm sm:max-w-[70%] ${
           isSystem
             ? "border border-rose-200 bg-rose-50 text-rose-700"
             : isUser
@@ -289,8 +290,8 @@ function ChatBubble({ message }: { message: ChatMessage }) {
               : "border border-neutral-200 bg-neutral-50 text-neutral-800"
         }`}
       >
-        <p className="whitespace-pre-wrap">{message.content}</p>
-        <span className="mt-2 block text-[11px] uppercase tracking-[0.3em] text-neutral-500">
+        <p className="whitespace-pre-wrap text-sm">{message.content}</p>
+        <span className="mt-1.5 block text-[10px] uppercase tracking-[0.3em] text-neutral-500">
           {formatTimestamp(message.createdAt)}
         </span>
       </div>
