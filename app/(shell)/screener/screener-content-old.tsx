@@ -20,12 +20,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -38,7 +32,7 @@ type FilterCategory = {
 
 type MainTab = "Descriptive" | "Fundamental" | "Technical" | "News" | "ETF" | "All";
 
-type FilterTab = "Overview" | "Valuation" | "Financial" | "Ownership" | "Performance" | "Technical" | "Custom" | "Charts" | "Tickers" | "Basic" | "TA" | "News" | "Snapshot" | "Maps" | "Stats";
+type ViewTab = "Overview" | "Valuation" | "Financial" | "Ownership" | "Performance" | "Technical" | "ETF" | "ETF Perf" | "Custom" | "Charts" | "Tickers" | "Basic" | "TA" | "News" | "Snapshot" | "Maps" | "Stats";
 
 type Stock = {
   ticker: string;
@@ -80,129 +74,327 @@ type Stock = {
   week52Low: number;
 };
 
-// Filters organized by Main Tab (Descriptive, Fundamental, Technical, News, ETF)
-const filtersByMainTab: Record<MainTab, FilterCategory[]> = {
+const filtersByTab: Record<MainTab, FilterCategory[]> = {
   Descriptive: [
-    { name: "Exchange", options: ["Any", "NYSE", "NASDAQ", "AMEX", "OTC"] },
-    { name: "Market Cap", options: ["Any", "Mega ($200B+)", "Large ($10B-$200B)", "Mid ($2B-$10B)", "Small ($300M-$2B)", "Micro (<$300M)", "Nano (<$50M)"] },
-    { name: "Price", options: ["Any", "Under $1", "Under $5", "Under $10", "Under $20", "Under $50", "Over $1", "Over $5", "Over $10", "Over $20", "Over $50", "Over $100"] },
-    { name: "Volume", options: ["Any", "Under 50K", "Under 100K", "Under 500K", "Under 750K", "Under 1M", "Over 50K", "Over 100K", "Over 200K", "Over 300K", "Over 400K", "Over 500K", "Over 750K", "Over 1M", "Over 2M"] },
-    { name: "Sector", options: ["Any", "Basic Materials", "Communication Services", "Consumer Cyclical", "Consumer Defensive", "Energy", "Financial", "Healthcare", "Industrials", "Real Estate", "Technology", "Utilities"] },
-    { name: "Industry", options: ["Any", "Stocks only (ex-Funds)", "Exchange Traded Fund"] },
-    { name: "Country", options: ["Any", "USA", "Foreign (ex-USA)", "Asia", "Europe", "Latin America", "BRIC"] },
-    { name: "Dividend Yield", options: ["Any", "None (0%)", "Positive (>0%)", "High (>5%)", "Very High (>10%)"] },
-    { name: "Float", options: ["Any", "Under 5M", "Under 10M", "Under 20M", "Under 50M", "Under 100M", "Over 5M", "Over 10M", "Over 20M", "Over 50M", "Over 100M", "Over 500M"] },
-    { name: "Option/Short", options: ["Any", "Optionable", "Shortable"] },
-    { name: "Analyst Recom.", options: ["Any", "Strong Buy (1)", "Buy or better", "Buy", "Hold or better", "Hold", "Hold or worse", "Sell", "Sell or worse", "Strong Sell (5)"] },
-    { name: "Earnings Date", options: ["Any", "Today", "Today Before Market Open", "Today After Market Close", "Tomorrow", "Tomorrow Before Market Open", "Tomorrow After Market Close", "Yesterday", "Yesterday Before Market Open", "Yesterday After Market Close", "Next 5 Days", "Previous 5 Days", "This Week", "Next Week", "Previous Week", "This Month"] },
-    { name: "Average Volume", options: ["Any", "Under 50K", "Under 100K", "Under 500K", "Under 750K", "Under 1M", "Over 50K", "Over 100K", "Over 200K", "Over 300K", "Over 400K", "Over 500K", "Over 750K", "Over 1M", "Over 2M"] },
-    { name: "Relative Volume", options: ["Any", "Over 0.1", "Over 0.2", "Over 0.3", "Over 0.4", "Over 0.5", "Over 0.6", "Over 0.7", "Over 0.8", "Over 0.9", "Over 1", "Over 1.5", "Over 2", "Over 3", "Over 4", "Over 5", "Over 10"] },
-    { name: "Shares Outstanding", options: ["Any", "Under 1M", "Under 5M", "Under 10M", "Under 20M", "Under 50M", "Under 100M", "Over 1M", "Over 2M", "Over 5M", "Over 10M", "Over 20M", "Over 50M", "Over 100M", "Over 500M", "Over 1000M"] },
-    { name: "Float Short", options: ["Any", "Low (<5%)", "High (>20%)", "Under 5%", "Under 10%", "Under 15%", "Under 20%", "Under 25%", "Under 30%", "Over 5%", "Over 10%", "Over 15%", "Over 20%", "Over 25%", "Over 30%"] },
-    { name: "IPO Date", options: ["Any", "Today", "Yesterday", "In the last week", "In the last month", "In the last quarter", "In the last year", "In the last 2 years", "In the last 3 years", "In the last 5 years", "More than a year ago", "More than 5 years ago", "More than 10 years ago", "More than 15 years ago", "More than 20 years ago", "More than 25 years ago"] },
-    { name: "Current Ratio", options: ["Any", "High (>3)", "Low (<1)", "Under 1", "Under 0.5", "Over 0.5", "Over 1", "Over 1.5", "Over 2", "Over 3", "Over 4", "Over 5", "Over 10"] },
-    { name: "Quick Ratio", options: ["Any", "High (>3)", "Low (<0.5)", "Under 1", "Under 0.5", "Over 0.5", "Over 1", "Over 1.5", "Over 2", "Over 3", "Over 4", "Over 5", "Over 10"] },
-    { name: "Target Price", options: ["Any", "50% Above Price", "40% Above Price", "30% Above Price", "20% Above Price", "10% Above Price", "5% Above Price", "Above Price", "Below Price", "5% Below Price", "10% Below Price", "20% Below Price", "30% Below Price", "40% Below Price", "50% Below Price"] },
+    {
+      name: "Exchange",
+      options: ["Any", "NYSE", "NASDAQ", "AMEX", "OTC"],
+    },
+    {
+      name: "Index",
+      options: ["Any", "S&P 500", "DJIA"],
+    },
+    {
+      name: "Sector",
+      options: ["Any", "Technology", "Healthcare", "Financial", "Consumer Cyclical", "Industrials", "Energy", "Communication Services", "Basic Materials", "Consumer Defensive", "Real Estate", "Utilities"],
+    },
+    {
+      name: "Industry",
+      options: ["Any", "Software", "Semiconductors", "Biotechnology", "Banks", "Oil & Gas", "Pharmaceuticals", "Auto Manufacturers", "Consumer Electronics"],
+    },
+    {
+      name: "Country",
+      options: ["Any", "USA", "China", "Japan", "United Kingdom", "Canada", "Germany", "France"],
+    },
+    {
+      name: "Market Cap",
+      options: ["Any", "Mega ($200bln+)", "Large ($10bln to $200bln)", "Mid ($2bln to $10bln)", "Small ($300mln to $2bln)", "Micro (<$300mln)"],
+    },
+    {
+      name: "Dividend Yield",
+      options: ["Any", "None (0%)", "Positive (>0%)", "High (>5%)", "Very High (>10%)"],
+    },
+    {
+      name: "Short Float",
+      options: ["Any", "Low (<5%)", "High (>20%)", "Over 10%", "Over 15%"],
+    },
+    {
+      name: "Analyst Recom.",
+      options: ["Any", "Strong Buy (1)", "Buy or better (2)", "Hold or better (3)", "Underperform or better (4)", "Sell"],
+    },
+    {
+      name: "Option/Short",
+      options: ["Any", "Optionable", "Shortable", "Optionable & Shortable"],
+    },
+    {
+      name: "Earnings Date",
+      options: ["Any", "Today", "Today Before Market Open", "Today After Market Close", "Tomorrow", "Tomorrow Before Market Open", "Tomorrow After Market Close", "This Week", "Next Week", "This Month"],
+    },
+    {
+      name: "Average Volume",
+      options: ["Any", "Over 50K", "Over 100K", "Over 500K", "Over 750K", "Over 1M", "Over 2M"],
+    },
+    {
+      name: "Relative Volume",
+      options: ["Any", "Over 0.5", "Over 1", "Over 1.5", "Over 2", "Over 3", "Over 4", "Over 5", "Over 10"],
+    },
+    {
+      name: "Current Volume",
+      options: ["Any", "Over 0", "Over 50K", "Over 100K", "Over 500K", "Over 1M"],
+    },
+    {
+      name: "Price",
+      options: ["Any", "Under $1", "Under $5", "Under $10", "Under $15", "Under $20", "Under $50", "Over $1", "Over $5", "Over $10", "Over $20", "Over $50", "Over $100"],
+    },
+    {
+      name: "Target Price",
+      options: ["Any", "50% Above Price", "40% Above Price", "30% Above Price", "20% Above Price", "10% Above Price", "Above Price", "Below Price", "10% Below Price", "20% Below Price", "30% Below Price"],
+    },
+    {
+      name: "IPO Date",
+      options: ["Any", "Today", "Yesterday", "In the last week", "In the last month", "In the last quarter", "In the last year", "In the last 2 years", "In the last 5 years", "More than a year ago", "More than 5 years ago", "More than 10 years ago", "More than 15 years ago", "More than 20 years ago", "More than 25 years ago"],
+    },
+    {
+      name: "Shares Outstanding",
+      options: ["Any", "Under 1M", "Under 5M", "Under 10M", "Under 20M", "Under 50M", "Under 100M", "Over 1M", "Over 2M", "Over 5M", "Over 10M", "Over 20M", "Over 50M", "Over 100M", "Over 500M", "Over 1000M"],
+    },
+    {
+      name: "Float",
+      options: ["Any", "Under 1M", "Under 5M", "Under 10M", "Under 20M", "Under 50M", "Under 100M", "Over 1M", "Over 2M", "Over 5M", "Over 10M", "Over 20M", "Over 50M", "Over 100M", "Over 500M", "Over 1000M"],
+    },
   ],
   Fundamental: [
-    { name: "P/E", options: ["Any", "Low (<15)", "High (>50)", "Under 5", "Under 10", "Under 15", "Under 20", "Under 25", "Under 30", "Under 35", "Under 40", "Under 45", "Under 50", "Over 5", "Over 10", "Over 15", "Over 20", "Over 25", "Over 30", "Over 35", "Over 40", "Over 45", "Over 50"] },
-    { name: "Forward P/E", options: ["Any", "Low (<15)", "High (>25)", "Under 5", "Under 10", "Under 15", "Under 20", "Under 25", "Over 5", "Over 10", "Over 15", "Over 20", "Over 25"] },
-    { name: "PEG", options: ["Any", "Low (<1)", "High (>2)", "Under 1", "Under 2", "Under 3", "Over 1", "Over 2", "Over 3"] },
-    { name: "P/S", options: ["Any", "Low (<1)", "High (>10)", "Under 1", "Under 2", "Under 3", "Under 4", "Under 5", "Under 6", "Under 7", "Under 8", "Under 9", "Under 10", "Over 1", "Over 2", "Over 3", "Over 4", "Over 5", "Over 6", "Over 7", "Over 8", "Over 9", "Over 10"] },
-    { name: "P/B", options: ["Any", "Low (<1)", "High (>5)", "Under 1", "Under 2", "Under 3", "Under 4", "Under 5", "Under 6", "Under 7", "Under 8", "Under 9", "Under 10", "Over 1", "Over 2", "Over 3", "Over 4", "Over 5", "Over 6", "Over 7", "Over 8", "Over 9", "Over 10"] },
-    { name: "Price/Cash", options: ["Any", "Low (<3)", "High (>50)", "Under 1", "Under 2", "Under 3", "Under 4", "Under 5", "Under 6", "Under 7", "Under 8", "Under 9", "Under 10", "Over 1", "Over 2", "Over 3", "Over 5", "Over 10", "Over 20", "Over 30", "Over 40", "Over 50"] },
-    { name: "Price/Free Cash Flow", options: ["Any", "Low (<15)", "High (>50)", "Under 5", "Under 10", "Under 15", "Under 20", "Under 25", "Under 30", "Under 35", "Under 40", "Under 45", "Under 50", "Over 5", "Over 10", "Over 15", "Over 20", "Over 25", "Over 30", "Over 35", "Over 40", "Over 45", "Over 50"] },
-    { name: "EV/EBITDA", options: ["Any", "Under 5", "Under 10", "Under 15", "Under 20", "Under 25", "Under 30", "Over 5", "Over 10", "Over 15", "Over 20", "Over 25", "Over 30"] },
-    { name: "EV/Sales", options: ["Any", "Under 0.1", "Under 0.5", "Under 1", "Under 2", "Under 3", "Under 4", "Under 5", "Over 0.1", "Over 0.5", "Over 1", "Over 2", "Over 3", "Over 4", "Over 5", "Over 10"] },
-    { name: "Dividend Growth", options: ["Any", "Positive (>0%)", "Negative (<0%)", "Very Positive (>25%)", "High (>50%)"] },
-    { name: "EPS Growth This Year", options: ["Any", "Positive (>0%)", "Negative (<0%)", "Very Positive (>25%)", "Under 5%", "Under 10%", "Under 15%", "Under 20%", "Under 25%", "Under 30%", "Over 5%", "Over 10%", "Over 15%", "Over 20%", "Over 25%", "Over 30%"] },
-    { name: "EPS Growth Next Year", options: ["Any", "Positive (>0%)", "Negative (<0%)", "Very Positive (>25%)", "Under 5%", "Under 10%", "Under 15%", "Under 20%", "Under 25%", "Under 30%", "Over 5%", "Over 10%", "Over 15%", "Over 20%", "Over 25%", "Over 30%"] },
-    { name: "EPS Growth Qtr Over Qtr", options: ["Any", "Positive (>0%)", "Negative (<0%)", "Very Positive (>25%)", "Under 5%", "Under 10%", "Under 15%", "Under 20%", "Under 25%", "Under 30%", "Over 5%", "Over 10%", "Over 15%", "Over 20%", "Over 25%", "Over 30%"] },
-    { name: "EPS Growth TTM", options: ["Any", "Positive (>0%)", "Negative (<0%)", "Very Positive (>25%)", "Under 5%", "Under 10%", "Under 15%", "Under 20%", "Under 25%", "Under 30%", "Over 5%", "Over 10%", "Over 15%", "Over 20%", "Over 25%", "Over 30%"] },
-    { name: "EPS Growth Past 3 Years", options: ["Any", "Positive (>0%)", "Negative (<0%)", "Very Positive (>25%)", "Under 5%", "Under 10%", "Under 15%", "Under 20%", "Under 25%", "Under 30%", "Over 5%", "Over 10%", "Over 15%", "Over 20%", "Over 25%", "Over 30%"] },
-    { name: "EPS Growth Past 5 Years", options: ["Any", "Positive (>0%)", "Negative (<0%)", "Very Positive (>25%)", "Under 5%", "Under 10%", "Under 15%", "Under 20%", "Under 25%", "Under 30%", "Over 5%", "Over 10%", "Over 15%", "Over 20%", "Over 25%", "Over 30%"] },
-    { name: "EPS Growth Next 5 Years", options: ["Any", "Positive (>0%)", "Negative (<0%)", "Very Positive (>25%)", "Under 5%", "Under 10%", "Under 15%", "Under 20%", "Under 25%", "Under 30%", "Over 5%", "Over 10%", "Over 15%", "Over 20%", "Over 25%", "Over 30%"] },
-    { name: "Sales Growth Qtr Over Qtr", options: ["Any", "Positive (>0%)", "Negative (<0%)", "Very Positive (>25%)", "Under 5%", "Under 10%", "Under 15%", "Under 20%", "Under 25%", "Under 30%", "Over 5%", "Over 10%", "Over 15%", "Over 20%", "Over 25%", "Over 30%"] },
-    { name: "Sales Growth TTM", options: ["Any", "Positive (>0%)", "Negative (<0%)", "Very Positive (>25%)", "Under 5%", "Under 10%", "Under 15%", "Under 20%", "Under 25%", "Under 30%", "Over 5%", "Over 10%", "Over 15%", "Over 20%", "Over 25%", "Over 30%"] },
-    { name: "Sales Growth Past 3 Years", options: ["Any", "Positive (>0%)", "Negative (<0%)", "Very Positive (>25%)", "Under 5%", "Under 10%", "Under 15%", "Under 20%", "Under 25%", "Under 30%", "Over 5%", "Over 10%", "Over 15%", "Over 20%", "Over 25%", "Over 30%"] },
-    { name: "Sales Growth Past 5 Years", options: ["Any", "Positive (>0%)", "Negative (<0%)", "Very Positive (>25%)", "Under 5%", "Under 10%", "Under 15%", "Under 20%", "Under 25%", "Under 30%", "Over 5%", "Over 10%", "Over 15%", "Over 20%", "Over 25%", "Over 30%"] },
-    { name: "Earnings & Revenue Surprise", options: ["Any", "Positive Earnings", "Positive Revenue", "Both Positive", "Negative Earnings", "Negative Revenue", "Both Negative"] },
-    { name: "Return on Assets", options: ["Any", "Positive (>0%)", "Negative (<0%)", "Very Positive (>15%)", "Under 5%", "Under 10%", "Under 15%", "Under 20%", "Under 25%", "Under 30%", "Over 5%", "Over 10%", "Over 15%", "Over 20%", "Over 25%", "Over 30%"] },
-    { name: "Return on Equity", options: ["Any", "Positive (>0%)", "Negative (<0%)", "Very Positive (>15%)", "Under 5%", "Under 10%", "Under 15%", "Under 20%", "Under 25%", "Under 30%", "Over 5%", "Over 10%", "Over 15%", "Over 20%", "Over 25%", "Over 30%", "Over 40%", "Over 50%"] },
-    { name: "Return on Invested Capital", options: ["Any", "Positive (>0%)", "Negative (<0%)", "Very Positive (>25%)", "Over 5%", "Over 10%", "Over 15%", "Over 20%", "Over 25%"] },
-    { name: "Current Ratio", options: ["Any", "High (>3)", "Low (<1)", "Under 1", "Under 0.5", "Over 0.5", "Over 1", "Over 1.5", "Over 2", "Over 3", "Over 4", "Over 5", "Over 10"] },
-    { name: "Quick Ratio", options: ["Any", "High (>3)", "Low (<0.5)", "Under 1", "Under 0.5", "Over 0.5", "Over 1", "Over 1.5", "Over 2", "Over 3", "Over 4", "Over 5", "Over 10"] },
-    { name: "LT Debt/Equity", options: ["Any", "High (>0.5)", "Low (<0.1)", "Under 0.1", "Under 0.2", "Under 0.3", "Under 0.4", "Under 0.5", "Over 0.1", "Over 0.2", "Over 0.3", "Over 0.4", "Over 0.5", "Over 1"] },
-    { name: "Debt/Equity", options: ["Any", "High (>0.5)", "Low (<0.1)", "Under 0.1", "Under 0.2", "Under 0.3", "Under 0.4", "Under 0.5", "Over 0.1", "Over 0.2", "Over 0.3", "Over 0.4", "Over 0.5", "Over 1"] },
-    { name: "Gross Margin", options: ["Any", "Positive (>0%)", "Negative (<0%)", "High (>50%)", "Under 10%", "Under 20%", "Under 30%", "Under 40%", "Under 50%", "Under 60%", "Under 70%", "Under 80%", "Under 90%", "Over 10%", "Over 20%", "Over 30%", "Over 40%", "Over 50%", "Over 60%", "Over 70%", "Over 80%", "Over 90%"] },
-    { name: "Operating Margin", options: ["Any", "Positive (>0%)", "Negative (<0%)", "Very Positive (>25%)", "Under 10%", "Under 20%", "Under 30%", "Under 40%", "Under 50%", "Over 10%", "Over 20%", "Over 30%", "Over 40%", "Over 50%"] },
-    { name: "Net Profit Margin", options: ["Any", "Positive (>0%)", "Negative (<0%)", "Very Positive (>20%)", "Under 10%", "Under 20%", "Under 30%", "Under 40%", "Under 50%", "Over 10%", "Over 20%", "Over 30%", "Over 40%", "Over 50%"] },
-    { name: "Payout Ratio", options: ["Any", "Low (<20%)", "High (>50%)", "None (0%)", "Positive (>0%)", "Under 10%", "Under 20%", "Under 30%", "Under 40%", "Under 50%", "Over 10%", "Over 20%", "Over 30%", "Over 40%", "Over 50%", "Over 60%", "Over 70%", "Over 80%", "Over 90%", "Over 100%"] },
-    { name: "Insider Ownership", options: ["Any", "Low (<5%)", "High (>30%)", "Very High (>50%)", "Under 5%", "Under 10%", "Under 15%", "Under 20%", "Under 25%", "Under 30%", "Over 5%", "Over 10%", "Over 15%", "Over 20%", "Over 25%", "Over 30%", "Over 40%", "Over 50%", "Over 60%", "Over 70%", "Over 80%", "Over 90%"] },
-    { name: "Insider Transactions", options: ["Any", "Very Positive (>20%)", "Positive (>0%)", "Negative (<0%)", "Very Negative (<-20%)"] },
-    { name: "Institutional Ownership", options: ["Any", "Low (<5%)", "High (>90%)", "Under 10%", "Under 20%", "Under 30%", "Under 40%", "Under 50%", "Under 60%", "Under 70%", "Under 80%", "Under 90%", "Over 10%", "Over 20%", "Over 30%", "Over 40%", "Over 50%", "Over 60%", "Over 70%", "Over 80%", "Over 90%"] },
-    { name: "Institutional Transactions", options: ["Any", "Very Positive (>20%)", "Positive (>0%)", "Negative (<0%)", "Very Negative (<-20%)"] },
+    {
+      name: "Exchange",
+      options: ["Any", "NYSE", "NASDAQ", "AMEX"],
+    },
+    {
+      name: "Sector",
+      options: ["Any", "Technology", "Healthcare", "Financial", "Consumer Cyclical", "Industrials", "Energy", "Communication Services"],
+    },
+    {
+      name: "Industry",
+      options: ["Any", "Software", "Semiconductors", "Biotechnology", "Banks", "Oil & Gas", "Pharmaceuticals", "Auto Manufacturers"],
+    },
+    {
+      name: "Country",
+      options: ["Any", "USA", "China", "Japan", "United Kingdom", "Canada"],
+    },
+    {
+      name: "Market Cap",
+      options: ["Any", "Mega ($200bln+)", "Large ($10bln to $200bln)", "Mid ($2bln to $10bln)", "Small ($300mln to $2bln)"],
+    },
+  ],
+  Valuation: [
+    {
+      name: "P/E",
+      options: ["Any", "Low (<15)", "Profitable (>0)", "High (>50)", "Under 15", "Under 20", "Under 30", "Over 30"],
+    },
+    {
+      name: "Forward P/E",
+      options: ["Any", "Low (<15)", "Under 15", "Under 20", "Over 20"],
+    },
+    {
+      name: "PEG",
+      options: ["Any", "Low (<1)", "High (>2)", "Under 1", "Under 2", "Over 2"],
+    },
+    {
+      name: "P/S",
+      options: ["Any", "Low (<1)", "Under 1", "Under 3", "Over 3", "Over 10"],
+    },
+    {
+      name: "P/B",
+      options: ["Any", "Low (<1)", "Under 1", "Under 3", "Over 3", "Over 5"],
+    },
+  ],
+  Financial: [
+    {
+      name: "Dividend Yield",
+      options: ["Any", "None (0%)", "Positive (>0%)", "Over 2%", "Over 3%", "Over 5%"],
+    },
+    {
+      name: "ROE",
+      options: ["Any", "Positive (>0%)", "Very Positive (>15%)", "Over 15%", "Over 20%", "Over 30%"],
+    },
+    {
+      name: "ROA",
+      options: ["Any", "Positive (>0%)", "Over 10%", "Over 15%"],
+    },
+    {
+      name: "Current Ratio",
+      options: ["Any", "Over 1", "Over 1.5", "Over 2"],
+    },
+    {
+      name: "Debt/Equity",
+      options: ["Any", "Low (<0.1)", "Under 0.5", "Over 0.5"],
+    },
+    {
+      name: "Gross Margin",
+      options: ["Any", "Positive (>0%)", "Over 30%", "Over 50%"],
+    },
+    {
+      name: "Operating Margin",
+      options: ["Any", "Positive (>0%)", "Over 10%", "Over 20%"],
+    },
+    {
+      name: "Net Profit Margin",
+      options: ["Any", "Positive (>0%)", "Over 10%", "Over 20%"],
+    },
+  ],
+  Ownership: [
+    {
+      name: "Insider Ownership",
+      options: ["Any", "Low (<5%)", "High (>30%)", "Over 10%", "Over 20%", "Over 30%"],
+    },
+    {
+      name: "Institutional Ownership",
+      options: ["Any", "Low (<5%)", "High (>90%)", "Over 50%", "Over 70%"],
+    },
+  ],
+  Performance: [
+    {
+      name: "Performance Week",
+      options: ["Any", "Up", "Down", "Up 5%+", "Up 10%+", "Down 5%+", "Down 10%+"],
+    },
+    {
+      name: "Performance Month",
+      options: ["Any", "Up", "Down", "Up 10%+", "Up 20%+", "Down 10%+"],
+    },
+    {
+      name: "Performance Year",
+      options: ["Any", "Up", "Down", "Up 50%+", "Up 100%+", "Down 50%+"],
+    },
+    {
+      name: "EPS Growth",
+      options: ["Any", "Positive (>0%)", "Over 10%", "Over 20%", "Over 25%"],
+    },
   ],
   Technical: [
-    { name: "Performance", options: ["Any", "Today Up", "Today Down", "Today -15%", "Today -10%", "Today -5%", "Today +5%", "Today +10%", "Today +15%", "Week -30%", "Week -20%", "Week -10%", "Week Down", "Week Up", "Week +10%", "Week +20%", "Week +30%", "Month -50%", "Month -30%", "Month -20%", "Month -10%", "Month Down", "Month Up", "Month +10%", "Month +20%", "Month +30%", "Month +50%", "Quarter -50%", "Quarter -30%", "Quarter -20%", "Quarter -10%", "Quarter Down", "Quarter Up", "Quarter +10%", "Quarter +20%", "Quarter +30%", "Quarter +50%", "Half -75%", "Half -50%", "Half -30%", "Half -20%", "Half -10%", "Half Down", "Half Up", "Half +10%", "Half +20%", "Half +30%", "Half +50%", "Half +75%", "Year -75%", "Year -50%", "Year -30%", "Year -20%", "Year -10%", "Year Down", "Year Up", "Year +10%", "Year +20%", "Year +30%", "Year +50%", "Year +75%", "Year +100%", "Year +200%", "Year +300%", "Year +500%", "YTD -75%", "YTD -50%", "YTD -30%", "YTD -20%", "YTD -10%", "YTD -5%", "YTD Down", "YTD Up", "YTD +5%", "YTD +10%", "YTD +20%", "YTD +30%", "YTD +50%", "YTD +75%", "YTD +100%"] },
-    { name: "Performance 2", options: ["Any", "Week Down", "Week Up", "Month Down", "Month Up", "Quarter Down", "Quarter Up", "Half Down", "Half Up", "Year Down", "Year Up", "YTD Down", "YTD Up"] },
-    { name: "Volatility", options: ["Any", "Week - Over 3%", "Week - Over 4%", "Week - Over 5%", "Week - Over 6%", "Week - Over 7%", "Week - Over 8%", "Week - Over 9%", "Week - Over 10%", "Week - Over 12%", "Week - Over 15%", "Month - Over 2%", "Month - Over 3%", "Month - Over 4%", "Month - Over 5%", "Month - Over 6%", "Month - Over 7%", "Month - Over 8%", "Month - Over 9%", "Month - Over 10%", "Month - Over 12%", "Month - Over 15%"] },
-    { name: "RSI (14)", options: ["Any", "Overbought (90)", "Overbought (80)", "Overbought (70)", "Overbought (60)", "Oversold (40)", "Oversold (30)", "Oversold (20)", "Oversold (10)", "Not Overbought (<60)", "Not Overbought (<70)", "Not Oversold (>30)", "Not Oversold (>40)"] },
-    { name: "Gap", options: ["Any", "Up 0%", "Up 1%", "Up 2%", "Up 3%", "Up 4%", "Up 5%", "Up 6%", "Up 7%", "Up 8%", "Up 9%", "Up 10%", "Up 15%", "Up 20%", "Down 0%", "Down 1%", "Down 2%", "Down 3%", "Down 4%", "Down 5%", "Down 6%", "Down 7%", "Down 8%", "Down 9%", "Down 10%", "Down 15%", "Down 20%"] },
-    { name: "20-Day Simple Moving Average", options: ["Any", "Price below SMA20", "Price 10% below SMA20", "Price 20% below SMA20", "Price 30% below SMA20", "Price 40% below SMA20", "Price 50% below SMA20", "Price above SMA20", "Price 10% above SMA20", "Price 20% above SMA20", "Price 30% above SMA20", "Price 40% above SMA20", "Price 50% above SMA20", "SMA20 crossed above SMA50", "SMA20 crossed below SMA50", "SMA20 crossed above SMA200", "SMA20 crossed below SMA200", "SMA20 above SMA50", "SMA20 below SMA50", "SMA20 above SMA200", "SMA20 below SMA200"] },
-    { name: "50-Day Simple Moving Average", options: ["Any", "Price below SMA50", "Price 10% below SMA50", "Price 20% below SMA50", "Price 30% below SMA50", "Price 40% below SMA50", "Price 50% below SMA50", "Price above SMA50", "Price 10% above SMA50", "Price 20% above SMA50", "Price 30% above SMA50", "Price 40% above SMA50", "Price 50% above SMA50", "SMA50 crossed above SMA20", "SMA50 crossed below SMA20", "SMA50 crossed above SMA200", "SMA50 crossed below SMA200", "SMA50 above SMA20", "SMA50 below SMA20", "SMA50 above SMA200", "SMA50 below SMA200"] },
-    { name: "200-Day Simple Moving Average", options: ["Any", "Price below SMA200", "Price 10% below SMA200", "Price 20% below SMA200", "Price 30% below SMA200", "Price 40% below SMA200", "Price 50% below SMA200", "Price 60% below SMA200", "Price 70% below SMA200", "Price 80% below SMA200", "Price 90% below SMA200", "Price above SMA200", "Price 10% above SMA200", "Price 20% above SMA200", "Price 30% above SMA200", "Price 40% above SMA200", "Price 50% above SMA200", "Price 60% above SMA200", "Price 70% above SMA200", "Price 80% above SMA200", "Price 90% above SMA200", "SMA200 crossed above SMA20", "SMA200 crossed below SMA20", "SMA200 crossed above SMA50", "SMA200 crossed below SMA50", "SMA200 above SMA20", "SMA200 below SMA20", "SMA200 above SMA50", "SMA200 below SMA50"] },
-    { name: "Change", options: ["Any", "Up", "Up 1%", "Up 2%", "Up 3%", "Up 4%", "Up 5%", "Up 6%", "Up 7%", "Up 8%", "Up 9%", "Up 10%", "Up 15%", "Up 20%", "Down", "Down 1%", "Down 2%", "Down 3%", "Down 4%", "Down 5%", "Down 6%", "Down 7%", "Down 8%", "Down 9%", "Down 10%", "Down 15%", "Down 20%"] },
-    { name: "Change from Open", options: ["Any", "Up", "Up 1%", "Up 2%", "Up 3%", "Up 4%", "Up 5%", "Up 6%", "Up 7%", "Up 8%", "Up 9%", "Up 10%", "Up 15%", "Up 20%", "Down", "Down 1%", "Down 2%", "Down 3%", "Down 4%", "Down 5%", "Down 6%", "Down 7%", "Down 8%", "Down 9%", "Down 10%", "Down 15%", "Down 20%"] },
-    { name: "20-Day High/Low", options: ["Any", "New High", "New Low", "5% or more below High", "10% or more below High", "15% or more below High", "20% or more below High", "30% or more below High", "40% or more below High", "50% or more below High", "0-3% below High", "0-5% below High", "0-10% below High", "5% or more above Low", "10% or more above Low", "15% or more above Low", "20% or more above Low", "30% or more above Low", "40% or more above Low", "50% or more above Low", "0-3% above Low", "0-5% above Low", "0-10% above Low"] },
-    { name: "50-Day High/Low", options: ["Any", "New High", "New Low", "5% or more below High", "10% or more below High", "15% or more below High", "20% or more below High", "30% or more below High", "40% or more below High", "50% or more below High", "0-3% below High", "0-5% below High", "0-10% below High", "5% or more above Low", "10% or more above Low", "15% or more above Low", "20% or more above Low", "30% or more above Low", "40% or more above Low", "50% or more above Low", "0-3% above Low", "0-5% above Low", "0-10% above Low"] },
-    { name: "52-Week High/Low", options: ["Any", "New High", "New Low", "5% or more below High", "10% or more below High", "15% or more below High", "20% or more below High", "30% or more below High", "40% or more below High", "50% or more below High", "60% or more below High", "70% or more below High", "80% or more below High", "90% or more below High", "0-3% below High", "0-5% below High", "0-10% below High", "5% or more above Low", "10% or more above Low", "15% or more above Low", "20% or more above Low", "30% or more above Low", "40% or more above Low", "50% or more above Low", "60% or more above Low", "70% or more above Low", "80% or more above Low", "90% or more above Low", "100% or more above Low", "150% or more above Low", "200% or more above Low", "300% or more above Low", "500% or more above Low", "0-3% above Low", "0-5% above Low", "0-10% above Low"] },
-    { name: "All-Time High/Low", options: ["Any", "At High", "At Low"] },
-    { name: "Pattern", options: ["Any", "Horizontal S/R", "Horizontal S/R (Strong)", "TL Resistance", "TL Resistance (Strong)", "TL Support", "TL Support (Strong)", "Wedge Up", "Wedge Up (Strong)", "Wedge Down", "Wedge Down (Strong)", "Triangle Ascending", "Triangle Ascending (Strong)", "Triangle Descending", "Triangle Descending (Strong)", "Wedge", "Wedge (Strong)", "Channel Up", "Channel Up (Strong)", "Channel Down", "Channel Down (Strong)", "Channel", "Channel (Strong)", "Double Top", "Double Bottom", "Multiple Top", "Multiple Bottom", "Head & Shoulders", "Head & Shoulders Inverse"] },
-    { name: "Candlestick", options: ["Any", "Long Lower Shadow", "Long Upper Shadow", "Hammer", "Inverted Hammer", "Spinning Top White", "Spinning Top Black", "Doji", "Dragonfly Doji", "Gravestone Doji", "Marubozu White", "Marubozu Black"] },
-    { name: "Beta", options: ["Any", "Under 0", "Under 0.5", "Under 1", "Under 1.5", "Under 2", "Over 0", "Over 0.5", "Over 1", "Over 1.5", "Over 2", "Over 2.5", "Over 3", "Over 4", "0 to 0.5", "0 to 1", "0.5 to 1", "0.5 to 1.5", "1 to 1.5", "1 to 2"] },
-    { name: "Average True Range", options: ["Any", "Over 0.25", "Over 0.5", "Over 0.75", "Over 1", "Over 1.5", "Over 2", "Over 2.5", "Over 3", "Over 3.5", "Over 4", "Over 4.5", "Over 5", "Under 0.25", "Under 0.5", "Under 0.75", "Under 1", "Under 1.5", "Under 2", "Under 2.5", "Under 3", "Under 3.5", "Under 4", "Under 4.5", "Under 5"] },
-    { name: "After-Hours Close", options: ["Any", "Up", "Up 1%", "Up 2%", "Up 3%", "Up 4%", "Up 5%", "Down", "Down 1%", "Down 2%", "Down 3%", "Down 4%", "Down 5%"] },
-    { name: "After-Hours Change", options: ["Any", "Up", "Up 1%", "Up 2%", "Up 3%", "Up 4%", "Up 5%", "Down", "Down 1%", "Down 2%", "Down 3%", "Down 4%", "Down 5%"] },
-  ],
-  News: [
-    { name: "Latest News", options: ["Any", "Under 1 min ago", "Under 5 mins ago", "Under 10 mins ago", "Under 15 mins ago", "Under 30 mins ago", "Under 1 hour ago", "Under 2 hours ago", "Under 4 hours ago", "Under 8 hours ago", "Under 12 hours ago", "Under 1 day ago", "Under 2 days ago", "Under 3 days ago", "Under 5 days ago", "Under 1 week ago"] },
-    { name: "News Keywords", options: ["Any", "Buyout", "Offering", "Earnings", "FDA", "Meeting", "Dividend", "Split", "Analyst", "Earnings Warning", "Guidance", "Downgrade", "Upgrade", "Legal", "SEC Filing", "Press Release"] },
+    {
+      name: "Price",
+      options: ["Any", "Under $10", "Under $20", "Under $50", "Over $10", "Over $50", "Over $100"],
+    },
+    {
+      name: "Volume",
+      options: ["Any", "Over 100K", "Over 500K", "Over 1M", "Over 5M"],
+    },
+    {
+      name: "Relative Volume",
+      options: ["Any", "Over 0.5", "Over 1", "Over 1.5", "Over 2"],
+    },
+    {
+      name: "Beta",
+      options: ["Any", "Under 1", "Under 1.5", "Over 1", "Over 1.5", "Over 2"],
+    },
+    {
+      name: "RSI",
+      options: ["Any", "Overbought (>70)", "Oversold (<30)", "Not Overbought (<70)", "Not Oversold (>30)"],
+    },
+    {
+      name: "Change",
+      options: ["Any", "Up", "Down", "Up 1%", "Up 5%", "Down 1%", "Down 5%"],
+    },
   ],
   ETF: [
-    { name: "Single Category Asset Type", options: ["Any", "Domestic Equity", "International Equity", "Fixed Income", "Commodities", "Real Estate", "Currency", "Alternative"] },
-    { name: "ETF Type", options: ["Any", "Index", "Active", "Leveraged", "Inverse", "Leveraged & Inverse"] },
-    { name: "Sector/Theme", options: ["Any", "Technology", "Healthcare", "Financial", "Consumer", "Energy", "Utilities", "Materials", "Industrials", "Real Estate", "Communication Services", "Consumer Defensive", "Consumer Cyclical", "Basic Materials", "Communication", "Dividend", "Growth", "Value", "Blend", "Small Cap", "Mid Cap", "Large Cap", "International Developed", "International Emerging"] },
-    { name: "Region", options: ["Any", "North America", "Latin America", "Europe", "Asia Pacific", "Africa/Middle East", "Global", "United States", "China", "Japan", "United Kingdom", "Canada", "India", "Brazil"] },
-    { name: "Bond Type", options: ["Any", "Treasury", "Corporate", "Municipal", "High Yield", "Investment Grade", "Government", "Mortgage Backed", "International"] },
-    { name: "Average Maturity", options: ["Any", "Short (1-3 years)", "Intermediate (3-10 years)", "Long (10+ years)"] },
-    { name: "Quant Type", options: ["Any", "Quality", "Value", "Momentum", "Low Volatility", "Dividend", "Size", "Growth", "Multi-Factor"] },
-    { name: "Commodity Type", options: ["Any", "Gold", "Silver", "Oil", "Natural Gas", "Agriculture", "Industrial Metals", "Precious Metals", "Broad Basket"] },
-    { name: "ESG Type", options: ["Any", "ESG Broad", "Environmental", "Social", "Governance", "Faith-Based", "Exclude Sectors"] },
-    { name: "Dividend Type", options: ["Any", "High Dividend", "Dividend Growth", "Dividend Aristocrats", "Low/No Dividend"] },
-    { name: "Structure Type", options: ["Any", "Open-Ended", "UIT", "Grantor Trust", "Partnership", "Closed-End"] },
-    { name: "Active/Passive", options: ["Any", "Active", "Passive"] },
-    { name: "Inverse/Leveraged", options: ["Any", "None", "Inverse", "Leveraged (2x)", "Leveraged (3x)", "Leveraged & Inverse (-2x)", "Leveraged & Inverse (-3x)"] },
-    { name: "Growth/Value", options: ["Any", "Growth", "Value", "Blend"] },
-    { name: "Market Cap. (ETF)", options: ["Any", "Large Cap", "Mid Cap", "Small Cap", "Micro Cap", "Multi Cap"] },
-    { name: "Developed/Emerging", options: ["Any", "Developed Markets", "Emerging Markets", "Frontier Markets", "Blend"] },
-    { name: "Currency", options: ["Any", "USD", "EUR", "GBP", "JPY", "CHF", "CNY", "Multi-Currency"] },
-    { name: "Index Weighting", options: ["Any", "Market Cap Weighted", "Equal Weighted", "Revenue Weighted", "Fundamentally Weighted", "Volatility Weighted"] },
-    { name: "Sponsor", options: ["Any", "Vanguard", "iShares", "SPDR", "Invesco", "Schwab", "ProShares", "First Trust", "WisdomTree", "VanEck", "Global X"] },
-    { name: "Net Expense Ratio", options: ["Any", "Under 0.10%", "Under 0.20%", "Under 0.30%", "Under 0.50%", "Under 0.75%", "Under 1.00%", "Over 0.20%", "Over 0.50%", "Over 0.75%", "Over 1.00%"] },
-    { name: "Net Fund Flows", options: ["Any", "Positive", "Negative", "Very Positive (>$1M)", "Very Positive (>$10M)", "Very Positive (>$100M)", "Very Negative (<-$1M)", "Very Negative (<-$10M)", "Very Negative (<-$100M)"] },
+    {
+      name: "Category",
+      options: ["Any", "Equity", "Bond", "Commodity", "Currency", "Hybrid"],
+    },
+    {
+      name: "Issuer",
+      options: ["Any", "Vanguard", "iShares", "SPDR", "Invesco", "Schwab"],
+    },
+    {
+      name: "Assets",
+      options: ["Any", "Over $1B", "Over $5B", "Over $10B"],
+    },
   ],
-  All: [], // Will be populated dynamically by combining all other tabs
-};
-
-// View tabs for different data presentations (bottom tabs)
-const viewTabsByMainTab: Record<MainTab, FilterTab[]> = {
-  Descriptive: ["Overview", "Valuation", "Financial", "Ownership", "Performance", "Custom"],
-  Fundamental: ["Overview", "Valuation", "Financial", "Ownership", "Performance", "Custom"],
-  Technical: ["Technical", "Basic", "TA"],
-  News: ["News", "Snapshot"],
-  ETF: ["Overview", "Performance", "Technical"],
-  All: ["Overview", "Valuation", "Financial", "Ownership", "Performance", "Technical", "Custom", "Basic", "TA", "News", "Snapshot"],
+  "ETF Perf": [
+    {
+      name: "Performance",
+      options: ["Any", "Up Today", "Down Today", "Up Week", "Down Week", "Up Month", "Down Month"],
+    },
+    {
+      name: "Volatility",
+      options: ["Any", "Low", "Medium", "High"],
+    },
+  ],
+  Custom: [
+    {
+      name: "Analyst Recom.",
+      options: ["Any", "Strong Buy", "Buy", "Hold", "Underperform", "Sell"],
+    },
+    {
+      name: "Option/Short",
+      options: ["Any", "Optionable", "Shortable", "Optionable & Shortable"],
+    },
+    {
+      name: "Earnings Date",
+      options: ["Any", "Today", "This Week", "Next Week", "This Month"],
+    },
+    {
+      name: "IPO Date",
+      options: ["Any", "Last Year", "Last 2 Years", "Last 5 Years", "More than 5 Years"],
+    },
+    {
+      name: "Target Price",
+      options: ["Any", "Above Price", "Below Price", "10% Above", "10% Below"],
+    },
+  ],
+  Charts: [
+    {
+      name: "Chart Type",
+      options: ["Any", "Candlestick", "Line", "Area", "OHLC"],
+    },
+    {
+      name: "Timeframe",
+      options: ["Any", "Intraday", "Daily", "Weekly", "Monthly"],
+    },
+  ],
+  Tickers: [
+    {
+      name: "Display",
+      options: ["Any", "Ticker Only", "Ticker + Name", "Name Only"],
+    },
+  ],
+  Basic: [
+    {
+      name: "View",
+      options: ["Any", "Overview", "Valuation", "Financial", "Ownership", "Performance", "Technical"],
+    },
+  ],
+  TA: [
+    {
+      name: "Pattern",
+      options: ["Any", "Head and Shoulders", "Triangle", "Wedge", "Channel", "Double Top", "Double Bottom"],
+    },
+    {
+      name: "Candlestick",
+      options: ["Any", "Doji", "Hammer", "Shooting Star", "Engulfing", "Morning Star", "Evening Star"],
+    },
+    {
+      name: "Gap",
+      options: ["Any", "Gap Up", "Gap Down", "No Gap"],
+    },
+  ],
+  News: [
+    {
+      name: "News Type",
+      options: ["Any", "All News", "Earnings", "FDA", "Upgrades", "Downgrades"],
+    },
+  ],
+  Snapshot: [
+    {
+      name: "Snapshot View",
+      options: ["Any", "Compact", "Detailed", "Grid"],
+    },
+  ],
+  Maps: [
+    {
+      name: "Map Type",
+      options: ["Any", "Performance", "Market Cap", "Volume"],
+    },
+    {
+      name: "Grouping",
+      options: ["Any", "Sector", "Industry", "Country"],
+    },
+  ],
+  Stats: [
+    {
+      name: "Statistics",
+      options: ["Any", "Key Stats", "Trading Info", "Share Stats", "Dividends"],
+    },
+  ],
 };
 
 const allStocks: Stock[] = [
@@ -278,13 +470,12 @@ export default function ScreenerPage() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   
+  // Main screener tab state
+  const [mainTab, setMainTab] = useState<"Descriptive" | "Fundamental" | "Technical" | "News" | "ETF" | "All">("Descriptive");
+  
   // Get tab from URL or default to Overview
   const tabFromUrl = searchParams.get('tab') as FilterTab | null;
   const [activeTab, setActiveTab] = useState<FilterTab>(tabFromUrl || "Overview");
-  
-  // Main tab state for organizing filter categories
-  const mainTabFromUrl = searchParams.get('mainTab') as MainTab | null;
-  const [mainTab, setMainTab] = useState<MainTab>(mainTabFromUrl || "Descriptive");
   
   // Store initial view parameter to preserve it
   const initialViewRef = useRef(searchParams.get('view'));
@@ -526,7 +717,7 @@ export default function ScreenerPage() {
 
       return true;
     });
-  }, [allStocks, selectedFilters, searchQuery]);
+  }, [selectedFilters, searchQuery]);
 
   const toggleFilter = (category: string, option: string) => {
     setSelectedFilters(prev => ({
@@ -574,8 +765,7 @@ export default function ScreenerPage() {
     return key !== 'view' && value && value !== "Any";
   }).length;
 
-  // Get available view tabs based on selected main tab
-  const allTabs: FilterTab[] = viewTabsByMainTab[mainTab] || viewTabsByMainTab.Descriptive;
+  const allTabs: FilterTab[] = ["Overview", "Valuation", "Financial", "Ownership", "Performance", "Technical", "ETF", "ETF Perf", "Custom", "Charts", "Tickers", "Basic", "TA", "News", "Snapshot", "Maps", "Stats"];
 
   const addToJournal = (stock: Stock) => {
     toast.success(`${stock.ticker} added to journal`, {
@@ -616,8 +806,16 @@ export default function ScreenerPage() {
         return ["No.", "Ticker", "Company", "Price", "Change %", "Week %", "Month %", "Year %", "EPS Growth %", "Actions"];
       case "Technical":
         return ["No.", "Ticker", "Company", "Price", "Change %", "Volume", "Rel Vol", "Beta", "RSI", "SMA20", "SMA50", "SMA200", "Actions"];
+      case "ETF":
+        return ["No.", "Ticker", "Company", "Price", "Change %", "Volume", "Mkt Cap", "Actions"];
+      case "ETF Perf":
+        return ["No.", "Ticker", "Company", "Price", "Change %", "Week %", "Month %", "Year %", "Actions"];
       case "Custom":
         return ["No.", "Ticker", "Company", "Price", "Change %", "Volume", "Mkt Cap", "P/E", "Actions"];
+      case "Charts":
+        return ["No.", "Ticker", "Company", "Price", "Change %", "Volume", "High", "Low", "Actions"];
+      case "Tickers":
+        return ["No.", "Ticker", "Company", "Sector", "Price", "Change %", "Volume", "Actions"];
       case "Basic":
         return ["No.", "Ticker", "Company", "Sector", "Price", "Change %", "Volume", "Mkt Cap", "Actions"];
       case "TA":
@@ -626,6 +824,10 @@ export default function ScreenerPage() {
         return ["No.", "Ticker", "Company", "Price", "Change %", "Volume", "Actions"];
       case "Snapshot":
         return ["No.", "Ticker", "Company", "Sector", "Price", "Change %", "Volume", "Mkt Cap", "P/E", "Actions"];
+      case "Maps":
+        return ["No.", "Ticker", "Company", "Sector", "Market Cap", "Change %", "Actions"];
+      case "Stats":
+        return ["No.", "Ticker", "Company", "Price", "Volume", "Mkt Cap", "P/E", "Beta", "Actions"];
       default:
         return ["No.", "Ticker", "Company", "Price", "Change %", "Volume", "Mkt Cap", "Actions"];
     }
@@ -746,10 +948,10 @@ export default function ScreenerPage() {
             {showPresets && (
               <>
                 <div 
-                  className="fixed inset-0 z-[150]" 
+                  className="fixed inset-0 z-150" 
                   onClick={() => setShowPresets(false)}
                 />
-                <div className="absolute top-full right-0 mt-2 w-72 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-xl z-[200] overflow-hidden">
+                <div className="absolute top-full right-0 mt-2 w-72 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-xl z-200 overflow-hidden">
                   <div className="px-3 py-2 bg-neutral-50 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
                     <span className="text-xs font-semibold text-neutral-700 dark:text-neutral-100">My Presets</span>
                     {activeFilterCount > 0 && (
@@ -828,106 +1030,26 @@ export default function ScreenerPage() {
           </button>
         </div>
 
-        {/* Controls Accordion */}
-        <Accordion type="single" collapsible defaultValue="controls" className="border-b border-neutral-200 dark:border-neutral-800">
-          <AccordionItem value="controls" className="border-none">
-            <AccordionTrigger className="px-4 py-3 text-sm font-semibold hover:no-underline hover:bg-neutral-50 dark:hover:bg-neutral-900/50">
-              Controls
-            </AccordionTrigger>
-            <AccordionContent>
-              {/* Main Tabs (Top) - Filter Categories (Descriptive, Fundamental, Technical, News, ETF, All) */}
-              <div className="border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50">
-                <div className="px-4 flex gap-1 overflow-x-auto">
-                  {(["Descriptive", "Fundamental", "Technical", "News", "ETF", "All"] as MainTab[]).map((tab) => (
-                    <button
-                      key={tab}
-                      onClick={() => setMainTab(tab)}
-                      className={`px-4 py-3 text-xs font-semibold border-b-2 transition whitespace-nowrap ${
-                        mainTab === tab
-                          ? "border-neutral-900 dark:border-neutral-100 text-neutral-900 dark:text-neutral-100"
-                          : "border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300"
-                      }`}
-                    >
-                      {tab}
-                    </button>
-                  ))}
-                </div>
-              </div>
+        {/* Main Screener Tabs */}
+        <div className="border-b border-neutral-200 dark:border-neutral-800">
+          <div className="px-4 flex gap-1">
+            {["Descriptive", "Fundamental", "Technical", "News", "ETF", "All"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setMainTab(tab as typeof mainTab)}
+                className={`px-4 py-3 text-sm font-medium border-b-2 transition whitespace-nowrap ${
+                  mainTab === tab
+                    ? "border-neutral-900 dark:border-neutral-100 text-neutral-900 dark:text-neutral-100"
+                    : "border-transparent text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 hover:border-neutral-300 dark:hover:border-neutral-700"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        </div>
 
-              {/* Filter Categories */}
-              <div className="px-4 py-3 max-h-[30vh] overflow-y-auto relative z-50">
-                {mainTab === "All" 
-                  ? // Show ALL filters organized by main tab sections when "All" is selected
-                    <div className="space-y-4">
-                      {Object.entries(filtersByMainTab)
-                        .filter(([key]) => key !== "All") // Exclude "All" itself
-                        .map(([tabName, categories]) => (
-                          <div key={tabName}>
-                            {/* Section Header */}
-                            <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-700 dark:text-neutral-300 mb-2 px-1 text-center">
-                              {tabName}
-                            </h3>
-                            {/* Filters Grid */}
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-                              {categories.map((category) => (
-                                <FilterDropdown
-                                  key={category.name}
-                                  category={category}
-                                  selectedValue={selectedFilters[category.name]}
-                                  onSelect={(option) => toggleFilter(category.name, option)}
-                                />
-                              ))}
-                            </div>
-                          </div>
-                        ))
-                      }
-                    </div>
-                  : // Show filters for the selected main tab in a simple grid
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-                      {filtersByMainTab[mainTab]?.map((category) => (
-                        <FilterDropdown
-                          key={category.name}
-                          category={category}
-                          selectedValue={selectedFilters[category.name]}
-                          onSelect={(option) => toggleFilter(category.name, option)}
-                        />
-                      ))}
-                    </div>
-                }
-              </div>
-
-              {/* Active Filters Display */}
-              {activeFilterCount > 0 && (
-                <div className="px-4 py-2 bg-neutral-50 dark:bg-neutral-900 border-t border-neutral-100 dark:border-neutral-800">
-                  <div className="flex items-center flex-wrap gap-2">
-                    <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Active filters:</span>
-                    {Object.entries(selectedFilters).map(([category, value]) => {
-                      if (!value || value === "Any" || category === "view") return null;
-                      return (
-                        <button
-                          key={category}
-                          onClick={() => toggleFilter(category, value)}
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 rounded-full hover:bg-neutral-800 dark:hover:bg-neutral-200 transition"
-                        >
-                          {category}: {value}
-                          <X className="h-3 w-3" />
-                        </button>
-                      );
-                    })}
-                    <button
-                      onClick={openSaveDialog}
-                      className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-neutral-900 bg-white border dark:text-neutral-100 dark:bg-neutral-800 dark:border-neutral-700 border-neutral-300 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-700 transition ml-auto"
-                    >
-                      💾 Save as Preset
-                    </button>
-                  </div>
-                </div>
-              )}
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-
-        {/* View Tabs (Bottom tabs) - Below filters */}
+        {/* Filter Tabs */}
         <div className="border-b border-neutral-200 dark:border-neutral-800 overflow-x-auto">
           <div className="px-4 flex gap-1 min-w-max">
             {allTabs.map((tab) => {
@@ -957,6 +1079,48 @@ export default function ScreenerPage() {
             })}
           </div>
         </div>
+
+        {/* Filter Categories */}
+        <div className="px-4 py-3 max-h-[30vh] overflow-y-auto relative z-50">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
+            {filtersByTab[activeTab].map((category) => (
+              <FilterDropdown
+                key={category.name}
+                category={category}
+                selectedValue={selectedFilters[category.name]}
+                onSelect={(option) => toggleFilter(category.name, option)}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Active Filters Display */}
+        {activeFilterCount > 0 && (
+          <div className="px-4 py-2 bg-neutral-50 dark:bg-neutral-900 border-t border-neutral-100 dark:border-neutral-800">
+            <div className="flex items-center flex-wrap gap-2">
+              <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">Active filters:</span>
+              {Object.entries(selectedFilters).map(([category, value]) => {
+                if (!value || value === "Any" || category === "view") return null;
+                return (
+                  <button
+                    key={category}
+                    onClick={() => toggleFilter(category, value)}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 rounded-full hover:bg-neutral-800 dark:hover:bg-neutral-200 transition"
+                  >
+                    {category}: {value}
+                    <X className="h-3 w-3" />
+                  </button>
+                );
+              })}
+              <button
+                onClick={openSaveDialog}
+                className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-neutral-900 bg-white border dark:text-neutral-100 dark:bg-neutral-800 dark:border-neutral-700 border-neutral-300 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-700 transition ml-auto"
+              >
+                💾 Save as Preset
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Save Preset Dialog */}

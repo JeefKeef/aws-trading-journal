@@ -1,7 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { useSearchParams, usePathname } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 import {
@@ -12,10 +11,14 @@ import {
 import {
   RightPaneProvider,
 } from "@/components/layout/right-pane-context";
+import {
+  LeftPanelProvider,
+  useLeftPanel,
+} from "@/components/layout/left-panel-context";
 import { AppSidebar } from "@/components/layout/sidebar";
 import { TopNav } from "@/components/layout/top-nav";
 
-// Import market page components
+// Import page components
 import MarketPage from "./market/page";
 import ScreenerContent from "./screener/screener-content";
 import ChartsPage from "./charts/page";
@@ -23,80 +26,99 @@ import GroupsPage from "./groups/page";
 import FuturesPage from "./futures/page";
 import ForexPage from "./forex/page";
 import CryptoPage from "./crypto/page";
-import ChatPage from "./chat/page";
 import JournalContent from "./journal/journal-content";
 
-export default function ShellLayout({ children }: { children: ReactNode }) {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+// Import left panel components
+import ChatPage from "./chat/page";
+import SettingsPage from "./settings/page";
 
-  // Check if we're on the journal page or if journal view is requested
-  const isJournalRoute = pathname === "/journal";
-  const hasJournalView = searchParams.get('view') === 'journal';
-  
-  // Check if we're on the screener page or if screener view is requested
-  const isScreenerRoute = pathname === "/screener";
-  const hasScreenerView = searchParams.get('view') === 'screener';
-
+export default function ShellLayout() {
   return (
-    <RightPaneProvider>
-      <div className="flex min-h-screen bg-neutral-100 dark:bg-neutral-950">
-        <AppSidebar />
-        <div className="flex flex-1 flex-col">
-          <TopNav />
-          <main className="flex-1 overflow-hidden min-h-0">
-            <div className="flex h-full w-full flex-col">
-              <div className="hidden h-full w-full md:flex">
-                <ResizablePanelGroup direction="horizontal" className="h-full w-full">
-                            <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-            <div className="h-full overflow-auto">
-              {/* Always show chat in left panel when on journal or screener routes */}
-              {(isJournalRoute || isScreenerRoute) ? <ChatPage /> : children}
-            </div>
-          </ResizablePanel>
-                  <ResizableHandle withHandle className="bg-neutral-200 dark:bg-neutral-800" />
-                            <ResizablePanel defaultSize={80} minSize={50}>
-            <div className="h-full overflow-auto">
-              {/* Show journal content when on journal route or when view=journal */}
-              {(isJournalRoute || hasJournalView) ? (
-                <JournalContent />
-              ) : (isScreenerRoute || hasScreenerView) ? (
-                <ScreenerContent />
-              ) : (
-                <RightPane />
-              )}
-            </div>
-          </ResizablePanel>
-                </ResizablePanelGroup>
-              </div>
-
-              <div className="flex h-full w-full flex-col md:hidden">
-                <section className="flex h-full min-h-0 flex-col border-b border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
-                  {(isJournalRoute || isScreenerRoute) ? <ChatPage /> : children}
-                </section>
-                {(isJournalRoute || hasJournalView) ? (
-                  <JournalContent />
-                ) : (isScreenerRoute || hasScreenerView) ? (
-                  <ScreenerContent />
-                ) : (
-                  <RightPane />
-                )}
-              </div>
-            </div>
-          </main>
-        </div>
-      </div>
-    </RightPaneProvider>
+    <LeftPanelProvider>
+      <RightPaneProvider>
+        <ShellContent />
+      </RightPaneProvider>
+    </LeftPanelProvider>
   );
 }
 
-function RightPane() {
+function ShellContent() {
   const searchParams = useSearchParams();
+  const { mode: leftPanelMode } = useLeftPanel();
+
+  // Check if app query param is set for right panel
+  const appView = searchParams.get('app');
+
+  return (
+    <div className="flex min-h-screen bg-neutral-100 dark:bg-neutral-950">
+      <AppSidebar />
+      <div className="flex flex-1 flex-col">
+        <TopNav />
+        <main className="flex-1 overflow-hidden min-h-0">
+          <div className="flex h-full w-full flex-col">
+            <div className="hidden h-full w-full md:flex">
+              <ResizablePanelGroup direction="horizontal" className="h-full w-full">
+                {/* Left Panel - Toggle between Chat and Settings */}
+                <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+                  <div className="h-full overflow-auto">
+                    <LeftPanelContent mode={leftPanelMode} />
+                  </div>
+                </ResizablePanel>
+                <ResizableHandle withHandle className="bg-neutral-200 dark:bg-neutral-800" />
+                {/* Right Panel - Dynamic content based on ?app= query param */}
+                <ResizablePanel defaultSize={80} minSize={50}>
+                  <div className="h-full overflow-auto">
+                    <RightPane appView={appView} />
+                  </div>
+                </ResizablePanel>
+              </ResizablePanelGroup>
+            </div>
+
+            {/* Mobile layout */}
+            <div className="flex h-full w-full flex-col md:hidden">
+              <section className="flex h-full min-h-0 flex-col border-b border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+                <LeftPanelContent mode={leftPanelMode} />
+              </section>
+              <RightPane appView={appView} />
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
+
+// Left panel content renderer - toggles between Chat and Settings
+function LeftPanelContent({ mode }: { mode: "chat" | "settings" }) {
+  switch (mode) {
+    case "chat":
+      return <ChatPage />;
+    case "settings":
+      return <SettingsPage />;
+    default:
+      return <ChatPage />;
+  }
+}
+
+// Right panel content renderer - shows apps or market tabs
+function RightPane({ appView }: { appView: string | null }) {
+  const searchParams = useSearchParams();
+  
+  // If specific app is selected, show it
+  if (appView === 'journal') {
+    return <JournalContent />;
+  }
+  
+  // Default to screener if no app is specified
+  if (!appView || appView === 'screener') {
+    return <ScreenerContent />;
+  }
+  
+  // Market view with tabs (only if explicitly requested)
   const view = searchParams.get('view') || 'market';
   
   const navItems = [
     { id: "market", label: "Overview" },
-    { id: "screener", label: "Screener" },
     { id: "charts", label: "Charts" },
     { id: "groups", label: "Groups" },
     { id: "futures", label: "Futures" },
@@ -106,8 +128,6 @@ function RightPane() {
 
   const renderContent = () => {
     switch (view) {
-      case "screener":
-        return <ScreenerContent />;
       case "charts":
         return <ChartsPage />;
       case "groups":
