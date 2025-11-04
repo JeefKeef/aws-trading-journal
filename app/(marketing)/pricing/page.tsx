@@ -201,8 +201,14 @@ export default function PricingPage() {
             <span className="text-xl font-bold">TraderCloud</span>
           </Link>
           <div className="flex items-center gap-6">
-            <Link href="/" className="text-sm text-muted-foreground transition hover:text-foreground">
-              Home
+            <Link href="/features" className="text-sm text-muted-foreground transition hover:text-foreground">
+              Features
+            </Link>
+            <Link href="/pricing" className="text-sm font-medium text-foreground transition hover:text-foreground">
+              Pricing
+            </Link>
+            <Link href="/docs" className="text-sm text-muted-foreground transition hover:text-foreground">
+              Docs
             </Link>
             <Link href="/affiliate" className="text-sm text-muted-foreground transition hover:text-foreground">
               Affiliate
@@ -531,9 +537,17 @@ export default function PricingPage() {
               <span className="text-lg font-bold">TraderCloud</span>
             </Link>
             
-            <p className="text-sm text-muted-foreground">
-              Made for traders, by traders. © 2025 TraderCloud
-            </p>
+            <div className="flex items-center gap-6 text-sm">
+              <Link href="/terms" className="text-muted-foreground hover:text-foreground transition">
+                Terms
+              </Link>
+              <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition">
+                Privacy
+              </Link>
+              <p className="text-muted-foreground">
+                © 2025 TraderCloud
+              </p>
+            </div>
           </div>
         </div>
       </footer>

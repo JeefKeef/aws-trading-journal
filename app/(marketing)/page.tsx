@@ -17,14 +17,23 @@ export default function LandingPage() {
             <span className="text-xl font-bold">TraderCloud</span>
           </Link>
           <div className="flex items-center gap-6">
+            <Link href="/features" className="text-sm text-muted-foreground transition hover:text-foreground">
+              Features
+            </Link>
             <Link href="/pricing" className="text-sm text-muted-foreground transition hover:text-foreground">
               Pricing
+            </Link>
+            <Link href="/docs" className="text-sm text-muted-foreground transition hover:text-foreground">
+              Docs
             </Link>
             <Link href="/affiliate" className="text-sm text-muted-foreground transition hover:text-foreground">
               Affiliate
             </Link>
+            <Link href="/login" className="text-sm text-muted-foreground transition hover:text-foreground">
+              Sign In
+            </Link>
             <Link
-              href="/chat"
+              href="/signup"
               className="rounded-lg border-2 border-foreground px-4 py-2 text-sm font-semibold transition hover:bg-foreground hover:text-background"
             >
               Start Free
@@ -77,7 +86,7 @@ export default function LandingPage() {
             {/* Strong CTA with Urgency */}
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
-                href="/chat"
+                href="/signup"
                 className="group inline-flex items-center gap-2 rounded-lg border-2 border-foreground bg-foreground px-8 py-4 text-lg font-semibold text-background transition hover:bg-background hover:text-foreground"
               >
                 Start Free - No Credit Card
@@ -306,7 +315,7 @@ export default function LandingPage() {
             
             <div className="flex flex-col items-center gap-4">
               <Link
-                href="/chat"
+                href="/signup"
                 className="group inline-flex items-center gap-2 rounded-lg border-2 border-background bg-background px-8 py-4 text-lg font-semibold text-foreground transition hover:bg-transparent hover:text-background"
               >
                 Start Free Now - No Credit Card Required
@@ -324,29 +333,85 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="border-t py-12 px-6 bg-white">
         <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg border-2">
-                <Sparkles className="h-4 w-4" />
-              </div>
-              <span className="text-lg font-bold">TraderCloud</span>
-            </Link>
-            
-            <p className="text-sm text-muted-foreground">
-              Made for traders, by traders. © 2025 TraderCloud
-            </p>
-            
-            <div className="flex items-center gap-4">
-              <Link href="https://twitter.com/TraderCloudAI" className="text-muted-foreground transition hover:text-foreground">
-                <Twitter className="h-5 w-5" />
+          <div className="grid gap-8 md:grid-cols-4 mb-8">
+            {/* Brand */}
+            <div>
+              <Link href="/" className="flex items-center gap-2 mb-4">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg border-2">
+                  <Sparkles className="h-4 w-4" />
+                </div>
+                <span className="text-lg font-bold">TraderCloud</span>
               </Link>
-              <Link href="https://youtube.com/@TraderCloudAI" className="text-muted-foreground transition hover:text-foreground">
-                <Youtube className="h-5 w-5" />
-              </Link>
-              <Link href="https://discord.gg/tradercloud" className="text-muted-foreground transition hover:text-foreground">
-                <Users className="h-5 w-5" />
-              </Link>
+              <p className="text-sm text-muted-foreground">
+                Made for traders, by traders.
+              </p>
             </div>
+
+            {/* Product */}
+            <div>
+              <h3 className="font-semibold mb-3">Product</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link href="/features" className="text-sm text-muted-foreground hover:text-foreground transition">
+                    Features
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/pricing" className="text-sm text-muted-foreground hover:text-foreground transition">
+                    Pricing
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/docs" className="text-sm text-muted-foreground hover:text-foreground transition">
+                    Documentation
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/affiliate" className="text-sm text-muted-foreground hover:text-foreground transition">
+                    Affiliate Program
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Legal */}
+            <div>
+              <h3 className="font-semibold mb-3">Legal</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground transition">
+                    Terms of Service
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition">
+                    Privacy Policy
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Social */}
+            <div>
+              <h3 className="font-semibold mb-3">Community</h3>
+              <div className="flex items-center gap-4">
+                <Link href="https://twitter.com/TraderCloudAI" className="text-muted-foreground transition hover:text-foreground">
+                  <Twitter className="h-5 w-5" />
+                </Link>
+                <Link href="https://youtube.com/@TraderCloudAI" className="text-muted-foreground transition hover:text-foreground">
+                  <Youtube className="h-5 w-5" />
+                </Link>
+                <Link href="https://discord.gg/tradercloud" className="text-muted-foreground transition hover:text-foreground">
+                  <Users className="h-5 w-5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t pt-8">
+            <p className="text-sm text-muted-foreground text-center">
+              © 2025 TraderCloud. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>

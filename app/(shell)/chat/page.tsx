@@ -1,12 +1,19 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Loader2, Sparkles, StopCircle, User } from "lucide-react";
+import { Loader2, Sparkles, StopCircle, User, Send } from "lucide-react";
 import {
   createDefaultToolState,
   useRightPane,
 } from "@/components/layout/right-pane-context";
 import type { ToolState } from "@/components/layout/right-pane-context";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type MessageRole = "user" | "assistant" | "system";
 
@@ -33,7 +40,7 @@ export default function ChatPage() {
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
-  const [activeModel, setActiveModel] = useState("gpt-4o-mini");
+  const [activeModel, setActiveModel] = useState("gpt-5-nano");
   const viewportRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<ChatMessage[]>(messages);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -169,25 +176,6 @@ export default function ChatPage() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-3.5rem)] max-h-[calc(100vh-3.5rem)]">
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-neutral-200 px-5 py-4 shrink-0">
-        <div>
-          <p className="text-sm font-semibold text-neutral-900">Chat session</p>
-          <p className="text-xs text-neutral-500">
-            Stream insights, automate follow-ups, stay in flow.
-          </p>
-        </div>
-        <select
-          value={activeModel}
-          onChange={(event) => setActiveModel(event.target.value)}
-          className="rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm text-neutral-700 transition focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
-        >
-          <option value="gpt-4o-mini">GPT‑4o mini (fast)</option>
-          <option value="gpt-4.1-mini">GPT‑4.1 mini</option>
-          <option value="gpt-4.1">GPT‑4.1</option>
-          <option value="o4-mini">o4 mini</option>
-        </select>
-      </div>
-
       <div className="flex flex-1 min-h-0 flex-col">
         <div
           ref={viewportRef}
@@ -205,13 +193,13 @@ export default function ChatPage() {
           onSubmit={handleSubmit}
           className="border-t border-neutral-200 bg-neutral-50 px-5 py-5"
         >
-          <div className="relative">
+          <div className="rounded-2xl border border-neutral-200 bg-white overflow-hidden">
             <textarea
               value={inputValue}
               onChange={(event) => setInputValue(event.target.value)}
               placeholder="Ask for synthesis, automation, or specific trade support…"
               rows={3}
-              className="w-full resize-none rounded-2xl border border-neutral-200 bg-white px-4 py-3 pr-12 text-sm text-neutral-700 placeholder:text-neutral-400 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
+              className="w-full resize-none px-4 py-3 text-sm text-neutral-700 placeholder:text-neutral-400 focus:outline-none border-0"
               onKeyDown={(event) => {
                 if (event.key === "Enter" && !event.shiftKey) {
                   event.preventDefault();
@@ -221,16 +209,34 @@ export default function ChatPage() {
               disabled={isStreaming}
             />
 
-            <button
-              type="submit"
-              className="absolute bottom-3 right-3 inline-flex h-8 items-center justify-center rounded-full bg-neutral-900 px-3 text-xs font-semibold text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:bg-neutral-400"
-              disabled={isStreaming || inputValue.trim().length === 0}
-            >
-              <Loader2
-                className={`h-4 w-4 ${isStreaming ? "animate-spin" : "hidden"}`}
-              />
-              <span className={`${isStreaming ? "hidden" : "block"}`}>Send</span>
-            </button>
+            <div className="flex items-center justify-between gap-2 border-t border-neutral-200 bg-neutral-50 px-3 py-2">
+              <Select
+                value={activeModel}
+                onValueChange={setActiveModel}
+                disabled={isStreaming}
+              >
+                <SelectTrigger size="sm" className="h-8 text-xs w-[130px] border-neutral-200 bg-white">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="gpt-5">GPT-5</SelectItem>
+                  <SelectItem value="gpt-5-mini">GPT-5 mini</SelectItem>
+                  <SelectItem value="gpt-5-nano">GPT-5 nano</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <button
+                type="submit"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-neutral-900 text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:bg-neutral-400"
+                disabled={isStreaming || inputValue.trim().length === 0}
+              >
+                {isStreaming ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4" />
+                )}
+              </button>
+            </div>
           </div>
 
           {isStreaming ? (
@@ -248,6 +254,7 @@ export default function ChatPage() {
               </button>
             </div>
           ) : null}
+
         </form>
       </div>
     </div>
