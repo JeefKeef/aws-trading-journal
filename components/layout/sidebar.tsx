@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Bot, MessageSquare, Settings, BookOpen, Plus, MoreHorizontal, TrendingUp, BarChart3, LineChart } from "lucide-react";
+import { Bot, MessageSquare, Settings, BookOpen, Plus, MoreHorizontal, TrendingUp, BarChart3, LineChart, Calendar } from "lucide-react";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 
@@ -50,6 +50,12 @@ const rightPanelApps = [
     label: "Analytics",
     icon: BarChart3,
     href: "/analytics", // Direct route to analytics page
+  },
+  {
+    id: "calendar",
+    label: "Calendar",
+    icon: Calendar,
+    href: "/calendar", // Direct route to calendar page
   },
 ];
 
