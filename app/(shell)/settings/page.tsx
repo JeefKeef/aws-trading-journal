@@ -1,18 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
-import {
-  createDefaultToolState,
-  useRightPane,
-} from "@/components/layout/right-pane-context";
-
 export default function SettingsPage() {
-  const { setState } = useRightPane();
-
-  useEffect(() => {
-    setState(createDefaultToolState());
-  }, [setState]);
-
   return (
     <>
       <div className="border-b border-neutral-200 px-5 py-4 dark:border-neutral-800">

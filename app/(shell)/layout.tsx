@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
 
 import {
@@ -17,14 +17,27 @@ import { TopNav } from "@/components/layout/top-nav";
 
 // Import market page components
 import MarketPage from "./market/page";
-import ScreenerPage from "./screener/page";
+import ScreenerContent from "./screener/screener-content";
 import ChartsPage from "./charts/page";
 import GroupsPage from "./groups/page";
 import FuturesPage from "./futures/page";
 import ForexPage from "./forex/page";
 import CryptoPage from "./crypto/page";
+import ChatPage from "./chat/page";
+import JournalContent from "./journal/journal-content";
 
 export default function ShellLayout({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // Check if we're on the journal page or if journal view is requested
+  const isJournalRoute = pathname === "/journal";
+  const hasJournalView = searchParams.get('view') === 'journal';
+  
+  // Check if we're on the screener page or if screener view is requested
+  const isScreenerRoute = pathname === "/screener";
+  const hasScreenerView = searchParams.get('view') === 'screener';
+
   return (
     <RightPaneProvider>
       <div className="flex min-h-screen bg-neutral-100 dark:bg-neutral-950">
@@ -35,23 +48,39 @@ export default function ShellLayout({ children }: { children: ReactNode }) {
             <div className="flex h-full w-full flex-col">
               <div className="hidden h-full w-full md:flex">
                 <ResizablePanelGroup direction="horizontal" className="h-full w-full">
-                  <ResizablePanel defaultSize={20} minSize={20}>
-                    <section className="flex h-full min-h-0 flex-col bg-white dark:bg-neutral-900">
-                      {children}
-                    </section>
-                  </ResizablePanel>
+                            <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+            <div className="h-full overflow-auto">
+              {/* Always show chat in left panel when on journal or screener routes */}
+              {(isJournalRoute || isScreenerRoute) ? <ChatPage /> : children}
+            </div>
+          </ResizablePanel>
                   <ResizableHandle withHandle className="bg-neutral-200 dark:bg-neutral-800" />
-                  <ResizablePanel defaultSize={80} minSize={40}>
-                    <RightPane />
-                  </ResizablePanel>
+                            <ResizablePanel defaultSize={80} minSize={50}>
+            <div className="h-full overflow-auto">
+              {/* Show journal content when on journal route or when view=journal */}
+              {(isJournalRoute || hasJournalView) ? (
+                <JournalContent />
+              ) : (isScreenerRoute || hasScreenerView) ? (
+                <ScreenerContent />
+              ) : (
+                <RightPane />
+              )}
+            </div>
+          </ResizablePanel>
                 </ResizablePanelGroup>
               </div>
 
               <div className="flex h-full w-full flex-col md:hidden">
                 <section className="flex h-full min-h-0 flex-col border-b border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
-                  {children}
+                  {(isJournalRoute || isScreenerRoute) ? <ChatPage /> : children}
                 </section>
-                <RightPane />
+                {(isJournalRoute || hasJournalView) ? (
+                  <JournalContent />
+                ) : (isScreenerRoute || hasScreenerView) ? (
+                  <ScreenerContent />
+                ) : (
+                  <RightPane />
+                )}
               </div>
             </div>
           </main>
@@ -78,7 +107,7 @@ function RightPane() {
   const renderContent = () => {
     switch (view) {
       case "screener":
-        return <ScreenerPage />;
+        return <ScreenerContent />;
       case "charts":
         return <ChartsPage />;
       case "groups":
