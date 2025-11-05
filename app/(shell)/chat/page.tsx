@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Loader2, Sparkles, StopCircle, User, Send } from "lucide-react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import {
   createDefaultToolState,
   useRightPane,
@@ -19,7 +20,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 export default function ChatPage() {
-  const { messages, addMessage, updateMessage } = useChatHistory();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const { messages, addMessage, updateMessage, setCurrentConversation, currentConversationId } = useChatHistory();
   const [inputValue, setInputValue] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [activeModel, setActiveModel] = useState("signal-mini-v1");
@@ -27,6 +31,30 @@ export default function ChatPage() {
   const messagesRef = useRef<ChatMessage[]>(messages);
   const abortControllerRef = useRef<AbortController | null>(null);
   const { setState: setToolState } = useRightPane();
+
+  // Sync URL with active conversation
+  useEffect(() => {
+    const chatIdFromUrl = searchParams.get("chatId");
+    
+    // If URL has chatId different from current, update the conversation
+    if (chatIdFromUrl && chatIdFromUrl !== currentConversationId) {
+      setCurrentConversation(chatIdFromUrl);
+    }
+    
+    // If we have an active conversation but no chatId in URL, add it
+    if (currentConversationId && !chatIdFromUrl) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("chatId", currentConversationId);
+      router.replace(`${pathname}?${params.toString()}`);
+    }
+    
+    // If no conversation and no chatId, make sure URL is clean
+    if (!currentConversationId && chatIdFromUrl) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("chatId");
+      router.replace(`${pathname}?${params.toString()}`);
+    }
+  }, [currentConversationId, searchParams, pathname, router, setCurrentConversation]);
 
   useEffect(() => {
     messagesRef.current = messages;

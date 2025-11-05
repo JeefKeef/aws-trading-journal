@@ -57,7 +57,7 @@ export default function ShellLayout({
 function ShellContent({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { mode: leftPanelMode } = useLeftPanel();
+  const { mode: leftPanelMode, isVisible } = useLeftPanel();
 
   // Check if app query param is set for right panel
   const appView = searchParams.get('app');
@@ -76,14 +76,18 @@ function ShellContent({ children }: { children: React.ReactNode }) {
             <div className="hidden h-full w-full md:flex">
               <ResizablePanelGroup direction="horizontal" className="h-full w-full">
                 {/* Left Panel - Toggle between Chat and Settings */}
-                <ResizablePanel defaultSize={15} minSize={15} maxSize={30}>
-                  <div className="h-full overflow-auto">
-                    <LeftPanelContent mode={leftPanelMode} />
-                  </div>
-                </ResizablePanel>
-                <ResizableHandle className="bg-neutral-200 dark:bg-neutral-800" />
+                {isVisible && (
+                  <>
+                    <ResizablePanel defaultSize={15} minSize={15} maxSize={30}>
+                      <div className="h-full overflow-auto">
+                        <LeftPanelContent mode={leftPanelMode} />
+                      </div>
+                    </ResizablePanel>
+                    <ResizableHandle className="bg-neutral-200 dark:bg-neutral-800" />
+                  </>
+                )}
                 {/* Right Panel - Shows page content for full-page routes, or dynamic content for others */}
-                <ResizablePanel defaultSize={85} minSize={50}>
+                <ResizablePanel defaultSize={isVisible ? 85 : 100} minSize={50}>
                   <div className="h-full overflow-auto">
                     {isFullPageRoute ? children : <RightPane appView={appView} />}
                   </div>
@@ -93,9 +97,11 @@ function ShellContent({ children }: { children: React.ReactNode }) {
 
             {/* Mobile layout */}
             <div className="flex h-full w-full flex-col md:hidden">
-              <section className="flex h-full min-h-0 flex-col border-b border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
-                <LeftPanelContent mode={leftPanelMode} />
-              </section>
+              {isVisible && (
+                <section className="flex h-full min-h-0 flex-col border-b border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
+                  <LeftPanelContent mode={leftPanelMode} />
+                </section>
+              )}
               {isFullPageRoute ? children : <RightPane appView={appView} />}
             </div>
           </div>
@@ -106,7 +112,9 @@ function ShellContent({ children }: { children: React.ReactNode }) {
 }
 
 // Left panel content renderer - toggles between Chat and Settings
-function LeftPanelContent({ mode }: { mode: "chat" | "settings" }) {
+function LeftPanelContent({ mode }: { mode: "chat" | "settings" | null }) {
+  if (!mode) return null;
+  
   switch (mode) {
     case "chat":
       return <ChatPage />;

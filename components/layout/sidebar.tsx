@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Bot, MessageSquare, Settings, BookOpen, Plus, MoreHorizontal, TrendingUp, BarChart3, LineChart, Calendar, Trash2, LayoutDashboard } from "lucide-react";
+import { Sparkles, Settings, BookOpen, Plus, MoreHorizontal, TrendingUp, BarChart3, LineChart, Calendar, Trash2, LayoutDashboard, Menu } from "lucide-react";
 import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
@@ -16,8 +16,8 @@ import { useChatHistory } from "@/lib/contexts/chat-history-context";
 const leftPanelItems = [
 	{
 		mode: "chat" as LeftPanelMode,
-		label: "Chat",
-		icon: MessageSquare,
+		label: "AI Chat",
+		icon: Sparkles,
 	},
 	{
 		mode: "settings" as LeftPanelMode,
@@ -62,7 +62,13 @@ const rightPanelApps = [
 
 export function AppSidebar() {
 	const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-	const { mode: leftPanelMode, setMode: setLeftPanelMode } = useLeftPanel();
+	const { mode: leftPanelMode, togglePanel } = useLeftPanel();
+
+	const handleLeftPanelClick = (mode: LeftPanelMode) => {
+		togglePanel(mode);
+		// Close the floating sidebar when clicking chat or settings
+		setIsHistoryOpen(false);
+	};
 
 	return (
 		<>
@@ -71,7 +77,7 @@ export function AppSidebar() {
 					onMouseEnter={() => setIsHistoryOpen(true)}
 					className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-neutral-900 text-white shadow-sm cursor-pointer transition-transform hover:scale-110 dark:border-neutral-700 dark:bg-neutral-800"
 				>
-					<Bot className="h-4 w-4" />
+					<Menu className="h-4 w-4" />
 				</div>
 
 				<nav className="mt-6 flex flex-1 flex-col items-center gap-3">
@@ -85,7 +91,7 @@ export function AppSidebar() {
 									<Button
 										variant="ghost"
 										size="icon"
-										onClick={() => setLeftPanelMode(item.mode)}
+										onClick={() => handleLeftPanelClick(item.mode)}
 										aria-label={item.label}
 										className={cn(
 											"h-10 w-10 rounded-full border border-transparent text-neutral-500 transition hover:border-neutral-200 hover:text-neutral-900 dark:text-neutral-400 dark:hover:border-neutral-700 dark:hover:text-neutral-100",
@@ -129,16 +135,34 @@ function HoverSidebar({
 	onMouseLeave: () => void;
 }) {
   const pathname = usePathname();
-  const { setMode } = useLeftPanel();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { togglePanel } = useLeftPanel();
   const { conversations, setCurrentConversation, createNewConversation, deleteConversation } = useChatHistory();
-  const [deleteHoverId, setDeleteHoverId] = useState<string | null>(null);	const handleNewChat = () => {
+  const [deleteHoverId, setDeleteHoverId] = useState<string | null>(null);
+
+	const handleNewChat = () => {
 		createNewConversation();
-		setMode("chat");
+		togglePanel("chat");
+		// Close the sidebar
+		onMouseLeave();
+		
+		// Navigate to chat without chatId (will be a new conversation)
+		const params = new URLSearchParams(searchParams.toString());
+		params.delete("chatId");
+		router.push(`/chat?${params.toString()}`);
 	};
 
 	const handleChatClick = (conversationId: string) => {
 		setCurrentConversation(conversationId);
-		setMode("chat");
+		togglePanel("chat");
+		// Close the sidebar
+		onMouseLeave();
+		
+		// Navigate to chat with chatId
+		const params = new URLSearchParams(searchParams.toString());
+		params.set("chatId", conversationId);
+		router.push(`/chat?${params.toString()}`);
 	};
 
 	const handleDeleteChat = (e: React.MouseEvent, conversationId: string) => {
@@ -161,7 +185,7 @@ function HoverSidebar({
 							onClick={handleNewChat}
 							className="flex items-center gap-2 text-sm font-semibold text-neutral-900 hover:text-neutral-700 transition dark:text-neutral-100 dark:hover:text-neutral-300"
 						>
-							<MessageSquare className="h-4 w-4" />
+							<Sparkles className="h-4 w-4" />
 							<span>New Chat</span>
 						</button>
 						<button
@@ -173,88 +197,86 @@ function HoverSidebar({
 					</div>
 				</div>
 
-				<div className="flex-1 overflow-y-auto">
-					{/* Apps - Right panel navigation */}
-					<div className="border-b border-neutral-200 px-3 py-3 dark:border-neutral-800">
-						<div className="mb-2 px-2 text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-							Apps
-						</div>
-						<div className="space-y-1">
-							{rightPanelApps.map((app) => {
-								const Icon = app.icon;
-								const isActive = pathname === app.href;
-
-								return (
-									<Link
-										key={app.id}
-										href={app.href}
-										className={cn(
-											"flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition",
-											isActive
-												? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
-												: "text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-900"
-										)}
-									>
-										<Icon className="h-4 w-4" />
-										<span>{app.label}</span>
-									</Link>
-								);
-							})}
-						</div>
+				{/* Apps - Right panel navigation */}
+				<div className="border-b border-neutral-200 px-3 py-3 dark:border-neutral-800">
+					<div className="mb-2 px-2 text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+						Apps
 					</div>
+					<div className="space-y-1">
+						{rightPanelApps.map((app) => {
+							const Icon = app.icon;
+							const isActive = pathname === app.href;
 
-					{/* Recent Chats */}
-					<div className="px-3 py-3">
-						<div className="mb-2 flex items-center justify-between px-2">
-							<div className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-								Recent Chats
-							</div>
-							{conversations.length > 5 && (
-								<button className="text-[10px] font-medium text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300">
-									See all
-								</button>
-							)}
-						</div>
-						<div className="space-y-0.5">
-							{conversations.slice(0, 7).map((conv) => (
-								<div
-									key={conv.id}
-									onClick={() => handleChatClick(conv.id)}
-									onMouseEnter={() => setDeleteHoverId(conv.id)}
-									onMouseLeave={() => setDeleteHoverId(null)}
-									className="group w-full block rounded-lg px-3 py-2 text-sm cursor-pointer transition hover:bg-neutral-100 dark:hover:bg-neutral-900"
-									role="button"
-									tabIndex={0}
-									onKeyDown={(e) => {
-										if (e.key === 'Enter' || e.key === ' ') {
-											e.preventDefault();
-											handleChatClick(conv.id);
-										}
-									}}
+							return (
+								<Link
+									key={app.id}
+									href={app.href}
+									className={cn(
+										"flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition",
+										isActive
+											? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
+											: "text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-900"
+									)}
 								>
-									<div className="flex items-start justify-between gap-2">
-										<p className="flex-1 font-medium text-neutral-900 line-clamp-1 dark:text-neutral-100">
-											{conv.title}
-										</p>
-										{deleteHoverId === conv.id && (
-											<button
-												onClick={(e) => handleDeleteChat(e, conv.id)}
-												className="text-neutral-400 hover:text-rose-600 dark:hover:text-rose-400 transition"
-												aria-label="Delete conversation"
-											>
-												<Trash2 className="h-3.5 w-3.5" />
-											</button>
-										)}
-										{deleteHoverId !== conv.id && (
-											<button className="opacity-0 group-hover:opacity-100 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300">
-												<MoreHorizontal className="h-3.5 w-3.5" />
-											</button>
-										)}
-									</div>
-									<p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">{conv.timestamp}</p>
-								</div>
-							))}
+									<Icon className="h-4 w-4" />
+									<span>{app.label}</span>
+								</Link>
+							);
+						})}
+					</div>
+				</div>
+
+				{/* Recent Chats - Scrollable */}
+				<div className="flex-1 overflow-y-auto px-3 py-3">
+					<div className="mb-2 flex items-center justify-between px-2">
+						<div className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+							Recent Chats
 						</div>
+						{conversations.length > 5 && (
+							<button className="text-[10px] font-medium text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300">
+								See all
+							</button>
+						)}
+					</div>
+					<div className="space-y-0.5">
+						{conversations.slice(0, 7).map((conv) => (
+							<div
+								key={conv.id}
+								onClick={() => handleChatClick(conv.id)}
+								onMouseEnter={() => setDeleteHoverId(conv.id)}
+								onMouseLeave={() => setDeleteHoverId(null)}
+								className="group w-full block rounded-lg px-3 py-2 text-sm cursor-pointer transition hover:bg-neutral-100 dark:hover:bg-neutral-900"
+								role="button"
+								tabIndex={0}
+								onKeyDown={(e) => {
+									if (e.key === 'Enter' || e.key === ' ') {
+										e.preventDefault();
+										handleChatClick(conv.id);
+									}
+								}}
+							>
+								<div className="flex items-start justify-between gap-2">
+									<p className="flex-1 font-medium text-neutral-900 line-clamp-1 dark:text-neutral-100">
+										{conv.title}
+									</p>
+									{deleteHoverId === conv.id && (
+										<button
+											onClick={(e) => handleDeleteChat(e, conv.id)}
+											className="text-neutral-400 hover:text-rose-600 dark:hover:text-rose-400 transition"
+											aria-label="Delete conversation"
+										>
+											<Trash2 className="h-3.5 w-3.5" />
+										</button>
+									)}
+									{deleteHoverId !== conv.id && (
+										<button className="opacity-0 group-hover:opacity-100 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300">
+											<MoreHorizontal className="h-3.5 w-3.5" />
+										</button>
+									)}
+								</div>
+								<p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">{conv.timestamp}</p>
+							</div>
+						))}
 					</div>
 				</div>
 
