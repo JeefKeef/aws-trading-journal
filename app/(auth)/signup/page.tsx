@@ -25,7 +25,7 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-neutral-950 flex items-center justify-center px-6 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-background px-6 py-12 text-foreground">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -33,18 +33,18 @@ export default function SignUpPage() {
         className="w-full max-w-md"
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 justify-center mb-8">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg border-2 dark:border-neutral-700">
+        <Link href="/" className="mb-8 flex items-center justify-center gap-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border/80">
             <Sparkles className="h-5 w-5" />
           </div>
-          <span className="text-2xl font-bold">TraderCloud</span>
+          <span className="text-2xl font-bold">Signal</span>
         </Link>
 
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">Create your account</h1>
           <p className="text-muted-foreground">
-            Start trading smarter in 2 minutes
+            Launch your Signal journal, analytics, and AI coach in minutes.
           </p>
         </div>
 
@@ -64,7 +64,7 @@ export default function SignUpPage() {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="John Doe"
                 required
-                className="w-full rounded-lg border bg-white py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-foreground"
+                className="w-full rounded-lg border border-border bg-background py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-foreground"
               />
             </div>
           </div>
@@ -83,7 +83,7 @@ export default function SignUpPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="w-full rounded-lg border bg-white py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-foreground"
+                className="w-full rounded-lg border border-border bg-background py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-foreground"
               />
             </div>
           </div>
@@ -103,7 +103,7 @@ export default function SignUpPage() {
                 placeholder="••••••••"
                 required
                 minLength={8}
-                className="w-full rounded-lg border bg-white py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-foreground"
+                className="w-full rounded-lg border border-border bg-background py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-foreground"
               />
             </div>
             <p className="mt-1 text-xs text-muted-foreground">
@@ -117,7 +117,7 @@ export default function SignUpPage() {
               id="terms"
               type="checkbox"
               required
-              className="mt-1 h-4 w-4 rounded border-gray-300"
+              className="mt-1 h-4 w-4 rounded border border-border text-foreground focus:ring-foreground"
             />
             <label htmlFor="terms" className="text-sm text-muted-foreground">
               I agree to the{" "}
@@ -154,13 +154,13 @@ export default function SignUpPage() {
             <div className="w-full border-t"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="bg-white px-4 text-muted-foreground">or</span>
+            <span className="bg-background px-4 text-muted-foreground">or</span>
           </div>
         </div>
 
         {/* Social Login */}
         <div className="space-y-3">
-          <button className="w-full rounded-lg border-2 px-6 py-3 text-sm font-semibold transition hover:bg-muted flex items-center justify-center gap-3">
+          <button className="flex w-full items-center justify-center gap-3 rounded-lg border border-border px-6 py-3 text-sm font-semibold transition hover:bg-muted">
             <svg className="h-5 w-5" viewBox="0 0 24 24">
               <path
                 fill="currentColor"

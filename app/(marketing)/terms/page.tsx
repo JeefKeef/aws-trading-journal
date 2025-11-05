@@ -2,195 +2,186 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Sparkles, ArrowLeft } from "lucide-react";
+import { ArrowLeft, Shield, Sparkles } from "lucide-react";
+
+const sections = [
+  {
+    title: "1. Acceptance of Terms",
+    body: [
+      "By accessing or using Signal (“Service”), you agree to be bound by these Terms of Service (“Terms”). If you do not agree, you must discontinue use immediately.",
+      "We may update these Terms from time to time. Continued use of the Service after changes take effect constitutes acceptance of the revised Terms.",
+    ],
+  },
+  {
+    title: "2. What Signal Provides",
+    intro: "Signal is a trading journal and performance analytics platform designed to help traders review, learn, and improve. The Service includes:",
+    list: [
+      "Trade journaling tools with tagging, attachments, and custom templates.",
+      "Analytics dashboards that surface performance metrics and risk discipline.",
+      "AI-assisted summaries, coaching insights, and automation features.",
+      "Team and coach collaboration tools, permission controls, and exports.",
+    ],
+    outro:
+      "Signal does not execute trades, route orders, provide brokerage services, or guarantee investment results.",
+  },
+  {
+    title: "3. No Investment Advice",
+    component: (
+      <div className="rounded-2xl border border-amber-200 bg-amber-50/80 p-6 dark:border-amber-400/40 dark:bg-amber-500/10">
+        <h3 className="mb-3 font-semibold text-amber-900 dark:text-amber-200">Important disclaimers</h3>
+        <ul className="list-disc space-y-2 pl-5 text-sm text-amber-900 dark:text-amber-100">
+          <li>Signal is an educational and productivity tool. It does not issue investment advice or recommendations.</li>
+          <li>You are solely responsible for evaluating trades, managing risk, and complying with applicable regulations.</li>
+          <li>Past performance surfaced by the Service does not guarantee future results.</li>
+          <li>We are not registered investment advisors, broker-dealers, or futures commission merchants.</li>
+        </ul>
+      </div>
+    ),
+  },
+  {
+    title: "4. Accounts & Security",
+    list: [
+      "Provide accurate account details and keep them up to date.",
+      "Maintain the confidentiality of your login credentials.",
+      "Notify us promptly if you suspect unauthorized access.",
+      "You are responsible for all activity that occurs under your account.",
+      "Account sharing is prohibited unless expressly approved for team workspaces.",
+    ],
+  },
+  {
+    title: "5. Subscriptions & Billing",
+    list: [
+      "Paid plans renew automatically unless you cancel before the renewal date.",
+      "Fees are billed in advance for the applicable subscription period.",
+      "Refunds are handled in accordance with the plan-specific refund policy disclosed at checkout.",
+      "We may adjust pricing with reasonable prior notice. Continued use after price changes constitutes acceptance.",
+    ],
+  },
+  {
+    title: "6. Acceptable Use",
+    list: [
+      "Use the Service only for lawful purposes and in accordance with these Terms.",
+      "Do not attempt to reverse engineer, copy, or misappropriate the Service or AI models.",
+      "Do not upload malicious code, attempt unauthorized access, or interfere with platform stability.",
+      "Respect the privacy and intellectual property rights of other users and third parties.",
+    ],
+  },
+  {
+    title: "7. Data Rights & Privacy",
+    body: [
+      "Our handling of personal data is governed by the Signal Privacy Policy. By using the Service, you consent to those practices.",
+      "You retain ownership of the journal entries, analytics exports, and files you upload. You grant us a limited license to process that data solely to operate and improve the Service.",
+    ],
+  },
+  {
+    title: "8. Intellectual Property",
+    body: [
+      "Signal, including its software, branding, analytics, AI models, and content, is owned by Signal Journal Inc. and protected by intellectual property laws.",
+      "You may not copy, modify, distribute, or create derivative works from the Service without prior written consent.",
+    ],
+  },
+  {
+    title: "9. Termination",
+    body: [
+      "We may suspend or terminate access if you violate these Terms or engage in abusive, fraudulent, or unlawful behavior.",
+      "You may cancel your account at any time. Termination does not relieve you of outstanding payment obligations.",
+    ],
+  },
+  {
+    title: "10. Limitation of Liability",
+    body: [
+      "To the maximum extent permitted by law, Signal Journal Inc. will not be liable for indirect, incidental, special, consequential, or punitive damages, or for any trading losses arising from use of the Service.",
+      "Our aggregate liability for direct damages will not exceed the amount you paid to use the Service in the twelve months preceding the claim.",
+    ],
+  },
+  {
+    title: "11. Governing Law & Disputes",
+    body: [
+      "These Terms are governed by the laws of the State of Delaware, USA, without regard to conflict of law principles.",
+      "Any disputes shall be resolved through binding arbitration in New York County, New York, unless another venue is mutually agreed.",
+    ],
+  },
+  {
+    title: "12. Contact",
+    component: (
+      <div className="space-y-2 text-sm text-muted-foreground">
+        <p>Signal Journal Inc.</p>
+        <p>99 Hudson Street, Floor 3</p>
+        <p>New York, NY 10013</p>
+        <p>
+          Email:{" "}
+          <a className="font-semibold text-foreground underline-offset-2 hover:underline" href="mailto:legal@signaljournal.ai">
+            legal@signaljournal.ai
+          </a>
+        </p>
+      </div>
+    ),
+  },
+];
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="fixed top-0 z-50 w-full border-b bg-white/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg border-2">
-              <Sparkles className="h-4 w-4" />
-            </div>
-            <span className="text-xl font-bold">TraderCloud</span>
+    <div className="bg-background text-foreground">
+      <nav className="fixed top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+          <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground">
+            <Sparkles className="h-4 w-4" />
+            Signal
+          </Link>
+          <Link href="/" className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground">
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Back to home
           </Link>
         </div>
       </nav>
 
-      {/* Content */}
-      <div className="pt-20 pb-20 px-6">
-        <div className="mx-auto max-w-4xl">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition mb-8"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Link>
+      <div className="px-6 pb-24 pt-28">
+        <motion.article
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="mx-auto max-w-4xl"
+        >
+          <header className="mb-10">
+            <h1 className="text-4xl font-semibold tracking-tight">Terms of Service</h1>
+            <p className="mt-2 text-sm text-muted-foreground">Effective as of November 3, 2025</p>
+          </header>
 
-          <motion.article
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="prose prose-lg max-w-none"
-          >
-            <h1 className="text-4xl font-bold mb-4">Terms of Service</h1>
-            <p className="text-muted-foreground mb-8">
-              Last Updated: November 3, 2025
-            </p>
-
-            <div className="space-y-8">
-              <section>
-                <h2 className="text-2xl font-bold mb-4">1. Acceptance of Terms</h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  By accessing or using TraderCloud (&quot;Service&quot;), you agree to be bound by these Terms of Service (&quot;Terms&quot;). If you do not agree to these Terms, please do not use the Service.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">2. Description of Service</h2>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  TraderCloud provides AI-powered trading analysis tools, including but not limited to:
-                </p>
-                <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-                  <li>Stock screening and analysis</li>
-                  <li>AI-powered trading recommendations</li>
-                  <li>Backtesting capabilities</li>
-                  <li>Real-time alerts and notifications</li>
-                  <li>Market data and insights</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">3. Important Disclaimers</h2>
-                <div className="rounded-xl border-2 border-yellow-200 bg-yellow-50 p-6">
-                  <h3 className="font-semibold text-yellow-900 mb-3">⚠️ Investment Risk Warning</h3>
-                  <ul className="list-disc pl-6 space-y-2 text-yellow-800">
-                    <li>TraderCloud does NOT provide investment advice</li>
-                    <li>All analysis and recommendations are for informational purposes only</li>
-                    <li>Trading stocks and options involves substantial risk of loss</li>
-                    <li>Past performance does not guarantee future results</li>
-                    <li>You are solely responsible for your trading decisions</li>
-                    <li>We are not registered investment advisors</li>
+          <div className="space-y-10 text-sm leading-7 text-muted-foreground">
+            {sections.map(({ title, body, list, intro, outro, component }) => (
+              <section key={title} className="space-y-4">
+                <h2 className="text-2xl font-semibold text-foreground">{title}</h2>
+                {body?.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+                {intro && <p>{intro}</p>}
+                {list && (
+                  <ul className="list-disc space-y-2 pl-5">
+                    {list.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
                   </ul>
-                </div>
+                )}
+                {outro && <p>{outro}</p>}
+                {component}
               </section>
+            ))}
+          </div>
 
-              <section>
-                <h2 className="text-2xl font-bold mb-4">4. User Accounts</h2>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  To use certain features of the Service, you must create an account. You agree to:
-                </p>
-                <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-                  <li>Provide accurate and complete information</li>
-                  <li>Maintain the security of your account credentials</li>
-                  <li>Notify us immediately of any unauthorized access</li>
-                  <li>Be responsible for all activities under your account</li>
-                  <li>Not share your account with others</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">5. Subscription and Payments</h2>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  We offer both free and paid subscription plans:
-                </p>
-                <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-                  <li>Subscriptions automatically renew unless cancelled</li>
-                  <li>You can cancel anytime from your account settings</li>
-                  <li>Refunds are provided within 7 days of purchase</li>
-                  <li>Prices are subject to change with 30 days notice</li>
-                  <li>Payment processing is handled by secure third-party providers</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">6. Acceptable Use</h2>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  You agree NOT to:
-                </p>
-                <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-                  <li>Use the Service for any illegal purpose</li>
-                  <li>Attempt to reverse engineer or hack the Service</li>
-                  <li>Share or resell access to the Service</li>
-                  <li>Scrape or copy data without permission</li>
-                  <li>Interfere with other users&apos; use of the Service</li>
-                  <li>Use automated tools to access the Service (except via our API)</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">7. Data Accuracy</h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  While we strive to provide accurate data, we cannot guarantee that all information is error-free, complete, or current. Market data may be delayed. You should verify all information before making trading decisions.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">8. Intellectual Property</h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  All content, features, and functionality of the Service are owned by TraderCloud and protected by copyright, trademark, and other intellectual property laws. You may not copy, modify, or distribute any part of the Service without our written permission.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">9. Limitation of Liability</h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  To the maximum extent permitted by law, TraderCloud shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or trading losses, arising from your use of the Service.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">10. API Usage</h2>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  If you use our API:
-                </p>
-                <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-                  <li>You must comply with rate limits for your plan</li>
-                  <li>You may not abuse or overload our systems</li>
-                  <li>We may terminate API access for violations</li>
-                  <li>API features may change with reasonable notice</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">11. Termination</h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  We may terminate or suspend your account immediately, without prior notice, for any breach of these Terms. Upon termination, your right to use the Service will immediately cease.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">12. Changes to Terms</h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  We reserve the right to modify these Terms at any time. We will notify you of material changes via email or through the Service. Your continued use after changes constitutes acceptance of the new Terms.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">13. Governing Law</h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  These Terms are governed by the laws of the United States. Any disputes will be resolved in the courts of Delaware.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">14. Contact Us</h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  If you have questions about these Terms, please contact us at:
-                </p>
-                <div className="mt-4 rounded-lg border bg-muted/30 p-4">
-                  <p className="font-medium">Email: legal@tradercloud.ai</p>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    We typically respond within 2-3 business days
-                  </p>
-                </div>
-              </section>
-            </div>
-          </motion.article>
-        </div>
+          <footer className="mt-16 rounded-2xl border border-border/60 bg-muted/40 p-6">
+            <h3 className="mb-2 flex items-center gap-2 text-base font-semibold text-foreground">
+              <Shield className="h-4 w-4" />
+              Need clarification?
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              We’re here to help. Email us at{" "}
+              <a className="font-semibold text-foreground underline-offset-2 hover:underline" href="mailto:legal@signaljournal.ai">
+                legal@signaljournal.ai
+              </a>{" "}
+              with any questions about these Terms.
+            </p>
+          </footer>
+        </motion.article>
       </div>
     </div>
   );

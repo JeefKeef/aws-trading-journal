@@ -24,7 +24,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-neutral-950 flex items-center justify-center px-6 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-background px-6 py-12 text-foreground">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -32,18 +32,18 @@ export default function LoginPage() {
         className="w-full max-w-md"
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 justify-center mb-8">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg border-2 dark:border-neutral-700">
+        <Link href="/" className="mb-8 flex items-center justify-center gap-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border/80">
             <Sparkles className="h-5 w-5" />
           </div>
-          <span className="text-2xl font-bold">TraderCloud</span>
+          <span className="text-2xl font-bold">Signal</span>
         </Link>
 
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">Welcome back</h1>
           <p className="text-muted-foreground">
-            Sign in to continue to your trading terminal
+            Sign in to continue to your Signal journal and performance hub.
           </p>
         </div>
 
@@ -63,7 +63,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="w-full rounded-lg border bg-white py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-foreground"
+                className="w-full rounded-lg border border-border bg-background py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-foreground"
               />
             </div>
           </div>
@@ -76,7 +76,7 @@ export default function LoginPage() {
               </label>
               <Link
                 href="/forgot-password"
-                className="text-sm text-muted-foreground hover:text-foreground transition"
+                className="text-sm text-muted-foreground transition hover:text-foreground"
               >
                 Forgot?
               </Link>
@@ -90,7 +90,7 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="w-full rounded-lg border bg-white py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-foreground"
+                className="w-full rounded-lg border border-border bg-background py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-foreground"
               />
             </div>
           </div>
@@ -115,16 +115,16 @@ export default function LoginPage() {
         {/* Divider */}
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t"></div>
+            <div className="w-full border-t border-border/60"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="bg-white px-4 text-muted-foreground">or</span>
+            <span className="bg-background px-4 text-muted-foreground">or</span>
           </div>
         </div>
 
         {/* Social Login */}
         <div className="space-y-3">
-          <button className="w-full rounded-lg border-2 px-6 py-3 text-sm font-semibold transition hover:bg-muted flex items-center justify-center gap-3">
+          <button className="flex w-full items-center justify-center gap-3 rounded-lg border border-border px-6 py-3 text-sm font-semibold transition hover:bg-muted">
             <svg className="h-5 w-5" viewBox="0 0 24 24">
               <path
                 fill="currentColor"

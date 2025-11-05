@@ -63,45 +63,30 @@ export default function PricingPage() {
 
   const tiers = [
     {
-      name: "Starter",
-      price: { monthly: 0, yearly: 0 },
-      description: "Build the journaling habit and see your core numbers.",
+      name: "Free",
+      price: { monthly: 0, yearly: null },
+      description: "Basic journaling & limited analytics.",
       features: [
-        "Unlimited manual journal entries",
-        "Core analytics (P&L, win rate, expectancy)",
-        "Tags, filters, and saved views",
-        "Daily recap & review templates",
-        "Community support",
+        "500 trades",
+        "100 MB storage",
+        "100 AI credits/month",
+        "8K AI Memory",
+        "Core analytics & metrics",
       ],
-      cta: "Start Free",
-      href: "/chat",
-    },
-    {
-      name: "Edge",
-      price: { monthly: 29, yearly: 278 },
-      description: "Everything you need to review trades with precision.",
-      features: [
-        "CSV & broker import automation",
-        "Advanced analytics & heatmaps",
-        "Emotion & discipline tracking",
-        "Custom templates & workflows",
-        "Export-ready PDF reports",
-        "Automated review reminders",
-      ],
-      cta: "Start Edge",
+      cta: "Choose Free",
       href: "/chat",
     },
     {
       name: "Pro",
-      price: { monthly: 79, yearly: 758 },
-      description: "AI-assisted feedback for high-volume, active traders.",
+      price: { monthly: 29, yearly: 278 },
+      description: "Full analytics, AI summaries, and sentiment analysis.",
       features: [
-        "Unlimited AI trade coaching",
-        "Risk guardrails & rule tracking",
-        "Playbook library & setup scorecards",
-        "Coach & accountability sharing",
-        "Voice notes & media attachments",
-        "Priority support",
+        "10,000 trades",
+        "2 GB storage",
+        "1,000 AI credits/month",
+        "32K AI Memory",
+        "Advanced analytics & heatmaps",
+        "Auto-import from brokers & CSV",
       ],
       cta: "Start Pro",
       href: "/chat",
@@ -109,30 +94,30 @@ export default function PricingPage() {
     },
     {
       name: "Elite",
-      price: { monthly: 179, yearly: 1718 },
-      description: "Quant-level insights for teams and prop traders.",
+      price: { monthly: 99, yearly: 948 },
+      description: "Full AI assistant and multi-account analytics.",
       features: [
-        "Multi-account & asset aggregation",
-        "Team workspaces with permissions",
-        "Custom metrics & dashboards",
-        "API & webhooks for automation",
-        "White-label client reporting",
-        "Dedicated success manager",
+        "50,000 trades",
+        "5 GB storage",
+        "3,000 AI credits/month",
+        "90K AI Memory",
+        "Multi-account aggregation",
+        "Team workspaces & API automation",
       ],
       cta: "Start Elite",
       href: "/chat",
     },
     {
-      name: "Teams",
+      name: "Enterprise",
       price: { monthly: null, yearly: null },
-      description: "Tailored workflows for prop desks and fund managers.",
+      description: "Tailored workflows for funds, prop desks, and educators.",
       features: [
-        "Hands-on onboarding for your desk",
-        "Custom data pipelines & integrations",
-        "Enterprise security & audit logs",
-        "SSO & granular permissions",
-        "Bespoke analytics & playbooks",
-        "Quarterly performance strategy reviews",
+        "Unlimited trades",
+        "Custom storage",
+        "Unlimited AI credits",
+        "Custom AI Memory",
+        "Custom integrations & pipelines",
+        "Dedicated success manager",
       ],
       cta: "Talk to Sales",
       href: "mailto:sales@signaljournal.ai",
@@ -140,47 +125,56 @@ export default function PricingPage() {
   ];
 
   const planColumns = [
-    { key: "starter", label: "Starter" },
-    { key: "edge", label: "Edge" },
+    { key: "free", label: "Free" },
     { key: "pro", label: "Pro" },
     { key: "elite", label: "Elite" },
-    { key: "teams", label: "Teams" },
+    { key: "enterprise", label: "Enterprise" },
   ] as const;
 
   const featureComparison = [
     {
+      category: "Resource Limits",
+      features: [
+        { name: "Trades cap", free: "500", pro: "10,000", elite: "50,000", enterprise: "Unlimited" },
+        { name: "Storage", free: "100 MB", pro: "1 GB", elite: "5 GB", enterprise: "Custom" },
+        { name: "AI Memory", free: "8K", pro: "32K", elite: "90K", enterprise: "Custom" },
+        { name: "AI Credits / Month", free: "100", pro: "1,000", elite: "5,000", enterprise: "Unlimited" },
+      ],
+    },
+    {
       category: "Analytics",
       features: [
-        { name: "Core metrics (P&L, win rate, expectancy)", starter: true, edge: true, pro: true, elite: true, teams: true },
-        { name: "Advanced analytics & heatmaps", starter: false, edge: true, pro: true, elite: true, teams: true },
-        { name: "Multi-account performance rollups", starter: false, edge: false, pro: false, elite: true, teams: true },
-        { name: "Custom KPI dashboards", starter: false, edge: false, pro: true, elite: true, teams: "Custom" },
+        { name: "Core metrics (P&L, win rate, expectancy)", free: true, pro: true, elite: true, enterprise: true },
+        { name: "Advanced analytics & heatmaps", free: false, pro: true, elite: true, enterprise: true },
+        { name: "Sentiment & market regime analysis", free: false, pro: true, elite: true, enterprise: true },
+        { name: "Multi-account rollups & custom dashboards", free: false, pro: false, elite: true, enterprise: "Custom" },
       ],
     },
     {
       category: "Journaling",
       features: [
-        { name: "Unlimited journal entries", starter: true, edge: true, pro: true, elite: true, teams: true },
-        { name: "Custom templates & prompts", starter: false, edge: true, pro: true, elite: true, teams: true },
-        { name: "Voice notes & media attachments", starter: false, edge: false, pro: true, elite: true, teams: true },
-        { name: "Risk guardrails & rule tracking", starter: false, edge: false, pro: true, elite: true, teams: true },
+        { name: "Unlimited journal entries & tags", free: true, pro: true, elite: true, enterprise: true },
+        { name: "Voice notes & rich media attachments", free: false, pro: false, elite: true, enterprise: true },
+        { name: "Risk guardrails & discipline tracking", free: false, pro: true, elite: true, enterprise: true },
+        { name: "Multi-user workspaces & permissions", free: false, pro: false, elite: true, enterprise: true },
       ],
     },
     {
-      category: "AI Guidance",
+      category: "AI Capabilities",
       features: [
-        { name: "AI trade summaries per day", starter: "5 / day", edge: "20 / day", pro: "Unlimited", elite: "Unlimited", teams: "Unlimited" },
-        { name: "AI performance insights", starter: false, edge: true, pro: true, elite: true, teams: true },
-        { name: "Automated recap generator", starter: false, edge: true, pro: true, elite: true, teams: true },
+        { name: "AI trade summaries per day", free: "Limited", pro: "Unlimited", elite: "Unlimited", enterprise: "Unlimited" },
+        { name: "AI sentiment & emotion insights", free: false, pro: true, elite: true, enterprise: true },
+        { name: "Persistent AI memory & coaching", free: false, pro: false, elite: true, enterprise: "Custom" },
+        { name: "Automated recap generator", free: false, pro: true, elite: true, enterprise: true },
       ],
     },
     {
-      category: "Collaboration & Support",
+      category: "Support & Success",
       features: [
-        { name: "Accountability sharing", starter: false, edge: true, pro: true, elite: true, teams: true },
-        { name: "Coach feedback threads", starter: false, edge: false, pro: true, elite: true, teams: true },
-        { name: "Team workspaces & permissions", starter: false, edge: false, pro: false, elite: true, teams: true },
-        { name: "Dedicated success manager", starter: false, edge: false, pro: false, elite: true, teams: true },
+        { name: "Email support", free: true, pro: true, elite: true, enterprise: true },
+        { name: "Priority turnaround", free: false, pro: true, elite: true, enterprise: true },
+        { name: "Dedicated success manager", free: false, pro: false, elite: true, enterprise: true },
+        { name: "Quarterly strategy reviews", free: false, pro: false, elite: false, enterprise: true },
       ],
     },
   ];
@@ -232,7 +226,7 @@ export default function PricingPage() {
       {/* Pricing Cards */}
       <section className="pb-20 px-6">
         <div className="mx-auto max-w-7xl">
-          <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-5">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {tiers.map((tier, index) => {
               const price = tier.price[billingCycle];
               const monthlyPrice = billingCycle === "yearly" && price ? Math.round(price / 12) : price;
@@ -362,7 +356,7 @@ export default function PricingPage() {
                     >
                       <td className="py-3 px-6 text-sm">{feature.name}</td>
                       {planColumns.map((column) => {
-                        const value = feature[column.key];
+                        const value = feature[column.key as keyof typeof feature];
                         return (
                           <td
                             key={column.key}

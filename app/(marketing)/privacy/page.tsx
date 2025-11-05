@@ -2,295 +2,241 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Sparkles, ArrowLeft, Shield, Lock, Eye, Database } from "lucide-react";
+import { ArrowLeft, Database, Eye, Lock, Shield, Sparkles } from "lucide-react";
+
+const infoCollection = [
+  {
+    title: "Information you provide",
+    items: [
+      "Name, email address, and authentication details.",
+      "Billing information processed securely by our payment providers.",
+      "Journal entries, tags, attachments, and analytics preferences.",
+      "Support requests, feedback, and survey responses.",
+    ],
+    icon: Database,
+  },
+  {
+    title: "Information we collect automatically",
+    items: [
+      "Session metadata (browser, device, operating system).",
+      "IP address and approximate location for security and analytics.",
+      "Usage data such as features accessed, query volume, and performance metrics.",
+      "Cookies and similar technologies that help remember preferences and maintain secure sessions.",
+    ],
+    icon: Eye,
+  },
+];
+
+const usagePurposes = [
+  {
+    title: "Operate the Service",
+    bullets: ["Authenticate you, process subscriptions, and deliver journal features.", "Generate analytics dashboards, AI insights, and exports on your behalf.", "Provide customer support, notifications, and product updates."],
+  },
+  {
+    title: "Improve the Service",
+    bullets: ["Analyze usage trends to enhance performance and stability.", "Develop new journaling, analytics, and AI capabilities.", "Train machine learning models using de-identified or aggregated data."],
+  },
+  {
+    title: "Protect the Platform",
+    bullets: ["Detect fraud, abuse, and security threats.", "Enforce our Terms of Service and other policies.", "Comply with legal obligations and respond to lawful requests."],
+  },
+];
+
+const thirdParties = [
+  {
+    title: "Service providers",
+    details: "Trusted vendors who assist with hosting, analytics, customer support, and billing (for example, Stripe, Vercel, Supabase). They access data only to perform services on our behalf and must maintain confidentiality.",
+  },
+  {
+    title: "Legal disclosures",
+    details: "We may disclose information if required by law or if we believe it is necessary to protect Signal, our users, or the public from harm.",
+  },
+  {
+    title: "Business transfers",
+    details: "If Signal is involved in a merger, acquisition, or asset sale, your information may be transferred as part of that transaction. We will notify you before it happens.",
+  },
+];
+
+const rights = [
+  {
+    title: "Access & correction",
+    description: "You can view and update profile information from your account settings. Contact us if you need assistance with data you cannot edit directly.",
+  },
+  {
+    title: "Export",
+    description: "You can export journal entries, analytics, and attachments at any time. Email us to request a comprehensive data export.",
+  },
+  {
+    title: "Deletion",
+    description: "You may delete individual entries or request full account deletion. We will honor verified requests within a reasonable timeframe, subject to legal requirements.",
+  },
+  {
+    title: "Opt‑out of communications",
+    description: "You can unsubscribe from marketing emails via the link in each message. Transactional communications (such as billing or security notices) will still be sent when necessary.",
+  },
+];
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="fixed top-0 z-50 w-full border-b bg-white/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg border-2">
-              <Sparkles className="h-4 w-4" />
-            </div>
-            <span className="text-xl font-bold">TraderCloud</span>
+    <div className="bg-background text-foreground">
+      <nav className="fixed top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+          <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground">
+            <Sparkles className="h-4 w-4" />
+            Signal
+          </Link>
+          <Link href="/" className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground">
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Back to home
           </Link>
         </div>
       </nav>
 
-      {/* Content */}
-      <div className="pt-20 pb-20 px-6">
-        <div className="mx-auto max-w-4xl">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition mb-8"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Link>
+      <div className="px-6 pb-24 pt-28">
+        <motion.article
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="mx-auto max-w-4xl"
+        >
+          <header className="mb-10">
+            <h1 className="text-4xl font-semibold tracking-tight">Privacy Policy</h1>
+            <p className="mt-2 text-sm text-muted-foreground">Effective as of November 3, 2025</p>
+          </header>
 
-          <motion.article
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="prose prose-lg max-w-none"
-          >
-            <h1 className="text-4xl font-bold mb-4">Privacy Policy</h1>
-            <p className="text-muted-foreground mb-8">
-              Last Updated: November 3, 2025
+          <div className="rounded-2xl border border-blue-200/70 bg-blue-50/70 p-6 text-sm text-blue-900 dark:border-blue-500/40 dark:bg-blue-500/10 dark:text-blue-100">
+            <h2 className="mb-2 text-base font-semibold">Our promise</h2>
+            <p>
+              Signal is your journal and your edge. We treat it that way—protecting your data, respecting your privacy, and giving you control over what happens next.
             </p>
+          </div>
 
-            <div className="rounded-xl border-2 border-blue-200 bg-blue-50 p-6 mb-8">
-              <h3 className="font-semibold text-blue-900 mb-3">🔒 Your Privacy Matters</h3>
-              <p className="text-blue-800">
-                TraderCloud is committed to protecting your privacy. This policy explains how we collect, use, and safeguard your information.
-              </p>
+          <section className="mt-10 space-y-6 text-sm leading-7 text-muted-foreground">
+            <h2 className="text-2xl font-semibold text-foreground">1. Information we collect</h2>
+            <div className="grid gap-6 md:grid-cols-2">
+              {infoCollection.map(({ title, items, icon: Icon }) => (
+                <div key={title} className="rounded-2xl border border-border/60 bg-muted/40 p-5">
+                  <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <Icon className="h-4 w-4" />
+                    {title}
+                  </div>
+                  <ul className="space-y-2 pl-4 text-sm leading-6">
+                    {items.map((item) => (
+                      <li key={item} className="list-disc">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
+          </section>
 
-            <div className="space-y-8">
-              <section>
-                <h2 className="text-2xl font-bold mb-4">1. Information We Collect</h2>
-                
-                <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
-                  <Database className="h-5 w-5" />
-                  Information You Provide
-                </h3>
-                <ul className="list-disc pl-6 space-y-2 text-muted-foreground mb-4">
-                  <li>Name and email address when you create an account</li>
-                  <li>Payment information (processed securely by Stripe)</li>
-                  <li>Trading preferences and settings</li>
-                  <li>Communications with our support team</li>
-                  <li>Feedback and survey responses</li>
-                </ul>
-
-                <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
-                  <Eye className="h-5 w-5" />
-                  Information We Collect Automatically
-                </h3>
-                <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-                  <li>Device information (browser, OS, device type)</li>
-                  <li>IP address and location data</li>
-                  <li>Usage data (features used, time spent)</li>
-                  <li>Cookies and similar tracking technologies</li>
-                  <li>Query history and search terms</li>
-                  <li>API usage and performance metrics</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">2. How We Use Your Information</h2>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  We use your information to:
-                </p>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="rounded-lg border bg-muted/30 p-4">
-                    <h4 className="font-semibold mb-2">Provide the Service</h4>
-                    <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Process your account and subscriptions</li>
-                      <li>• Deliver AI recommendations</li>
-                      <li>• Send alerts and notifications</li>
-                      <li>• Provide customer support</li>
-                    </ul>
-                  </div>
-                  <div className="rounded-lg border bg-muted/30 p-4">
-                    <h4 className="font-semibold mb-2">Improve the Service</h4>
-                    <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Analyze usage patterns</li>
-                      <li>• Fix bugs and improve performance</li>
-                      <li>• Develop new features</li>
-                      <li>• Train and improve AI models</li>
-                    </ul>
-                  </div>
-                  <div className="rounded-lg border bg-muted/30 p-4">
-                    <h4 className="font-semibold mb-2">Marketing</h4>
-                    <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Send product updates</li>
-                      <li>• Share educational content</li>
-                      <li>• Promote new features</li>
-                      <li>• You can opt-out anytime</li>
-                    </ul>
-                  </div>
-                  <div className="rounded-lg border bg-muted/30 p-4">
-                    <h4 className="font-semibold mb-2">Security & Compliance</h4>
-                    <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Prevent fraud and abuse</li>
-                      <li>• Comply with legal obligations</li>
-                      <li>• Protect user safety</li>
-                      <li>• Enforce our Terms of Service</li>
-                    </ul>
-                  </div>
+          <section className="mt-12 space-y-6 text-sm leading-7 text-muted-foreground">
+            <h2 className="text-2xl font-semibold text-foreground">2. How we use your information</h2>
+            <div className="grid gap-6 md:grid-cols-2">
+              {usagePurposes.map(({ title, bullets }) => (
+                <div key={title} className="rounded-2xl border border-border/60 bg-muted/40 p-5">
+                  <h3 className="mb-3 text-sm font-semibold text-foreground">{title}</h3>
+                  <ul className="space-y-2 pl-4 text-sm leading-6">
+                    {bullets.map((bullet) => (
+                      <li key={bullet} className="list-disc">
+                        {bullet}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                  <Lock className="h-6 w-6" />
-                  3. How We Protect Your Information
-                </h2>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  We implement industry-standard security measures:
-                </p>
-                <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-                  <li>End-to-end encryption for sensitive data</li>
-                  <li>Secure HTTPS connections for all traffic</li>
-                  <li>Regular security audits and penetration testing</li>
-                  <li>Two-factor authentication available</li>
-                  <li>Limited employee access to user data</li>
-                  <li>Secure data centers with physical security</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">4. Sharing Your Information</h2>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  We do NOT sell your personal information. We may share data with:
-                </p>
-                <div className="space-y-4">
-                  <div className="rounded-lg border bg-white p-4">
-                    <h4 className="font-semibold mb-2">Service Providers</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Third-party companies that help us operate (hosting, analytics, payment processing, customer support)
-                    </p>
-                  </div>
-                  <div className="rounded-lg border bg-white p-4">
-                    <h4 className="font-semibold mb-2">Legal Requirements</h4>
-                    <p className="text-sm text-muted-foreground">
-                      When required by law, court order, or to protect rights and safety
-                    </p>
-                  </div>
-                  <div className="rounded-lg border bg-white p-4">
-                    <h4 className="font-semibold mb-2">Business Transfers</h4>
-                    <p className="text-sm text-muted-foreground">
-                      In connection with a merger, acquisition, or sale of assets (you will be notified)
-                    </p>
-                  </div>
-                  <div className="rounded-lg border bg-white p-4">
-                    <h4 className="font-semibold mb-2">Aggregated Data</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Anonymous, aggregated statistics that cannot identify you personally
-                    </p>
-                  </div>
-                </div>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">5. Cookies and Tracking</h2>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  We use cookies and similar technologies to:
-                </p>
-                <ul className="list-disc pl-6 space-y-2 text-muted-foreground mb-4">
-                  <li>Keep you logged in</li>
-                  <li>Remember your preferences</li>
-                  <li>Analyze usage and improve the Service</li>
-                  <li>Provide personalized recommendations</li>
-                  <li>Measure marketing effectiveness</li>
-                </ul>
-                <p className="text-sm text-muted-foreground">
-                  You can control cookies through your browser settings, but some features may not work properly if disabled.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                  <Shield className="h-6 w-6" />
-                  6. Your Privacy Rights
-                </h2>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  You have the right to:
-                </p>
-                <div className="grid gap-3 md:grid-cols-2">
-                  {[
-                    "Access your personal data",
-                    "Correct inaccurate data",
-                    "Request data deletion",
-                    "Export your data",
-                    "Opt-out of marketing emails",
-                    "Disable cookies",
-                    "Close your account",
-                    "Object to data processing",
-                  ].map((right, i) => (
-                    <div key={i} className="flex items-center gap-2 text-muted-foreground">
-                      <div className="h-2 w-2 rounded-full bg-foreground" />
-                      <span>{right}</span>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-muted-foreground leading-relaxed mt-4">
-                  To exercise these rights, email us at privacy@tradercloud.ai
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">7. Data Retention</h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  We retain your information for as long as your account is active or as needed to provide services. After account deletion, we may retain certain data for legal and business purposes (audit logs, legal disputes, fraud prevention) for up to 7 years.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">8. Children&apos;s Privacy</h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  TraderCloud is not intended for users under 18. We do not knowingly collect information from children. If you believe we have collected data from a child, please contact us immediately.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">9. International Users</h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  TraderCloud is based in the United States. If you access the Service from outside the US, your information may be transferred to and stored in the US. By using the Service, you consent to this transfer.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">10. Third-Party Services</h2>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  We integrate with third-party services:
-                </p>
-                <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-                  <li>Google Analytics (analytics)</li>
-                  <li>Stripe (payment processing)</li>
-                  <li>SendGrid (email delivery)</li>
-                  <li>Discord/Slack (notifications)</li>
-                </ul>
-                <p className="text-muted-foreground leading-relaxed mt-4">
-                  These services have their own privacy policies. We are not responsible for their practices.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">11. Changes to This Policy</h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  We may update this Privacy Policy from time to time. We will notify you of material changes via email or through the Service. Your continued use after changes constitutes acceptance of the updated policy.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold mb-4">12. Contact Us</h2>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  Questions about privacy? We&apos;re here to help:
-                </p>
-                <div className="rounded-lg border bg-muted/30 p-6">
-                  <div className="space-y-3">
-                    <div>
-                      <p className="font-medium mb-1">Email</p>
-                      <p className="text-sm text-muted-foreground">privacy@tradercloud.ai</p>
-                    </div>
-                    <div>
-                      <p className="font-medium mb-1">Data Protection Officer</p>
-                      <p className="text-sm text-muted-foreground">dpo@tradercloud.ai</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground mt-4">
-                        We typically respond within 48 hours
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </section>
+              ))}
             </div>
-          </motion.article>
-        </div>
+          </section>
+
+          <section className="mt-12 space-y-6 text-sm leading-7 text-muted-foreground">
+            <h2 className="text-2xl font-semibold text-foreground">3. When we share data</h2>
+            <div className="space-y-5">
+              {thirdParties.map(({ title, details }) => (
+                <div key={title} className="rounded-2xl border border-border/60 bg-muted/40 p-5">
+                  <h3 className="mb-2 text-sm font-semibold text-foreground">{title}</h3>
+                  <p>{details}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="mt-12 space-y-6 text-sm leading-7 text-muted-foreground">
+            <h2 className="text-2xl font-semibold text-foreground">4. Security</h2>
+            <div className="rounded-2xl border border-emerald-200/70 bg-emerald-50/70 p-6 text-sm text-emerald-900 dark:border-emerald-400/40 dark:bg-emerald-500/10 dark:text-emerald-100">
+              <h3 className="mb-2 flex items-center gap-2 text-base font-semibold">
+                <Lock className="h-4 w-4" />
+                How we safeguard your data
+              </h3>
+              <ul className="space-y-2 pl-5">
+                <li className="list-disc">All data in transit is protected with TLS 1.2+ encryption.</li>
+                <li className="list-disc">Sensitive data at rest is encrypted using industry-standard algorithms.</li>
+                <li className="list-disc">Access to production systems is limited to trained personnel with multi-factor authentication.</li>
+                <li className="list-disc">We maintain audit logs, least-privilege access, and regular security reviews.</li>
+              </ul>
+            </div>
+          </section>
+
+          <section className="mt-12 space-y-6 text-sm leading-7 text-muted-foreground">
+            <h2 className="text-2xl font-semibold text-foreground">5. Your rights & choices</h2>
+            <div className="grid gap-6 md:grid-cols-2">
+              {rights.map(({ title, description }) => (
+                <div key={title} className="rounded-2xl border border-border/60 bg-muted/40 p-5">
+                  <h3 className="mb-2 text-sm font-semibold text-foreground">{title}</h3>
+                  <p>{description}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="mt-12 space-y-6 text-sm leading-7 text-muted-foreground">
+            <h2 className="text-2xl font-semibold text-foreground">6. International transfers</h2>
+            <p>
+              Signal Journal Inc. operates primarily in the United States. If you access the Service from outside the United States, you consent to the transfer, storage, and processing of your information in the United States and other jurisdictions where we or our service providers operate.
+            </p>
+          </section>
+
+          <section className="mt-12 space-y-6 text-sm leading-7 text-muted-foreground">
+            <h2 className="text-2xl font-semibold text-foreground">7. Updates to this policy</h2>
+            <p>
+              We may update this Privacy Policy to reflect changes to the Service or legal requirements. If updates are material, we will provide notice via email or through the product before the changes take effect.
+            </p>
+          </section>
+
+          <section className="mt-12 space-y-4 rounded-2xl border border-border/60 bg-muted/40 p-6 text-sm leading-7 text-muted-foreground">
+            <h2 className="text-2xl font-semibold text-foreground">8. Contact us</h2>
+            <p>Signal Journal Inc.</p>
+            <p>99 Hudson Street, Floor 3</p>
+            <p>New York, NY 10013</p>
+            <p>
+              Email:{" "}
+              <a className="font-semibold text-foreground underline-offset-2 hover:underline" href="mailto:privacy@signaljournal.ai">
+                privacy@signaljournal.ai
+              </a>
+            </p>
+            <p>
+              Data Protection Officer:{" "}
+              <a className="font-semibold text-foreground underline-offset-2 hover:underline" href="mailto:dpo@signaljournal.ai">
+                dpo@signaljournal.ai
+              </a>
+            </p>
+          </section>
+
+          <footer className="mt-16 rounded-2xl border border-border/60 bg-muted/40 p-6">
+            <h3 className="mb-2 flex items-center gap-2 text-base font-semibold text-foreground">
+              <Shield className="h-4 w-4" />
+              Questions about privacy?
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              We’re happy to help. Reach out to{" "}
+              <a className="font-semibold text-foreground underline-offset-2 hover:underline" href="mailto:privacy@signaljournal.ai">
+                privacy@signaljournal.ai
+              </a>{" "}
+              for anything related to your personal data.
+            </p>
+          </footer>
+        </motion.article>
       </div>
     </div>
   );
