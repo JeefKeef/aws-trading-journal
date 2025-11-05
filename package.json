@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "check-env": "node scripts/check-env.js",
+    "setup": "node scripts/check-env.js && echo '\n✅ Ready to start! Run: npm run dev'"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
