@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +25,7 @@ type Notification = {
 };
 
 export function TopNav() {
+  const router = useRouter();
   const [notifications, setNotifications] = useState<Notification[]>([
     {
       id: "1",
@@ -54,6 +56,12 @@ export function TopNav() {
 
   const clearAllNotifications = () => {
     setNotifications([]);
+  };
+
+  const handleSignOut = () => {
+    // Clear any auth tokens/session data here in the future
+    // For now, just redirect to marketing page
+    router.push("/");
   };
   return (
     <header className="border-b border-neutral-200 bg-white/80 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/80">
@@ -171,7 +179,10 @@ export function TopNav() {
               <DropdownMenuSeparator />
               <ThemeToggle />
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-rose-500 focus:text-rose-600 dark:text-rose-400 dark:focus:text-rose-300">
+              <DropdownMenuItem 
+                className="text-rose-500 focus:text-rose-600 dark:text-rose-400 dark:focus:text-rose-300 cursor-pointer"
+                onClick={handleSignOut}
+              >
                 Sign out
               </DropdownMenuItem>
             </DropdownMenuContent>

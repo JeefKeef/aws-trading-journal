@@ -31,8 +31,8 @@ export default function OnboardingPage() {
     if (step < totalSteps) {
       setStep(step + 1);
     } else {
-      // Complete onboarding
-      router.push("/chat");
+      // Complete onboarding - redirect to dashboard
+      router.push("/dashboard");
     }
   };
 
@@ -468,7 +468,7 @@ export default function OnboardingPage() {
         {step < totalSteps && (
           <div className="text-center mt-6">
             <button
-              onClick={() => router.push("/chat")}
+              onClick={() => router.push("/dashboard")}
               className="text-sm text-muted-foreground hover:text-foreground transition"
             >
               Skip for now

@@ -17,6 +17,7 @@ import {
   LeftPanelProvider,
   useLeftPanel,
 } from "@/components/layout/left-panel-context";
+import { ChatHistoryProvider } from "@/lib/contexts/chat-history-context";
 import { AppSidebar } from "@/components/layout/sidebar";
 import { TopNav } from "@/components/layout/top-nav";
 
@@ -40,14 +41,16 @@ export default function ShellLayout({
   children: React.ReactNode;
 }) {
   return (
-    <LeftPanelProvider>
-      <RightPaneProvider>
-        <Suspense fallback={<div>Loading...</div>}>
-          <ShellContent>{children}</ShellContent>
-        </Suspense>
-        <Toaster />
-      </RightPaneProvider>
-    </LeftPanelProvider>
+    <ChatHistoryProvider>
+      <LeftPanelProvider>
+        <RightPaneProvider>
+          <Suspense fallback={<div>Loading...</div>}>
+            <ShellContent>{children}</ShellContent>
+          </Suspense>
+          <Toaster />
+        </RightPaneProvider>
+      </LeftPanelProvider>
+    </ChatHistoryProvider>
   );
 }
 
@@ -59,8 +62,8 @@ function ShellContent({ children }: { children: React.ReactNode }) {
   // Check if app query param is set for right panel
   const appView = searchParams.get('app');
   
-  // Check if we're on a full-page route (journal, screener, trades, analytics, calendar)
-  const isFullPageRoute = pathname === '/journal' || pathname === '/screener' || pathname === '/trades' || pathname === '/analytics' || pathname === '/calendar';
+  // Check if we're on a full-page route (dashboard, journal, screener, trades, analytics, calendar)
+  const isFullPageRoute = pathname === '/dashboard' || pathname === '/journal' || pathname === '/screener' || pathname === '/trades' || pathname === '/analytics' || pathname === '/calendar';
 
   // Always show dual-panel layout with left panel (chat/settings) and right panel (page content)
   return (

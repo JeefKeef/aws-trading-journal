@@ -18,8 +18,8 @@ export default function LoginPage() {
 
     // Simulate API call
     setTimeout(() => {
-      // For demo: redirect to chat
-      router.push("/chat");
+      // For demo: redirect to dashboard
+      router.push("/dashboard");
     }, 1000);
   };
 

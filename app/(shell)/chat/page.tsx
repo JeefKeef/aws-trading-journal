@@ -7,6 +7,8 @@ import {
   useRightPane,
 } from "@/components/layout/right-pane-context";
 import type { ToolState } from "@/components/layout/right-pane-context";
+import { useChatHistory } from "@/lib/contexts/chat-history-context";
+import type { ChatMessage } from "@/lib/types/chat";
 import {
   Select,
   SelectContent,
@@ -16,29 +18,8 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
-type MessageRole = "user" | "assistant" | "system";
-
-type ChatMessage = {
-  id: string;
-  role: MessageRole;
-  content: string;
-  createdAt: string;
-  status?: "pending" | "error" | "complete";
-};
-
-const defaultAssistantMessage: ChatMessage = {
-  id: "assistant-welcome",
-  role: "assistant",
-  content:
-    "Welcome back. How can I help move your market workflow forward? Ask for risk framing, automation blueprints, or rapid synthesis.",
-  createdAt: new Date().toISOString(),
-  status: "complete",
-};
-
 export default function ChatPage() {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    defaultAssistantMessage,
-  ]);
+  const { messages, addMessage, updateMessage } = useChatHistory();
   const [inputValue, setInputValue] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [activeModel, setActiveModel] = useState("signal-mini-v1");
@@ -75,16 +56,13 @@ export default function ChatPage() {
     const detectedFromUser = detectToolFromInput(userInput);
     setToolState(detectedFromUser);
 
-    const userMessage: ChatMessage = {
-      id: createMessageId("user"),
+    // Add user message via context
+    addMessage({
       role: "user",
       content: userInput,
-      createdAt: new Date().toISOString(),
       status: "complete",
-    };
+    });
 
-    const optimisticConversation = [...messagesRef.current, userMessage];
-    setMessages(optimisticConversation);
     setInputValue("");
     setIsStreaming(true);
 
@@ -100,7 +78,7 @@ export default function ChatPage() {
         },
         body: JSON.stringify({
           model: activeModel,
-          messages: optimisticConversation.map((message) => ({
+          messages: messagesRef.current.map((message) => ({
             role: message.role,
             content: message.content,
           })),
@@ -122,33 +100,26 @@ export default function ChatPage() {
         extractAssistantText(payload) ??
         "I couldn't generate a response. Try refining your question.";
 
-      const assistantMessage: ChatMessage = {
-        id: createMessageId("assistant"),
+      // Add assistant message via context
+      addMessage({
         role: "assistant",
         content: serializedContent,
-        createdAt: new Date().toISOString(),
         status: "complete",
-      };
+      });
 
       const detectedFromAssistant = detectToolFromAssistant(serializedContent);
       if (detectedFromAssistant.mode !== "overview") {
         setToolState(detectedFromAssistant);
       }
-
-      setMessages((current) => [...current, assistantMessage]);
     } catch (error) {
       if (isAbortError(error)) {
-        setMessages((current) =>
-          current.map((message) =>
-            message.id === userMessage.id
-              ? {
-                  ...message,
-                  status: "error",
-                  content: `${message.content}\n\n— Request cancelled.`,
-                }
-              : message,
-          ),
-        );
+        // Update last user message with cancellation note
+        const lastUserMessage = messagesRef.current.findLast((m) => m.role === "user");
+        if (lastUserMessage) {
+          updateMessage(lastUserMessage.id, {
+            content: `${lastUserMessage.content}\n\n— Request cancelled.`,
+          });
+        }
         return;
       }
 
@@ -156,14 +127,13 @@ export default function ChatPage() {
         error instanceof Error
           ? error.message
           : "Something went wrong while contacting the model API.";
-      const systemMessage: ChatMessage = {
-        id: createMessageId("system"),
+      
+      // Add system error message via context
+      addMessage({
         role: "system",
         content: message,
-        createdAt: new Date().toISOString(),
         status: "error",
-      };
-      setMessages((current) => [...current, systemMessage]);
+      });
     } finally {
       setIsStreaming(false);
       abortControllerRef.current = null;
@@ -340,7 +310,7 @@ function ChatBubble({ message }: { message: ChatMessage }) {
               : "border border-neutral-200 bg-neutral-50 text-neutral-800 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200"
         }`}
       >
-        <p className="whitespace-pre-wrap text-sm">{message.content}</p>
+        <p className={`whitespace-pre-wrap ${isSystem ? "text-sm" : "text-[13px]"}`}>{message.content}</p>
         <span className="mt-1 block text-[10px] uppercase tracking-[0.3em] text-neutral-500" suppressHydrationWarning>
           {formatTimestamp(message.createdAt)}
         </span>
@@ -367,13 +337,6 @@ function formatTimestamp(value: string) {
     hour: "numeric",
     minute: "2-digit",
   });
-}
-
-function createMessageId(prefix: string) {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-    return `${prefix}-${crypto.randomUUID()}`;
-  }
-  return `${prefix}-${Math.random().toString(36).slice(2, 8)}${Date.now().toString(36)}`;
 }
 
 function extractAssistantText(payload: unknown): string | undefined {

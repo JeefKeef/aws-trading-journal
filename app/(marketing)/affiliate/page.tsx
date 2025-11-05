@@ -2,45 +2,13 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Sparkles, DollarSign, Users, TrendingUp, Zap, ArrowRight } from "lucide-react";
+import { DollarSign, Users, TrendingUp, Zap, ArrowRight } from "lucide-react";
 
 export default function AffiliatePage(): React.JSX.Element {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="fixed top-0 z-50 w-full border-b bg-white/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg border-2">
-              <Sparkles className="h-4 w-4" />
-            </div>
-            <span className="text-xl font-bold">TraderCloud</span>
-          </Link>
-          <div className="flex items-center gap-6">
-            <Link href="/features" className="text-sm text-muted-foreground transition hover:text-foreground">
-              Features
-            </Link>
-            <Link href="/pricing" className="text-sm text-muted-foreground transition hover:text-foreground">
-              Pricing
-            </Link>
-            <Link href="/docs" className="text-sm text-muted-foreground transition hover:text-foreground">
-              Docs
-            </Link>
-            <Link href="/affiliate" className="text-sm font-medium text-foreground transition hover:text-foreground">
-              Affiliate
-            </Link>
-            <Link
-              href="/chat"
-              className="rounded-lg border-2 border-foreground px-4 py-2 text-sm font-semibold transition hover:bg-foreground hover:text-background"
-            >
-              Start Free
-            </Link>
-          </div>
-        </div>
-      </nav>
-
+    <div className="bg-background text-foreground">
       {/* Hero */}
-      <section className="pt-32 pb-20 px-6">
+      <section className="px-6 pb-20 pt-24">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -56,12 +24,12 @@ export default function AffiliatePage(): React.JSX.Element {
             Earn 30% recurring commission
           </h1>
           <p className="mb-10 text-xl text-muted-foreground">
-            Join hundreds of creators building passive income by sharing TraderCloud with your audience.
+            Join hundreds of creators building passive income by sharing Signal—the trading journal built for serious operators.
           </p>
 
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
-              href="mailto:partners@tradercloud.ai"
+              href="mailto:partners@signaljournal.ai"
               className="inline-flex items-center gap-2 rounded-lg border-2 border-foreground bg-foreground px-8 py-4 text-lg font-semibold text-background transition hover:bg-background hover:text-foreground"
             >
               Become a Partner
@@ -78,7 +46,7 @@ export default function AffiliatePage(): React.JSX.Element {
       </section>
 
       {/* Stats */}
-      <section className="py-12 px-6">
+      <section className="px-6 py-12">
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-6 md:grid-cols-3">
             {[
@@ -91,10 +59,10 @@ export default function AffiliatePage(): React.JSX.Element {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="rounded-2xl border bg-muted/50 p-8 text-center"
+                className="rounded-2xl border bg-muted/50 p-8 text-center dark:border-neutral-800 dark:bg-neutral-900/60"
               >
-                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl border-2">
-                  <stat.icon className="h-6 w-6" />
+                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl border-2 border-border dark:border-neutral-700">
+                  <stat.icon className="h-6 w-6 text-foreground" />
                 </div>
                 <p className="mb-2 text-4xl font-bold">{stat.value}</p>
                 <p className="text-sm text-muted-foreground">{stat.label}</p>
@@ -105,10 +73,10 @@ export default function AffiliatePage(): React.JSX.Element {
       </section>
 
       {/* Benefits */}
-      <section className="py-20 px-6">
+      <section className="px-6 py-20">
         <div className="mx-auto max-w-6xl">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-4xl font-bold">Why partner with TraderCloud?</h2>
+            <h2 className="mb-4 text-4xl font-bold text-foreground">Why partner with Signal?</h2>
             <p className="text-lg text-muted-foreground">
               Best-in-class commission structure designed for creators
             </p>
@@ -147,9 +115,9 @@ export default function AffiliatePage(): React.JSX.Element {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="rounded-2xl border bg-muted/50 p-6"
+                className="rounded-2xl border bg-muted/50 p-6 dark:border-neutral-800 dark:bg-neutral-900/60"
               >
-                <h3 className="mb-2 text-xl font-semibold">{benefit.title}</h3>
+                <h3 className="mb-2 text-xl font-semibold text-foreground">{benefit.title}</h3>
                 <p className="text-muted-foreground">{benefit.description}</p>
               </motion.div>
             ))}
@@ -158,10 +126,10 @@ export default function AffiliatePage(): React.JSX.Element {
       </section>
 
       {/* How It Works */}
-      <section id="how-it-works" className="py-20 px-6 bg-muted/30">
+      <section id="how-it-works" className="px-6 py-20 bg-muted/30 dark:bg-neutral-900/50">
         <div className="mx-auto max-w-4xl">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-4xl font-bold">How it works</h2>
+            <h2 className="mb-4 text-4xl font-bold text-foreground">How it works</h2>
             <p className="text-lg text-muted-foreground">
               Start earning in three simple steps
             </p>
@@ -196,11 +164,11 @@ export default function AffiliatePage(): React.JSX.Element {
                 viewport={{ once: true }}
                 className="flex gap-6"
               >
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 text-2xl font-bold">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 border-border text-2xl font-bold dark:border-neutral-700">
                   {item.step}
                 </div>
                 <div>
-                  <h3 className="mb-2 text-2xl font-bold">{item.title}</h3>
+                  <h3 className="mb-2 text-2xl font-bold text-foreground">{item.title}</h3>
                   <p className="text-muted-foreground">{item.description}</p>
                 </div>
               </motion.div>
@@ -210,9 +178,9 @@ export default function AffiliatePage(): React.JSX.Element {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 px-6">
+      <section className="px-6 py-20">
         <div className="mx-auto max-w-3xl">
-          <h2 className="mb-12 text-center text-3xl font-bold">
+          <h2 className="mb-12 text-center text-3xl font-bold text-foreground">
             Frequently asked questions
           </h2>
 
@@ -231,8 +199,8 @@ export default function AffiliatePage(): React.JSX.Element {
                 a: "Our cookie lasts 90 days. If someone clicks your link and signs up within 90 days, you get credit for the referral.",
               },
               {
-                q: "Can I promote TraderCloud if I don't use it?",
-                a: "We prefer partners who genuinely use and believe in TraderCloud. Authentic recommendations convert much better!",
+                q: "Can I promote Signal if I don't use it?",
+                a: "We prefer partners who actively journal with Signal. Authentic recommendations convert far better than generic endorsements.",
               },
               {
                 q: "Do you have marketing materials I can use?",
@@ -245,9 +213,9 @@ export default function AffiliatePage(): React.JSX.Element {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="rounded-2xl border bg-muted/50 p-6"
+                className="rounded-2xl border bg-muted/50 p-6 dark:border-neutral-800 dark:bg-neutral-900/60"
               >
-                <h3 className="mb-2 text-lg font-semibold">{faq.q}</h3>
+                <h3 className="mb-2 text-lg font-semibold text-foreground">{faq.q}</h3>
                 <p className="text-muted-foreground">{faq.a}</p>
               </motion.div>
             ))}
@@ -256,7 +224,7 @@ export default function AffiliatePage(): React.JSX.Element {
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-6">
+      <section className="px-6 py-20">
         <div className="mx-auto max-w-4xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -264,13 +232,13 @@ export default function AffiliatePage(): React.JSX.Element {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h2 className="mb-6 text-4xl font-bold">Ready to start earning?</h2>
+            <h2 className="mb-6 text-4xl font-bold text-foreground">Ready to start earning?</h2>
             <p className="mb-10 text-xl text-muted-foreground">
               Join our partner program and turn your audience into recurring revenue.
             </p>
             <Link
-              href="mailto:partners@tradercloud.ai"
-              className="inline-flex items-center gap-2 rounded-lg border-2 border-foreground bg-foreground px-8 py-4 text-lg font-semibold text-background transition hover:bg-background hover:text-foreground"
+              href="mailto:partners@signaljournal.ai"
+              className="inline-flex items-center gap-2 rounded-lg border-2 border-foreground bg-foreground px-8 py-4 text-lg font-semibold text-background transition hover:bg-background hover:text-foreground dark:hover:border-foreground"
             >
               Apply Now
               <ArrowRight className="h-5 w-5" />
@@ -278,24 +246,6 @@ export default function AffiliatePage(): React.JSX.Element {
           </motion.div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="border-t py-12 px-6">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg border-2">
-                <Sparkles className="h-4 w-4" />
-              </div>
-              <span className="text-lg font-bold">TraderCloud</span>
-            </Link>
-            
-            <p className="text-sm text-muted-foreground">
-              Made for traders, by traders. © 2025 TraderCloud
-            </p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

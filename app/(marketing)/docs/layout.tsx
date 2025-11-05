@@ -1,31 +1,23 @@
 "use client";
 
-import Link from "next/link";
-import { 
-  Sparkles, 
+import { useState, useEffect } from "react";
+import {
   Search,
   BookOpen,
   Rocket,
-  MessageSquare,
   Target,
-  TrendingUp,
-  Bell,
-  Code2,
-  Settings,
+  BarChart3,
+  Brain,
+  Clock,
   Home,
   Users,
-  Twitter,
-  Youtube
 } from "lucide-react";
-import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
 
 export default function DocsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
   const [activeSection, setActiveSection] = useState("introduction");
 
   const sidebarSections = [
@@ -34,24 +26,22 @@ export default function DocsLayout({
       items: [
         { id: "introduction", label: "Introduction", icon: Home },
         { id: "quick-start", label: "Quick Start", icon: Rocket },
-        { id: "basic-concepts", label: "Basic Concepts", icon: BookOpen },
+        { id: "journaling", label: "Journaling", icon: BookOpen },
       ],
     },
     {
-      title: "Features",
+      title: "Deep Dive",
       items: [
-        { id: "ai-chat", label: "AI Chat Interface", icon: MessageSquare },
-        { id: "stock-screener", label: "Stock Screener", icon: Search },
-        { id: "backtesting", label: "Backtesting", icon: TrendingUp },
-        { id: "alerts", label: "Alerts & Notifications", icon: Bell },
+        { id: "analytics", label: "Analytics", icon: BarChart3 },
+        { id: "ai-coach", label: "AI Coach", icon: Brain },
+        { id: "reviews", label: "Review Cadence", icon: Clock },
       ],
     },
     {
-      title: "Advanced",
+      title: "Team & Next Steps",
       items: [
-        { id: "api", label: "API Reference", icon: Code2 },
-        { id: "integrations", label: "Integrations", icon: Settings },
-        { id: "custom-models", label: "Custom AI Models", icon: Target },
+        { id: "collaboration", label: "Collaboration", icon: Users },
+        { id: "next-steps", label: "Next Steps", icon: Target },
       ],
     },
   ];
@@ -97,42 +87,10 @@ export default function DocsLayout({
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="fixed top-0 z-50 w-full border-b bg-white/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg border-2">
-              <Sparkles className="h-4 w-4" />
-            </div>
-            <span className="text-xl font-bold">TraderCloud</span>
-          </Link>
-          <div className="flex items-center gap-6">
-            <Link href="/features" className="text-sm text-muted-foreground transition hover:text-foreground">
-              Features
-            </Link>
-            <Link href="/pricing" className="text-sm text-muted-foreground transition hover:text-foreground">
-              Pricing
-            </Link>
-            <Link href="/docs" className="text-sm font-medium text-foreground transition hover:text-foreground">
-              Docs
-            </Link>
-            <Link href="/affiliate" className="text-sm text-muted-foreground transition hover:text-foreground">
-              Affiliate
-            </Link>
-            <Link
-              href="/chat"
-              className="rounded-lg border-2 border-foreground px-4 py-2 text-sm font-semibold transition hover:bg-foreground hover:text-background"
-            >
-              Start Free
-            </Link>
-          </div>
-        </div>
-      </nav>
-
-      <div className="pt-20 flex min-h-screen">
+    <div className="bg-background text-foreground">
+      <div className="flex min-h-screen pt-10">
         {/* Left Sidebar - Navigation */}
-        <aside className="sticky top-20 self-start h-[calc(100vh-5rem)] w-64 shrink-0 overflow-y-auto border-r bg-muted/30 px-4 py-8">
+        <aside className="sticky top-24 h-[calc(100vh-6rem)] w-64 shrink-0 self-start overflow-y-auto border-r bg-muted/30 px-4 py-8 dark:border-neutral-800 dark:bg-neutral-900/40">
           {/* Search */}
           <div className="mb-6">
             <div className="relative">
@@ -140,7 +98,7 @@ export default function DocsLayout({
               <input
                 type="text"
                 placeholder="Search docs..."
-                className="w-full rounded-lg border bg-white py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-foreground"
+                className="w-full rounded-lg border bg-white py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-foreground dark:border-neutral-800 dark:bg-neutral-900 dark:text-foreground"
               />
             </div>
           </div>
@@ -161,7 +119,7 @@ export default function DocsLayout({
                         className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition ${
                           activeSection === item.id
                             ? "bg-foreground text-background font-medium"
-                            : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                            : "text-muted-foreground hover:bg-muted hover:text-foreground dark:hover:bg-neutral-900"
                         }`}
                       >
                         <item.icon className="h-4 w-4 shrink-0" />
@@ -176,48 +134,10 @@ export default function DocsLayout({
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 px-12 py-8 max-w-4xl mx-auto">
+        <main className="mx-auto flex-1 px-12 py-8">
           {children}
         </main>
       </div>
-
-      {/* Footer */}
-      <footer className="border-t py-12 px-6 bg-white">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg border-2">
-                <Sparkles className="h-4 w-4" />
-              </div>
-              <span className="text-lg font-bold">TraderCloud</span>
-            </Link>
-            
-            <div className="flex items-center gap-6 text-sm">
-              <Link href="/terms" className="text-muted-foreground hover:text-foreground transition">
-                Terms
-              </Link>
-              <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition">
-                Privacy
-              </Link>
-              <p className="text-muted-foreground">
-                © 2025 TraderCloud
-              </p>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <Link href="https://twitter.com/TraderCloudAI" className="text-muted-foreground transition hover:text-foreground">
-                <Twitter className="h-5 w-5" />
-              </Link>
-              <Link href="https://youtube.com/@TraderCloudAI" className="text-muted-foreground transition hover:text-foreground">
-                <Youtube className="h-5 w-5" />
-              </Link>
-              <Link href="https://discord.gg/tradercloud" className="text-muted-foreground transition hover:text-foreground">
-                <Users className="h-5 w-5" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

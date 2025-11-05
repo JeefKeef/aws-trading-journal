@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Check, Sparkles, ArrowRight, X } from "lucide-react";
+import { Check, ArrowRight, X } from "lucide-react";
 import { useState, useEffect } from "react";
 
 function OdometerDigit({ value, prevValue }: { value: string; prevValue?: string }) {
@@ -63,168 +63,132 @@ export default function PricingPage() {
 
   const tiers = [
     {
-      name: "Free",
+      name: "Starter",
       price: { monthly: 0, yearly: 0 },
-      description: "Perfect for getting started",
+      description: "Build the journaling habit and see your core numbers.",
       features: [
-        "Basic stock screener",
-        "5 AI queries per day",
+        "Unlimited manual journal entries",
+        "Core analytics (P&L, win rate, expectancy)",
+        "Tags, filters, and saved views",
+        "Daily recap & review templates",
         "Community support",
-        "Basic market data",
-        "Mobile access",
       ],
       cta: "Start Free",
       href: "/chat",
     },
     {
-      name: "Pro",
-      price: { monthly: 19, yearly: 182 },
-      description: "For active traders",
+      name: "Edge",
+      price: { monthly: 29, yearly: 278 },
+      description: "Everything you need to review trades with precision.",
       features: [
-        "Advanced screener with custom filters",
-        "Unlimited AI queries",
-        "Real-time market data",
-        "Email alerts",
-        "Priority support",
-        "Export to CSV",
-        "Technical indicators",
+        "CSV & broker import automation",
+        "Advanced analytics & heatmaps",
+        "Emotion & discipline tracking",
+        "Custom templates & workflows",
+        "Export-ready PDF reports",
+        "Automated review reminders",
       ],
-      cta: "Start Pro",
+      cta: "Start Edge",
       href: "/chat",
     },
     {
-      name: "Pro+",
-      price: { monthly: 69, yearly: 662 },
-      description: "Most popular for serious traders",
+      name: "Pro",
+      price: { monthly: 79, yearly: 758 },
+      description: "AI-assisted feedback for high-volume, active traders.",
       features: [
-        "Everything in Pro",
-        "Advanced backtesting engine",
-        "Discord + Webhook alerts",
-        "Options flow analysis",
-        "Custom AI models",
-        "API access (100 req/min)",
-        "Dark pool data",
-        "Institutional indicators",
+        "Unlimited AI trade coaching",
+        "Risk guardrails & rule tracking",
+        "Playbook library & setup scorecards",
+        "Coach & accountability sharing",
+        "Voice notes & media attachments",
+        "Priority support",
       ],
-      cta: "Start Pro+",
+      cta: "Start Pro",
       href: "/chat",
       highlight: true,
     },
     {
-      name: "Ultra",
-      price: { monthly: 199, yearly: 1910 },
-      description: "For power users",
+      name: "Elite",
+      price: { monthly: 179, yearly: 1718 },
+      description: "Quant-level insights for teams and prop traders.",
       features: [
-        "Everything in Pro+",
-        "Unlimited API access",
-        "Real-time options data",
-        "Level 2 market data",
-        "Custom integrations",
-        "White-label options",
-        "Dedicated account manager",
-        "SLA guarantee",
+        "Multi-account & asset aggregation",
+        "Team workspaces with permissions",
+        "Custom metrics & dashboards",
+        "API & webhooks for automation",
+        "White-label client reporting",
+        "Dedicated success manager",
       ],
-      cta: "Start Ultra",
+      cta: "Start Elite",
       href: "/chat",
     },
     {
-      name: "Enterprise",
+      name: "Teams",
       price: { monthly: null, yearly: null },
-      description: "Custom solutions for teams",
+      description: "Tailored workflows for prop desks and fund managers.",
       features: [
-        "Everything in Ultra",
-        "Custom data sources",
-        "On-premise deployment",
-        "SSO & team management",
-        "Custom SLA",
-        "Dedicated support team",
-        "Training & onboarding",
-        "Custom development",
+        "Hands-on onboarding for your desk",
+        "Custom data pipelines & integrations",
+        "Enterprise security & audit logs",
+        "SSO & granular permissions",
+        "Bespoke analytics & playbooks",
+        "Quarterly performance strategy reviews",
       ],
-      cta: "Contact Sales",
-      href: "mailto:sales@tradercloud.ai",
+      cta: "Talk to Sales",
+      href: "mailto:sales@signaljournal.ai",
     },
   ];
 
+  const planColumns = [
+    { key: "starter", label: "Starter" },
+    { key: "edge", label: "Edge" },
+    { key: "pro", label: "Pro" },
+    { key: "elite", label: "Elite" },
+    { key: "teams", label: "Teams" },
+  ] as const;
+
   const featureComparison = [
     {
-      category: "AI & Analysis",
+      category: "Analytics",
       features: [
-        { name: "AI queries per day", free: "5", pro: "Unlimited", proPlus: "Unlimited", ultra: "Unlimited", enterprise: "Unlimited" },
-        { name: "GPT-4 access", free: false, pro: true, proPlus: true, ultra: true, enterprise: true },
-        { name: "Custom AI models", free: false, pro: false, proPlus: true, ultra: true, enterprise: true },
-        { name: "Advanced backtesting", free: false, pro: false, proPlus: true, ultra: true, enterprise: true },
+        { name: "Core metrics (P&L, win rate, expectancy)", starter: true, edge: true, pro: true, elite: true, teams: true },
+        { name: "Advanced analytics & heatmaps", starter: false, edge: true, pro: true, elite: true, teams: true },
+        { name: "Multi-account performance rollups", starter: false, edge: false, pro: false, elite: true, teams: true },
+        { name: "Custom KPI dashboards", starter: false, edge: false, pro: true, elite: true, teams: "Custom" },
       ],
     },
     {
-      category: "Data & Screeners",
+      category: "Journaling",
       features: [
-        { name: "Basic stock screener", free: true, pro: true, proPlus: true, ultra: true, enterprise: true },
-        { name: "Advanced custom filters", free: false, pro: true, proPlus: true, ultra: true, enterprise: true },
-        { name: "Real-time market data", free: false, pro: true, proPlus: true, ultra: true, enterprise: true },
-        { name: "Options flow analysis", free: false, pro: false, proPlus: true, ultra: true, enterprise: true },
-        { name: "Dark pool data", free: false, pro: false, proPlus: true, ultra: true, enterprise: true },
-        { name: "Level 2 market data", free: false, pro: false, proPlus: false, ultra: true, enterprise: true },
+        { name: "Unlimited journal entries", starter: true, edge: true, pro: true, elite: true, teams: true },
+        { name: "Custom templates & prompts", starter: false, edge: true, pro: true, elite: true, teams: true },
+        { name: "Voice notes & media attachments", starter: false, edge: false, pro: true, elite: true, teams: true },
+        { name: "Risk guardrails & rule tracking", starter: false, edge: false, pro: true, elite: true, teams: true },
       ],
     },
     {
-      category: "Alerts & Integrations",
+      category: "AI Guidance",
       features: [
-        { name: "Email alerts", free: false, pro: true, proPlus: true, ultra: true, enterprise: true },
-        { name: "Discord alerts", free: false, pro: false, proPlus: true, ultra: true, enterprise: true },
-        { name: "Webhook alerts", free: false, pro: false, proPlus: true, ultra: true, enterprise: true },
-        { name: "API access", free: false, pro: false, proPlus: "100/min", ultra: "Unlimited", enterprise: "Unlimited" },
-        { name: "Custom integrations", free: false, pro: false, proPlus: false, ultra: true, enterprise: true },
+        { name: "AI trade summaries per day", starter: "5 / day", edge: "20 / day", pro: "Unlimited", elite: "Unlimited", teams: "Unlimited" },
+        { name: "AI performance insights", starter: false, edge: true, pro: true, elite: true, teams: true },
+        { name: "Automated recap generator", starter: false, edge: true, pro: true, elite: true, teams: true },
       ],
     },
     {
-      category: "Support & Services",
+      category: "Collaboration & Support",
       features: [
-        { name: "Community support", free: true, pro: true, proPlus: true, ultra: true, enterprise: true },
-        { name: "Priority support", free: false, pro: true, proPlus: true, ultra: true, enterprise: true },
-        { name: "Dedicated account manager", free: false, pro: false, proPlus: false, ultra: true, enterprise: true },
-        { name: "SLA guarantee", free: false, pro: false, proPlus: false, ultra: true, enterprise: "Custom" },
-        { name: "Training & onboarding", free: false, pro: false, proPlus: false, ultra: false, enterprise: true },
+        { name: "Accountability sharing", starter: false, edge: true, pro: true, elite: true, teams: true },
+        { name: "Coach feedback threads", starter: false, edge: false, pro: true, elite: true, teams: true },
+        { name: "Team workspaces & permissions", starter: false, edge: false, pro: false, elite: true, teams: true },
+        { name: "Dedicated success manager", starter: false, edge: false, pro: false, elite: true, teams: true },
       ],
     },
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="fixed top-0 z-50 w-full border-b bg-white/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg border-2">
-              <Sparkles className="h-4 w-4" />
-            </div>
-            <span className="text-xl font-bold">TraderCloud</span>
-          </Link>
-          <div className="flex items-center gap-6">
-            <Link href="/features" className="text-sm text-muted-foreground transition hover:text-foreground">
-              Features
-            </Link>
-            <Link href="/pricing" className="text-sm font-medium text-foreground transition hover:text-foreground">
-              Pricing
-            </Link>
-            <Link href="/docs" className="text-sm text-muted-foreground transition hover:text-foreground">
-              Docs
-            </Link>
-            <Link href="/affiliate" className="text-sm text-muted-foreground transition hover:text-foreground">
-              Affiliate
-            </Link>
-            <Link
-              href="/chat"
-              className="rounded-lg border-2 border-foreground px-4 py-2 text-sm font-semibold transition hover:bg-foreground hover:text-background"
-            >
-              Start Free
-            </Link>
-          </div>
-        </div>
-      </nav>
-
+    <div className="bg-background text-foreground">
       {/* Hero */}
-      <section className="pt-32 pb-12 px-6">
+      <section className="px-6 pb-12 pt-24">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -279,10 +243,10 @@ export default function PricingPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className={`relative flex flex-col rounded-2xl border p-6 transition ${
+                  className={`relative flex flex-col rounded-2xl border bg-card p-6 transition ${
                     tier.highlight
-                      ? "border-foreground shadow-lg scale-105"
-                      : "bg-muted/50 hover:shadow-md"
+                      ? "scale-105 border-foreground shadow-lg dark:border-foreground/80"
+                      : "border-border bg-muted/50 hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900/60"
                   }`}
                 >
                   {tier.highlight && (
@@ -323,7 +287,7 @@ export default function PricingPage() {
                     className={`mb-6 inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold transition ${
                       tier.highlight
                         ? "border-2 border-foreground bg-foreground text-background hover:bg-background hover:text-foreground"
-                        : "border-2 hover:bg-muted"
+                        : "border-2 hover:bg-muted dark:hover:bg-neutral-900"
                     }`}
                   >
                     {tier.cta}
@@ -346,7 +310,7 @@ export default function PricingPage() {
       </section>
 
       {/* Features Comparison Table */}
-      <section className="py-20 px-6 bg-muted/30">
+      <section className="bg-muted/30 px-6 py-20 dark:bg-neutral-900/40">
         <div className="mx-auto max-w-7xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -364,20 +328,25 @@ export default function PricingPage() {
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
-                <tr className="border-b-2">
+                <tr className="border-b-2 border-border dark:border-neutral-800">
                   <th className="py-4 px-6 text-left font-semibold">Features</th>
-                  <th className="py-4 px-4 text-center font-semibold">Free</th>
-                  <th className="py-4 px-4 text-center font-semibold">Pro</th>
-                  <th className="py-4 px-4 text-center font-semibold bg-muted/50">Pro+</th>
-                  <th className="py-4 px-4 text-center font-semibold">Ultra</th>
-                  <th className="py-4 px-4 text-center font-semibold">Enterprise</th>
+                  {planColumns.map((column) => (
+                    <th
+                      key={column.key}
+                      className={`py-4 px-4 text-center font-semibold ${
+                        column.key === "pro" ? "bg-muted/50" : ""
+                      }`}
+                    >
+                      {column.label}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
                 {featureComparison.flatMap((category, categoryIndex) => [
                   (
-                    <tr key={`header-${categoryIndex}`} className="border-t-2">
-                      <td colSpan={6} className="py-4 px-6 font-bold text-sm uppercase tracking-wide">
+                    <tr key={`header-${categoryIndex}`} className="border-t-2 border-border dark:border-neutral-800">
+                      <td colSpan={planColumns.length + 1} className="py-4 px-6 text-sm font-bold uppercase tracking-wide">
                         {category.category}
                       </td>
                     </tr>
@@ -389,64 +358,30 @@ export default function PricingPage() {
                       whileInView={{ opacity: 1 }}
                       transition={{ duration: 0.3, delay: featureIndex * 0.05 }}
                       viewport={{ once: true }}
-                      className="border-t hover:bg-muted/20"
+                      className="border-t hover:bg-muted/20 dark:border-neutral-800 dark:hover:bg-neutral-900/40"
                     >
                       <td className="py-3 px-6 text-sm">{feature.name}</td>
-                      <td className="py-3 px-4 text-center text-sm">
-                        {typeof feature.free === "boolean" ? (
-                          feature.free ? (
-                            <Check className="h-5 w-5 mx-auto" />
-                          ) : (
-                            <X className="h-5 w-5 mx-auto text-muted-foreground" />
-                          )
-                        ) : (
-                          feature.free
-                        )}
-                      </td>
-                      <td className="py-3 px-4 text-center text-sm">
-                        {typeof feature.pro === "boolean" ? (
-                          feature.pro ? (
-                            <Check className="h-5 w-5 mx-auto" />
-                          ) : (
-                            <X className="h-5 w-5 mx-auto text-muted-foreground" />
-                          )
-                        ) : (
-                          feature.pro
-                        )}
-                      </td>
-                      <td className="py-3 px-4 text-center text-sm bg-muted/30">
-                        {typeof feature.proPlus === "boolean" ? (
-                          feature.proPlus ? (
-                            <Check className="h-5 w-5 mx-auto" />
-                          ) : (
-                            <X className="h-5 w-5 mx-auto text-muted-foreground" />
-                          )
-                        ) : (
-                          feature.proPlus
-                        )}
-                      </td>
-                      <td className="py-3 px-4 text-center text-sm">
-                        {typeof feature.ultra === "boolean" ? (
-                          feature.ultra ? (
-                            <Check className="h-5 w-5 mx-auto" />
-                          ) : (
-                            <X className="h-5 w-5 mx-auto text-muted-foreground" />
-                          )
-                        ) : (
-                          feature.ultra
-                        )}
-                      </td>
-                      <td className="py-3 px-4 text-center text-sm">
-                        {typeof feature.enterprise === "boolean" ? (
-                          feature.enterprise ? (
-                            <Check className="h-5 w-5 mx-auto" />
-                          ) : (
-                            <X className="h-5 w-5 mx-auto text-muted-foreground" />
-                          )
-                        ) : (
-                          feature.enterprise
-                        )}
-                      </td>
+                      {planColumns.map((column) => {
+                        const value = feature[column.key];
+                        return (
+                          <td
+                            key={column.key}
+                            className={`py-3 px-4 text-center text-sm ${
+                              column.key === "pro" ? "bg-muted/30 dark:bg-neutral-900/60" : ""
+                            }`}
+                          >
+                            {typeof value === "boolean" ? (
+                              value ? (
+                                <Check className="mx-auto h-5 w-5" />
+                              ) : (
+                                <X className="mx-auto h-5 w-5 text-muted-foreground" />
+                              )
+                            ) : (
+                              value
+                            )}
+                          </td>
+                        );
+                      })}
                     </motion.tr>
                   )),
                 ])}
@@ -457,9 +392,9 @@ export default function PricingPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 px-6">
+      <section className="px-6 py-20">
         <div className="mx-auto max-w-3xl">
-          <h2 className="mb-12 text-center text-3xl font-bold">
+          <h2 className="mb-12 text-center text-3xl font-bold text-foreground">
             Frequently asked questions
           </h2>
 
@@ -492,7 +427,7 @@ export default function PricingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="rounded-2xl border bg-muted/50 p-6"
+                className="rounded-2xl border bg-muted/50 p-6 dark:border-neutral-800 dark:bg-neutral-900/60"
               >
                 <h3 className="mb-2 text-lg font-semibold">{faq.q}</h3>
                 <p className="text-muted-foreground">{faq.a}</p>
@@ -503,7 +438,7 @@ export default function PricingPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-6">
+      <section className="px-6 py-20">
         <div className="mx-auto max-w-4xl text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -511,7 +446,7 @@ export default function PricingPage() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h2 className="mb-6 text-4xl font-bold">Ready to start trading smarter?</h2>
+            <h2 className="mb-6 text-4xl font-bold text-foreground">Ready to start trading smarter?</h2>
             <p className="mb-10 text-xl text-muted-foreground">
               Join thousands of traders powered by AI.
             </p>
@@ -525,32 +460,6 @@ export default function PricingPage() {
           </motion.div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="border-t py-12 px-6">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg border-2">
-                <Sparkles className="h-4 w-4" />
-              </div>
-              <span className="text-lg font-bold">TraderCloud</span>
-            </Link>
-            
-            <div className="flex items-center gap-6 text-sm">
-              <Link href="/terms" className="text-muted-foreground hover:text-foreground transition">
-                Terms
-              </Link>
-              <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition">
-                Privacy
-              </Link>
-              <p className="text-muted-foreground">
-                © 2025 TraderCloud
-              </p>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
