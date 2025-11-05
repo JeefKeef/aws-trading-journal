@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/contexts/auth-context";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,6 +27,7 @@ type Notification = {
 
 export function TopNav() {
   const router = useRouter();
+  const { user, signOut } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([
     {
       id: "1",
@@ -50,7 +52,7 @@ export function TopNav() {
     },
   ]);
 
-  const deleteNotification = (id: string) => {
+  const handleDismiss = (id: string) => {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
   };
 
@@ -58,11 +60,12 @@ export function TopNav() {
     setNotifications([]);
   };
 
-  const handleSignOut = () => {
-    // Clear any auth tokens/session data here in the future
-    // For now, just redirect to marketing page
-    router.push("/");
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/login");
+    router.refresh();
   };
+
   return (
     <header className="border-b border-neutral-200 bg-white/80 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/80">
       <div className="flex w-full items-center justify-between gap-3 px-3 py-2 sm:px-5">
@@ -123,7 +126,7 @@ export function TopNav() {
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          deleteNotification(notification.id);
+                          handleDismiss(notification.id);
                         }}
                       >
                         <X className="h-3.5 w-3.5 text-neutral-500 dark:text-neutral-400" />
@@ -171,7 +174,7 @@ export function TopNav() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" sideOffset={8}>
               <DropdownMenuLabel className="text-xs font-normal text-neutral-500 dark:text-neutral-400">
-                Signed in as
+                {user?.email || "Signed in"}
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Profile</DropdownMenuItem>

@@ -5,6 +5,7 @@ import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/lib/contexts/auth-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -100,10 +101,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <TooltipProvider delayDuration={0}>
-            {children}
-          </TooltipProvider>
-          <Toaster />
+          <AuthProvider>
+            <TooltipProvider delayDuration={0}>
+              {children}
+            </TooltipProvider>
+            <Toaster />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
